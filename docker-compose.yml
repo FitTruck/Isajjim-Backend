@@ -1,0 +1,16 @@
+services:
+  spring:
+    image: ghcr.io/fittruck/isajjim-backend:develop
+    container_name: spring
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    volumes:
+      - ./configs:/configs
+    environment:
+      - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/configs/
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE:-local}
+
+networks:
+  backend:
