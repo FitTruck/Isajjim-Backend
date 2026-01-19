@@ -2,11 +2,15 @@ package kr.co.isajjim.domains.estimate.persistence.entity;
 
 import jakarta.persistence.*;
 import kr.co.isajjim.domains.estimate.domain.constant.*;
+import kr.co.isajjim.domains.image.persistence.entity.Image;
 import kr.co.isajjim.global.base.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -45,6 +49,9 @@ public class Estimate extends BaseEntity {
 
     private Boolean parking;
 
+    @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
+
     @Builder
     private Estimate(
             BuildingType buildingType,
@@ -67,5 +74,12 @@ public class Estimate extends BaseEntity {
         this.duplex = duplex;
         this.groundStair = groundStair;
         this.parking = parking;
+    }
+
+    public void addImage(Image image) {
+        this.images.add(image);
+        if (image.getEstimate() != this) {
+            image.setEstimate(this);
+        }
     }
 }
