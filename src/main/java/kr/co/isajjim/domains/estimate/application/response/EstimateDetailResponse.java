@@ -13,6 +13,9 @@ public record EstimateDetailResponse(
         AIStatus aiStatus,
 
         @Schema(description = "이미지 목록")
-        List<ImageResponse> images
+        List<ImageResponse> images,
+
+        @Schema(description = "견적 목록")
+        List<EstimateItemResponse> items
 ) {
 }

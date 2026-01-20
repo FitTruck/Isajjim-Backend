@@ -52,6 +52,9 @@ public class Estimate extends BaseEntity {
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EstimateItem> estimateItems = new ArrayList<>();
+
     @Builder
     private Estimate(
             BuildingType buildingType,
@@ -80,6 +83,13 @@ public class Estimate extends BaseEntity {
         this.images.add(image);
         if (image.getEstimate() != this) {
             image.setEstimate(this);
+        }
+    }
+
+    public void addEstimateItem(EstimateItem estimateItem) {
+        this.estimateItems.add(estimateItem);
+        if (estimateItem.getEstimate() != this) {
+            estimateItem.setEstimate(this);
         }
     }
 
