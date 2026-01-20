@@ -1,6 +1,6 @@
 services:
   spring:
-    image: ghcr.io/fittruck/isajjim-backend:develop
+    image: ghcr.io/fittruck/isajjim-backend:dev
     container_name: spring
     ports:
       - "8080:8080"
