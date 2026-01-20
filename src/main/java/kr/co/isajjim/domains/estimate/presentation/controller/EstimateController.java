@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
+import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/estimates")
 @RequiredArgsConstructor
-public class EstimateController {
+public class EstimateController implements EstimateApi {
 
     private final EstimateUseCase estimateUseCase;
 
