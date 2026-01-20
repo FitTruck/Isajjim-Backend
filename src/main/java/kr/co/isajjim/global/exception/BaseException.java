@@ -1,14 +1,14 @@
 package kr.co.isajjim.global.exception;
 
-import kr.co.isajjim.global.common.BaseResponseCode;
+import kr.co.isajjim.global.common.ResponseCode;
 import lombok.Getter;
 
 @Getter
 public class BaseException extends RuntimeException {
 
-    private final BaseResponseCode responseCode;
+    private final ResponseCode responseCode;
 
-    public BaseException(BaseResponseCode responseCode) {
+    public BaseException(ResponseCode responseCode) {
         super(responseCode.getMessage());
         this.responseCode = responseCode;
     }

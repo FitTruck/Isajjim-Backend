@@ -15,14 +15,14 @@ public record ApiResponse<T>(
         T data
 ) {
 
-    public static <T> ApiResponse<T> ofSuccess(final BaseResponseCode responseCode) {
+    public static <T> ApiResponse<T> ofSuccess(final ResponseCode responseCode) {
         return ApiResponse.<T>builder()
                 .code(responseCode.getCode())
                 .message(responseCode.getMessage())
                 .build();
     }
 
-    public static <T> ApiResponse<T> ofSuccess(final BaseResponseCode responseCode, T data) {
+    public static <T> ApiResponse<T> ofSuccess(final ResponseCode responseCode, T data) {
         return ApiResponse.<T>builder()
                 .code(responseCode.getCode())
                 .message(responseCode.getMessage())
@@ -30,14 +30,14 @@ public record ApiResponse<T>(
                 .build();
     }
 
-    public static <T> ApiResponse<T> ofFail(final BaseResponseCode responseCode) {
+    public static <T> ApiResponse<T> ofFail(final ResponseCode responseCode) {
         return ApiResponse.<T>builder()
                 .code(responseCode.getCode())
                 .message(responseCode.getMessage())
                 .build();
     }
 
-    public static <T> ApiResponse<T> ofFail(final BaseResponseCode responseCode, final List<FieldError> fieldErrors) {
+    public static <T> ApiResponse<T> ofFail(final ResponseCode responseCode, final List<FieldError> fieldErrors) {
         return ApiResponse.<T>builder()
                 .code(responseCode.getCode())
                 .message(responseCode.getMessage())

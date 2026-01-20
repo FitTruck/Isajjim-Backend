@@ -4,8 +4,9 @@ import jakarta.validation.Valid;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
+import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
 import kr.co.isajjim.global.common.ApiResponse;
-import kr.co.isajjim.global.common.CommonResponseCode;
+import kr.co.isajjim.global.common.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,15 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/estimates")
 @RequiredArgsConstructor
-public class EstimateController {
+public class EstimateController implements EstimateApi {
 
     private final EstimateUseCase estimateUseCase;
 
+    @Override
     @PostMapping()
     public ResponseEntity<ApiResponse<EstimateResponse>> createEstimate(
             @RequestBody @Valid EstimateRequest request
     ) {
         Long savedId = estimateUseCase.createEstimate(request);
-        return ResponseEntity.ok(ApiResponse.ofSuccess(CommonResponseCode.OK, EstimateResponse.from(savedId)));
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, EstimateResponse.from(savedId)));
     }
 }
