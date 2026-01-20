@@ -2,6 +2,8 @@ package kr.co.isajjim.domains.estimate.application.usecase;
 
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateMapper;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
+import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.image.application.mapper.ImageMapper;
@@ -28,5 +30,16 @@ public class EstimateUseCase {
                 );
 
         return estimateService.createEstimate(estimate);
+    }
+
+    public EstimateDetailResponse getDetailEstimates(Long estimateId) {
+        Estimate estimate = estimateService.getEstimateById(estimateId);
+        return EstimateMapper.fromEstimate(estimate);
+    }
+
+    @Transactional
+    public void updateDefaultInfo(Long estimateId, EstimateUpdateRequest request) {
+        Estimate estimate = estimateService.getEstimateById(estimateId);
+        estimateService.updateDefaultInfo(estimate, request);
     }
 }

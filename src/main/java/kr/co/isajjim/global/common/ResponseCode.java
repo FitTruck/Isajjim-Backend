@@ -22,6 +22,7 @@ public enum ResponseCode {
 
     // 404 Not Found
     NOT_FOUND(HttpStatus.NOT_FOUND, "COMMON-005", "요청 리소스를 찾을 수 없습니다."),
+    NOT_FOUND_ESTIMATE(HttpStatus.NOT_FOUND, "ESTIMATE-001", "요청 견적서 ID를 찾을 수 없습니다."),
 
     // 405 Method Not Allowed
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "COMMON-006", "요청 메소드를 지원하지 않습니다."),

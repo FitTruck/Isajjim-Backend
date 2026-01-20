@@ -24,7 +24,7 @@ public class Estimate extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private AIStatus status;
+    private AIStatus aiStatus;
 
     @Enumerated(EnumType.STRING)
     private BuildingType buildingType;
@@ -64,7 +64,7 @@ public class Estimate extends BaseEntity {
             Boolean groundStair,
             Boolean parking
     ) {
-        this.status = AIStatus.PENDING;
+        this.aiStatus = AIStatus.PENDING;
         this.buildingType = buildingType;
         this.roomSize = roomSize;
         this.floor = floor;
@@ -81,5 +81,27 @@ public class Estimate extends BaseEntity {
         if (image.getEstimate() != this) {
             image.setEstimate(this);
         }
+    }
+
+    public void updateEstimate(
+            BuildingType buildingType,
+            RoomSize roomSize,
+            Floor floor,
+            Boolean elevator,
+            LadderTruck ladderTruck,
+            RoomType roomType,
+            Boolean duplex,
+            Boolean groundStair,
+            Boolean parking
+    ) {
+        this.buildingType = (buildingType != null) ? buildingType : this.buildingType;
+        this.roomSize = (roomSize != null) ? roomSize : this.roomSize;
+        this.floor = (floor != null) ? floor : this.floor;
+        this.elevator = (elevator != null) ? elevator : this.elevator;
+        this.ladderTruck = (ladderTruck != null) ? ladderTruck : this.ladderTruck;
+        this.roomType = (roomType != null) ? roomType : this.roomType;
+        this.duplex = (duplex != null) ? duplex : this.duplex;
+        this.groundStair = (groundStair != null) ? groundStair : this.groundStair;
+        this.parking = (parking != null) ? parking : this.parking;
     }
 }
