@@ -1,0 +1,11 @@
+# application-local.yml
+spring:
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/isajjim
+#   url: jdbc:h2:mem:isajjim
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+swagger:
+  server-url: http://localhost:8080

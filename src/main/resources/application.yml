@@ -1,3 +1,10 @@
+# application.yml
 spring:
   application:
     name: isajjim
+  profiles:
+    active: local
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
