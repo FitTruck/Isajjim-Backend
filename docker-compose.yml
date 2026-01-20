@@ -6,6 +6,8 @@ services:
       - "8080:8080"
     networks:
       - backend
+    env_file:
+      - .env
     volumes:
       - ./configs:/configs
     environment:
