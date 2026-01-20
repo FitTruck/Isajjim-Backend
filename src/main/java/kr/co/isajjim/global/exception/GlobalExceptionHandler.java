@@ -9,7 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.security.access.AccessDeniedException;
+//import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
 
 @Slf4j
 @RestControllerAdvice
@@ -36,12 +35,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ApiResponse.ofFail(responseCode), responseCode.getStatus());
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
-        log.error("AccessDeniedException: ", e);
-        BaseResponseCode responseCode = CommonResponseCode.FORBIDDEN;
-        return new ResponseEntity<>(ApiResponse.ofFail(responseCode), responseCode.getStatus());
-    }
+//    @ExceptionHandler(AccessDeniedException.class)
+//    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
+//        log.error("AccessDeniedException: ", e);
+//        BaseResponseCode responseCode = CommonResponseCode.FORBIDDEN;
+//        return new ResponseEntity<>(ApiResponse.ofFail(responseCode), responseCode.getStatus());
+//    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
