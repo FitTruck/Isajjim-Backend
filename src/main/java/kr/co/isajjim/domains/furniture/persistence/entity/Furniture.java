@@ -1,0 +1,80 @@
+package kr.co.isajjim.domains.furniture.persistence.entity;
+
+import jakarta.persistence.*;
+import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
+import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
+import kr.co.isajjim.domains.image.persistence.entity.Image;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Getter
+@Table(name = "furniture")
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Furniture {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "furniture_id")
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "image_id", nullable = false)
+    private Image image;
+
+    @Enumerated(EnumType.STRING)
+    private FurnitureLabel label;
+
+    @Enumerated(EnumType.STRING)
+    private FurnitureType type;
+
+    private Integer width;
+
+    private Integer height;
+
+    private Integer depth;
+
+    private Integer volume;
+
+    private Integer ratioWidth;
+
+    private Integer ratioHeight;
+
+    private Integer ratioDepth;
+
+    private Integer count;
+
+    @Builder
+    private Furniture(
+        FurnitureLabel label,
+        FurnitureType type,
+        Integer width,
+        Integer height,
+        Integer depth,
+        Integer volume,
+        Integer ratioWidth,
+        Integer ratioHeight,
+        Integer ratioDepth,
+        Integer count
+    ) {
+        this.label = label;
+        this.type = type;
+        this.width = width;
+        this.height = height;
+        this.depth = depth;
+        this.volume = volume;
+        this.ratioWidth = ratioWidth;
+        this.ratioHeight = ratioHeight;
+        this.ratioDepth = ratioDepth;
+        this.count = count;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+        if (!image.getFurnitures().contains(this)) {
+            image.getFurnitures().add(this);
+        }
+    }
+}

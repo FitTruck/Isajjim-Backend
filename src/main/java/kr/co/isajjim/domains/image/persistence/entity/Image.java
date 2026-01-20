@@ -3,11 +3,15 @@ package kr.co.isajjim.domains.image.persistence.entity;
 import jakarta.persistence.*;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
+import kr.co.isajjim.domains.furniture.persistence.entity.Furniture;
 import kr.co.isajjim.global.base.entity.BaseEntity;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -29,6 +33,9 @@ public class Image extends BaseEntity {
     @JoinColumn(name = "estimate_id")
     private Estimate estimate;
 
+    @OneToMany(mappedBy = "image", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Furniture> furnitures = new ArrayList<>();
+
     @Builder
     private Image(
             String imageUrl
@@ -41,6 +48,13 @@ public class Image extends BaseEntity {
         this.estimate = estimate;
         if (!estimate.getImages().contains(this)) {
             estimate.getImages().add(this);
+        }
+    }
+
+    public void addFurniture(Furniture furniture) {
+        this.furnitures.add(furniture);
+        if (furniture.getImage() != this) {
+            furniture.setImage(this);
         }
     }
 }

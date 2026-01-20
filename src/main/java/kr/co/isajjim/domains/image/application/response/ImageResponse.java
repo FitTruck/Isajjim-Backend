@@ -1,7 +1,10 @@
 package kr.co.isajjim.domains.image.application.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import kr.co.isajjim.domains.furniture.FurnitureResponse;
 import lombok.Builder;
+
+import java.util.List;
 
 @Builder
 public record ImageResponse(
@@ -10,6 +13,8 @@ public record ImageResponse(
         Long imageId,
 
         @Schema(description = "이미지 URL", example = "https://example.com/image1.jpg")
-        String imageUrl
+        String imageUrl,
+
+        List<FurnitureResponse> furnitureList
 ) {
 }
