@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 @RequiredArgsConstructor
-public enum CommonResponseCode implements BaseResponseCode {
+public enum ResponseCode {
 
     // 2xx Success
     OK(HttpStatus.OK, "OK", "요청이 성공적으로 처리되었습니다."),

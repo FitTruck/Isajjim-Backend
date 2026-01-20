@@ -8,7 +8,7 @@ import io.swagger.v3.oas.models.responses.ApiResponse;
 import io.swagger.v3.oas.models.responses.ApiResponses;
 import kr.co.isajjim.global.annotation.swagger.ApiErrorResponseExplanation;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
-import kr.co.isajjim.global.common.BaseResponseCode;
+import kr.co.isajjim.global.common.ResponseCode;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.stereotype.Component;
@@ -47,25 +47,17 @@ public class ApiErrorResponseHandler {
     }
 
     private ExampleHolder createExampleHolder(ApiErrorResponseExplanation apiErrorResponseExample) {
-        Class<? extends BaseResponseCode> enumClass = apiErrorResponseExample.exceptionCode();
-        BaseResponseCode[] codes = enumClass.getEnumConstants();
-
-        if (codes != null && codes.length > 0) {
-            BaseResponseCode responseCode = codes[0];
-
-            return ExampleHolder.builder()
-                    .httpStatusCode(responseCode.getStatus().value())
-                    .name(((Enum<?>) responseCode).name())
-                    .errorCode(responseCode.getCode())
-                    .description(responseCode.getMessage())
-                    .holder(createSwaggerExample(responseCode, responseCode.getMessage()))
-                    .build();
-        }
-
-        return null;
+        ResponseCode responseCode = apiErrorResponseExample.exceptionCode();
+        return ExampleHolder.builder()
+                .httpStatusCode(responseCode.getStatus().value())
+                .name(responseCode.name())
+                .errorCode(responseCode.getCode())
+                .description(responseCode.getMessage())
+                .holder(createSwaggerExample(responseCode, responseCode.getMessage()))
+                .build();
     }
 
-    private Example createSwaggerExample(BaseResponseCode responseCode, String description) {
+    private Example createSwaggerExample(ResponseCode responseCode, String description) {
         kr.co.isajjim.global.common.ApiResponse<Object> apiResponse
                 = kr.co.isajjim.global.common.ApiResponse.ofFail(responseCode);
 

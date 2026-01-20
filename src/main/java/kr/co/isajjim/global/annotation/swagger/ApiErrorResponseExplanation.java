@@ -1,6 +1,6 @@
 package kr.co.isajjim.global.annotation.swagger;
 
-import kr.co.isajjim.global.common.BaseResponseCode;
+import kr.co.isajjim.global.common.ResponseCode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiErrorResponseExplanation {
-    Class<? extends BaseResponseCode> exceptionCode();
+    ResponseCode exceptionCode();
 }

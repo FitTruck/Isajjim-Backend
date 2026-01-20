@@ -1,6 +1,6 @@
 package kr.co.isajjim.global.annotation.swagger;
 
-import kr.co.isajjim.global.common.CommonResponseCode;
+import kr.co.isajjim.global.common.ResponseCode;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ApiSuccessResponseExplanation {
-    CommonResponseCode responseCode() default CommonResponseCode.OK;
+    ResponseCode responseCode() default ResponseCode.OK;
 
 	Class<?> responseClass() default EmptyClass.class;
 
