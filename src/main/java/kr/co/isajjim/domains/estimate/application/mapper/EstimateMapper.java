@@ -1,6 +1,7 @@
 package kr.co.isajjim.domains.estimate.application.mapper;
 
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
+import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
@@ -40,5 +41,11 @@ public class EstimateMapper {
                 .category(estimateItem.getCategory())
                 .itemType(estimateItem.getType())
                 .build();
+    }
+
+    public static EstimateItemListResponse toEstimateItemListResponse(
+            List<EstimateItemResponse> items
+    ) {
+        return EstimateItemListResponse.toEstimateItemListResponse(items);
     }
 }

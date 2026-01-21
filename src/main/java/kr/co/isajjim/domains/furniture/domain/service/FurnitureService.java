@@ -5,6 +5,8 @@ import kr.co.isajjim.domains.furniture.persistence.entity.Furniture;
 import kr.co.isajjim.domains.furniture.persistence.repository.FurnitureRepository;
 import kr.co.isajjim.domains.image.domain.service.ImageService;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +26,17 @@ public class FurnitureService {
         for (AIAnalysisResponse.ImageResult result : imageResults) {
             saveFurniturePerImage(result);
         }
+    }
+
+    public void updateFurnitureQuantity(Long furnitureId, Integer quantity) {
+        Furniture furniture = getOrThrow(furnitureId);
+        furniture.updateQuantity(quantity);
+    }
+
+    /* HELPER METHOD */
+    private Furniture getOrThrow(Long id) {
+        return furnitureRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND));
     }
 
     private void saveFurniturePerImage(AIAnalysisResponse.ImageResult result) {

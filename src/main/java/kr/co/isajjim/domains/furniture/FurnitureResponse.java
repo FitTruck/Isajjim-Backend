@@ -18,6 +18,6 @@ public record FurnitureResponse(
         FurnitureType type,
 
         @Schema(description = "개수", example = "1")
-        Integer count
+        Integer quantity
 ) {
 }

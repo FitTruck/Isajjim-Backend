@@ -42,7 +42,7 @@ public class Furniture {
 
     private Double ratioDepth;
 
-    private Integer count;
+    private Integer quantity;
 
     @Builder
     private Furniture(
@@ -54,7 +54,7 @@ public class Furniture {
         Double ratioWidth,
         Double ratioHeight,
         Double ratioDepth,
-        Integer count
+        Integer quantity
     ) {
         this.label = label;
         this.type = type;
@@ -64,7 +64,7 @@ public class Furniture {
         this.ratioWidth = ratioWidth;
         this.ratioHeight = ratioHeight;
         this.ratioDepth = ratioDepth;
-        this.count = count;
+        this.quantity = quantity;
     }
 
     public void setImage(Image image) {
@@ -72,5 +72,9 @@ public class Furniture {
         if (!image.getFurnitures().contains(this)) {
             image.getFurnitures().add(this);
         }
+    }
+
+    public void updateQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

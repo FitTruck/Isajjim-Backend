@@ -16,7 +16,7 @@ public class FurnitureMapper {
                 .ratioWidth(info.ratio().w())
                 .ratioDepth(info.ratio().d())
                 .ratioHeight(info.ratio().h())
-                .count(1)
+                .quantity(1)
                 .build();
     }
 
@@ -27,7 +27,7 @@ public class FurnitureMapper {
                 .furnitureId(furniture.getId())
                 .label(furniture.getLabel())
                 .type(furniture.getType())
-                .count(furniture.getCount())
+                .quantity(furniture.getQuantity())
                 .build();
     }
 }
