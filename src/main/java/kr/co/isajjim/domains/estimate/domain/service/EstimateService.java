@@ -64,6 +64,6 @@ public class EstimateService {
     /* HELPER METHOD */
     private Estimate getOrThrow(Long id) {
         return estimateRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_ESTIMATE));
     }
 }

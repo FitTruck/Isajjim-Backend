@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.exception.BaseException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -42,7 +44,7 @@ public class Furniture {
 
     private Double ratioDepth;
 
-    private Integer count;
+    private Integer quantity;
 
     @Builder
     private Furniture(
@@ -54,7 +56,7 @@ public class Furniture {
         Double ratioWidth,
         Double ratioHeight,
         Double ratioDepth,
-        Integer count
+        Integer quantity
     ) {
         this.label = label;
         this.type = type;
@@ -64,13 +66,23 @@ public class Furniture {
         this.ratioWidth = ratioWidth;
         this.ratioHeight = ratioHeight;
         this.ratioDepth = ratioDepth;
-        this.count = count;
+        this.quantity = quantity;
     }
 
     public void setImage(Image image) {
         this.image = image;
         if (!image.getFurnitures().contains(this)) {
             image.getFurnitures().add(this);
+        }
+    }
+
+    public void updateQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
+
+    public void validateBelongsTo(Long estimateId) {
+        if (!this.image.getEstimate().getId().equals(estimateId)) {
+            throw new BaseException(ResponseCode.INVALID_FURNITURE_ESTIMATE_ASSOCIATION);
         }
     }
 }

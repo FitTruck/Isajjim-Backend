@@ -1,9 +1,11 @@
 package kr.co.isajjim.domains.estimate.presentation.controller;
 
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
+import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
 import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
@@ -37,6 +39,17 @@ public class EstimateController implements EstimateApi {
     ) {
         estimateUseCase.updateDefaultInfo(estimateId, request);
         EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
+    @PatchMapping("/{estimateId}/furniture")
+    public ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
+            @PathVariable Long estimateId,
+            @RequestBody @Valid EstimateItemUpdateRequest request
+    ) {
+        estimateUseCase.updateFurniture(estimateId, request);
+        EstimateItemListResponse response = estimateUseCase.getItemList(estimateId);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 }

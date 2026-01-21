@@ -3,14 +3,19 @@ package kr.co.isajjim.domains.estimate.presentation.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
+import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
+import kr.co.isajjim.global.annotation.swagger.ApiErrorResponseExplanation;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
+import kr.co.isajjim.global.common.ResponseCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -45,5 +50,25 @@ public interface EstimateApi {
     ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
+    );
+
+
+    @Operation(
+            summary = "가구 수량 조정 및 실시간 견적 조회",
+            description = "‘견적서 기본 정보 입력’에서 응답받은 가구 목록을 사용자가 수정하여 실시간으로 견적을 조회합니다."
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = EstimateItemListResponse.class,
+                    description = "수정 성공"
+            ),
+            errors = {
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_FURNITURE_ESTIMATE_ASSOCIATION)
+            }
+    )
+    @PatchMapping("/{estimateId}/furniture")
+    ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
+            @PathVariable Long estimateId,
+            @RequestBody @Valid EstimateItemUpdateRequest request
     );
 }
