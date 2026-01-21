@@ -30,7 +30,7 @@ public class ImageService {
     /* HELPER METHOD */
     private Image getOrThrow(Long id) {
         return imageRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_IMAGE));
     }
 
     public List<Image> getAllByEstimateId(Long estimateId) {

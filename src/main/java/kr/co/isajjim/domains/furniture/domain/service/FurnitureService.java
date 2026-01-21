@@ -37,7 +37,7 @@ public class FurnitureService {
     /* HELPER METHOD */
     private Furniture getOrThrow(Long id) {
         return furnitureRepository.findById(id)
-                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_FURNITURE));
     }
 
     private void saveFurniturePerImage(AIAnalysisResponse.ImageResult result) {
