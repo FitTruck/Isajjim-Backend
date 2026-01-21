@@ -82,7 +82,7 @@ public class Furniture {
 
     public void validateBelongsTo(Long estimateId) {
         if (!this.image.getEstimate().getId().equals(estimateId)) {
-            throw new BaseException(ResponseCode.NOT_FOUND_ESTIMATE);
+            throw new BaseException(ResponseCode.INVALID_FURNITURE_ESTIMATE_ASSOCIATION);
         }
     }
 }
