@@ -25,7 +25,7 @@ public class EstimateController implements EstimateApi {
     public ResponseEntity<ApiResponse<EstimateResponse>> createEstimate(
             @RequestBody @Valid EstimateRequest request
     ) {
-        Long savedId = estimateUseCase.createEstimate(request);
+        Long savedId = estimateUseCase.createAndAnalyze(request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, EstimateResponse.from(savedId)));
     }
 

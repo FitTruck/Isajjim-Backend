@@ -1,7 +1,6 @@
 package kr.co.isajjim.domains.image.persistence.entity;
 
 import jakarta.persistence.*;
-import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.furniture.persistence.entity.Furniture;
 import kr.co.isajjim.global.base.entity.BaseEntity;
@@ -26,9 +25,6 @@ public class Image extends BaseEntity {
 
     private String imageUrl;
 
-    @Enumerated(EnumType.STRING)
-    private AIStatus status;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estimate_id")
     private Estimate estimate;
@@ -41,7 +37,6 @@ public class Image extends BaseEntity {
             String imageUrl
     ) {
         this.imageUrl = imageUrl;
-        this.status = AIStatus.PENDING;
     }
 
     public void setEstimate(Estimate estimate) {

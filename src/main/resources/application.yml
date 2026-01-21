@@ -8,3 +8,11 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: update
+
+rest-client:
+  connect-timeout: 5
+  read-timeout: 30
+
+infra:
+  ai:
+    base-url: ${AI_BASE_URL}

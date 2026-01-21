@@ -30,19 +30,17 @@ public class Furniture {
     @Enumerated(EnumType.STRING)
     private FurnitureType type;
 
-    private Integer width;
+    private Double width;
 
-    private Integer height;
+    private Double height;
 
-    private Integer depth;
+    private Double depth;
 
-    private Integer volume;
+    private Double ratioWidth;
 
-    private Integer ratioWidth;
+    private Double ratioHeight;
 
-    private Integer ratioHeight;
-
-    private Integer ratioDepth;
+    private Double ratioDepth;
 
     private Integer count;
 
@@ -50,13 +48,12 @@ public class Furniture {
     private Furniture(
         FurnitureLabel label,
         FurnitureType type,
-        Integer width,
-        Integer height,
-        Integer depth,
-        Integer volume,
-        Integer ratioWidth,
-        Integer ratioHeight,
-        Integer ratioDepth,
+        Double width,
+        Double height,
+        Double depth,
+        Double ratioWidth,
+        Double ratioHeight,
+        Double ratioDepth,
         Integer count
     ) {
         this.label = label;
@@ -64,7 +61,6 @@ public class Furniture {
         this.width = width;
         this.height = height;
         this.depth = depth;
-        this.volume = volume;
         this.ratioWidth = ratioWidth;
         this.ratioHeight = ratioHeight;
         this.ratioDepth = ratioDepth;
