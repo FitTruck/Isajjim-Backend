@@ -31,16 +31,13 @@ public enum ResponseCode {
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON-007", "서버 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
 
 
-    /*    FURNITURE    */
-    INVALID_FURNITURE_ESTIMATE_ASSOCIATION(HttpStatus.BAD_REQUEST, "FURNITURE-001", "가구가 해당 견적서에 해당하지 않습니다."),
-
-
     /*    ESTIMATE    */
     NOT_FOUND_ESTIMATE(HttpStatus.NOT_FOUND, "ESTIMATE-001", "요청 견적서 ID를 찾을 수 없습니다."),
 
 
     /*    Furniture    */
     NOT_FOUND_FURNITURE(HttpStatus.NOT_FOUND, "FURNITURE-001", "요청 가구 ID를 찾을 수 없습니다."),
+    INVALID_FURNITURE_ESTIMATE_ASSOCIATION(HttpStatus.BAD_REQUEST, "FURNITURE-002", "가구가 해당 견적서에 해당하지 않습니다."),
 
 
     /*    Image    */
