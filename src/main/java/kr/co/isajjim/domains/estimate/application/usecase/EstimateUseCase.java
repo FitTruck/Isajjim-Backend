@@ -6,11 +6,13 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
-import kr.co.isajjim.domains.image.application.mapper.ImageMapper;
-import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.global.annotation.UseCase;
+import kr.co.isajjim.infra.ai.domain.service.AIService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @UseCase
 @RequiredArgsConstructor
@@ -18,18 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 public class EstimateUseCase {
 
     private final EstimateService estimateService;
+    private final AIService aiService;
 
     @Transactional
-    public Long createEstimate(EstimateRequest request) {
-        Estimate estimate = EstimateMapper.toEstimate();
-        request.imageUrls()
-                .forEach(imageUrl -> {
-                            Image image = ImageMapper.toImage(imageUrl);
-                            estimate.addImage(image);
-                        }
-                );
+    public Long createAndAnalyze(EstimateRequest request) {
+        Long estimateId = estimateService.createEstimate(request);
 
-        return estimateService.createEstimate(estimate);
+        List<ImageAnalysisDto> imageDtos = estimateService.getImageDtos(estimateId);
+        aiService.analyzeFurniture(estimateId, imageDtos);
+
+        return estimateId;
     }
 
     public EstimateDetailResponse getDetailEstimates(Long estimateId) {

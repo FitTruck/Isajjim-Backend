@@ -12,3 +12,7 @@ spring:
 rest-client:
   connect-timeout: 5
   read-timeout: 30
+
+infra:
+  ai:
+    base-url: ${AI_BASE_URL}

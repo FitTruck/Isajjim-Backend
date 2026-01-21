@@ -114,4 +114,8 @@ public class Estimate extends BaseEntity {
         this.groundStair = (groundStair != null) ? groundStair : this.groundStair;
         this.parking = (parking != null) ? parking : this.parking;
     }
+
+    public void updateAIStatus(AIStatus aiStatus) {
+        this.aiStatus = aiStatus;
+    }
 }
