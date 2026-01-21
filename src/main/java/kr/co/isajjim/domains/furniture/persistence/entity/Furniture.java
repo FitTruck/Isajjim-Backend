@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.exception.BaseException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -76,5 +78,11 @@ public class Furniture {
 
     public void updateQuantity(Integer quantity) {
         this.quantity = quantity;
+    }
+
+    public void validateBelongsTo(Long estimateId) {
+        if (!this.image.getEstimate().getId().equals(estimateId)) {
+            throw new BaseException(ResponseCode.NOT_FOUND_ESTIMATE);
+        }
     }
 }

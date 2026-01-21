@@ -16,6 +16,7 @@ public enum ResponseCode {
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "COMMON-001", "잘못된 요청입니다."),
     INVALID_METHOD_ARGUMENT(HttpStatus.BAD_REQUEST, "COMMON-002", "올바르지 않은 요청 형식입니다."),
     DATA_INTEGRITY_VIOLATION(HttpStatus.BAD_REQUEST, "COMMON-003", "데이터 무결성 제약 조건을 위반하였습니다."),
+    INVALID_FURNITURE_ESTIMATE_ASSOCIATION(HttpStatus.BAD_REQUEST, "FURNITURE-001", "가구가 해당 견적서에 해당하지 않습니다."),
 
     // 403 Forbidden
     FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON-004", "요청 리소스에 대한 접근 권한이 없습니다."),

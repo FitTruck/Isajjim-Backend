@@ -28,8 +28,9 @@ public class FurnitureService {
         }
     }
 
-    public void updateFurnitureQuantity(Long furnitureId, Integer quantity) {
+    public void updateFurnitureQuantity(Long estimateId, Long furnitureId, Integer quantity) {
         Furniture furniture = getOrThrow(furnitureId);
+        furniture.validateBelongsTo(estimateId);
         furniture.updateQuantity(quantity);
     }
 

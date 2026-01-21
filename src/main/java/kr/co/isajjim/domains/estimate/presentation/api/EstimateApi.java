@@ -9,9 +9,11 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
+import kr.co.isajjim.global.annotation.swagger.ApiErrorResponseExplanation;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
+import kr.co.isajjim.global.common.ResponseCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -59,7 +61,10 @@ public interface EstimateApi {
             success = @ApiSuccessResponseExplanation(
                     responseClass = EstimateItemListResponse.class,
                     description = "수정 성공"
-            )
+            ),
+            errors = {
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_FURNITURE_ESTIMATE_ASSOCIATION)
+            }
     )
     @PatchMapping("/{estimateId}/furniture")
     ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(

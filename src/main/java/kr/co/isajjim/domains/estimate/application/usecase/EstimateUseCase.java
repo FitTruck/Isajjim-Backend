@@ -58,7 +58,7 @@ public class EstimateUseCase {
     }
 
     @Transactional
-    public void updateFurniture(EstimateItemUpdateRequest request) {
-        furnitureService.updateFurnitureQuantity(request.furnitureId(), request.quantity());
+    public void updateFurniture(Long estimateId, EstimateItemUpdateRequest request) {
+        furnitureService.updateFurnitureQuantity(estimateId, request.furnitureId(), request.quantity());
     }
 }

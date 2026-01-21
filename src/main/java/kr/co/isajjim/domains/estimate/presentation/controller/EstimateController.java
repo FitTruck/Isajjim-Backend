@@ -48,7 +48,7 @@ public class EstimateController implements EstimateApi {
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateItemUpdateRequest request
     ) {
-        estimateUseCase.updateFurniture(request);
+        estimateUseCase.updateFurniture(estimateId, request);
         EstimateItemListResponse response = estimateUseCase.getItemList(estimateId);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
