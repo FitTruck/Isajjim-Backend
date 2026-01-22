@@ -43,6 +43,15 @@ public class EstimateController implements EstimateApi {
     }
 
     @Override
+    @GetMapping("/{estimateId}")
+    public ResponseEntity<ApiResponse<EstimateDetailResponse>> getEstimate(
+            @PathVariable Long estimateId
+    ) {
+        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
     @PatchMapping("/{estimateId}/furniture")
     public ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
             @PathVariable Long estimateId,
