@@ -19,15 +19,15 @@ public record AIAnalysisResponse(
             FurnitureLabel label,
             Double width,
             Double depth,
-            Double height,
-            FurnitureRatio ratio
+            Double height
+//            FurnitureRatio ratio
     ) {
     }
-
-    public record FurnitureRatio(
-            Double w,
-            Double d,
-            Double h
-    ) {
-    }
+//
+//    public record FurnitureRatio(
+//            Double w,
+//            Double d,
+//            Double h
+//    ) {
+//    }
 }

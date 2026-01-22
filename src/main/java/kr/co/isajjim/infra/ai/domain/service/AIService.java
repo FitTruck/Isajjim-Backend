@@ -60,15 +60,15 @@ public class AIService {
         AIAnalysisResponse.ImageResult image1 = new AIAnalysisResponse.ImageResult(
                 imageId1,
                 List.of(
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, 30.5, 20.0, 15.2, new AIAnalysisResponse.FurnitureRatio(0.2, 0.3, 0.4)),
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.TV, 210.0, 90.0, 85.0, new AIAnalysisResponse.FurnitureRatio(0.2, 0.3, 0.4))
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, 30.5, 20.0, 15.2),
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.TV, 210.0, 90.0, 85.0)
                 )
         );
 
         AIAnalysisResponse.ImageResult image2 = new AIAnalysisResponse.ImageResult(
                 imageId2,
                 List.of(
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.TV, 45.0, 50.0, 90.0, new AIAnalysisResponse.FurnitureRatio(0.2, 0.3, 0.4))
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.TV, 45.0, 50.0, 90.0)
                 )
         );
 

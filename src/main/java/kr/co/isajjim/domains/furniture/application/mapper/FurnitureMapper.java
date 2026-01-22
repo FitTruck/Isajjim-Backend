@@ -13,9 +13,9 @@ public class FurnitureMapper {
                 .width(info.width())
                 .depth(info.depth())
                 .height(info.height())
-                .ratioWidth(info.ratio().w())
-                .ratioDepth(info.ratio().d())
-                .ratioHeight(info.ratio().h())
+//                .ratioWidth(info.ratio().w())
+//                .ratioDepth(info.ratio().d())
+//                .ratioHeight(info.ratio().h())
                 .quantity(1)
                 .build();
     }
