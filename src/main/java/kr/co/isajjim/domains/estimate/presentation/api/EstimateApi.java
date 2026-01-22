@@ -52,6 +52,20 @@ public interface EstimateApi {
             @RequestBody @Valid EstimateUpdateRequest request
     );
 
+    @Operation(
+            summary = "견적서 조회",
+            description = "[견적서 기본 정보 입력]에서 aiStatus이 COMPLETED가 아닌 경우 일정 시간 대기 후 해당 API를 호출하여 동일한 응답을 반환합니다."
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = EstimateDetailResponse.class,
+                    description = "조회 성공"
+            )
+    )
+    ResponseEntity<ApiResponse<EstimateDetailResponse>> getEstimate(
+            @PathVariable Long estimateId
+    );
+
 
     @Operation(
             summary = "가구 수량 조정 및 실시간 견적 조회",
