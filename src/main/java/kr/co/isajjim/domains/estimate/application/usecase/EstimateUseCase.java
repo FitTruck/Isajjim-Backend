@@ -7,14 +7,15 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
+import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
 import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.global.annotation.UseCase;
-import kr.co.isajjim.infra.ai.domain.service.AIService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,14 +27,14 @@ public class EstimateUseCase {
 
     private final FurnitureService furnitureService;
     private final EstimateService estimateService;
-    private final AIService aiService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
     public Long createAndAnalyze(EstimateRequest request) {
         Long estimateId = estimateService.createEstimate(request);
 
         List<ImageAnalysisDto> imageDtos = estimateService.getImageDtos(estimateId);
-        aiService.analyzeFurniture(estimateId, imageDtos);
+        eventPublisher.publishEvent(new EstimateCreatedEvent(estimateId, imageDtos));
 
         return estimateId;
     }
