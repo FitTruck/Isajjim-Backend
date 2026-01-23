@@ -7,6 +7,7 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
+import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
@@ -14,6 +15,7 @@ import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
 import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.global.annotation.UseCase;
+import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,5 +63,11 @@ public class EstimateUseCase {
     @Transactional
     public void updateFurniture(Long estimateId, EstimateItemUpdateRequest request) {
         furnitureService.updateFurnitureQuantity(estimateId, request.furnitureId(), request.quantity());
+    }
+
+    @Transactional
+    public void saveFurnitureList(Long estimateId, AIAnalysisResponse request) {
+        furnitureService.saveFurnitureList(request.results());
+        estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
     }
 }
