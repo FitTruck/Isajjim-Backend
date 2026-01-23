@@ -41,6 +41,11 @@ public class EstimateService {
                 .toList();
     }
 
+    public boolean isAIProcessingCompleted(Long estimateId) {
+        Estimate estimate = getOrThrow(estimateId);
+        return estimate.getAiStatus() == AIStatus.COMPLETED;
+    }
+
     public void updateDefaultInfo(Estimate estimate, EstimateUpdateRequest request) {
         estimate.updateEstimate(
                 request.buildingType(),
