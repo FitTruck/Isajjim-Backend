@@ -26,6 +26,9 @@ public class AIService {
     @Value("${infra.ai.base-url}")
     private String url;
 
+    @Value("${infra.ai.use-server}")
+    private Boolean aiServerOn;
+
     private final RestClient restClient;
     private final EstimateService estimateService;
     private final EstimateNotificationService notificationService;
@@ -37,11 +40,13 @@ public class AIService {
             requestBody.put("estimate_id", estimateId);
             requestBody.put("image_urls", images);
 
-            restClient.post()
-                    .uri(url + "/analyze-furniture")
-                    .body(requestBody)
-                    .retrieve()
-                    .body(AIAnalysisResponse.class);
+            if (aiServerOn) {
+                restClient.post()
+                        .uri(url + "/analyze-furniture")
+                        .body(requestBody)
+                        .retrieve()
+                        .body(AIAnalysisResponse.class);
+            }
 
             // Sse 알림 전송;
             notificationService.sendNotify(estimateId);
