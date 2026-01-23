@@ -13,6 +13,7 @@ public class FurnitureMapper {
                 .width(info.width())
                 .depth(info.depth())
                 .height(info.height())
+                .volume(info.volume())
 //                .ratioWidth(info.ratio().w())
 //                .ratioDepth(info.ratio().d())
 //                .ratioHeight(info.ratio().h())

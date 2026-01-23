@@ -38,6 +38,8 @@ public class Furniture {
 
     private Double depth;
 
+    private Double volume;
+
     private Double ratioWidth;
 
     private Double ratioHeight;
@@ -53,6 +55,7 @@ public class Furniture {
         Double width,
         Double height,
         Double depth,
+        Double volume,
         Double ratioWidth,
         Double ratioHeight,
         Double ratioDepth,
@@ -63,6 +66,7 @@ public class Furniture {
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.volume = volume;
         this.ratioWidth = ratioWidth;
         this.ratioHeight = ratioHeight;
         this.ratioDepth = ratioDepth;
