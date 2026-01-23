@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.global.base.entity.BaseEntity;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "furniture")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Furniture {
+public class Furniture extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
