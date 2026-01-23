@@ -12,8 +12,10 @@ import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/api/v1/estimates")
@@ -33,13 +35,20 @@ public class EstimateController implements EstimateApi {
 
     @Override
     @PatchMapping("/{estimateId}")
-    public ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
+    public ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
     ) {
         estimateUseCase.updateDefaultInfo(estimateId, request);
-        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
-        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @GetMapping(value = "/{estimateId}/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public SseEmitter getEstimateSSE(
+            @PathVariable Long estimateId
+    ) {
+        return estimateUseCase.subscribe(estimateId);
     }
 
     @Override

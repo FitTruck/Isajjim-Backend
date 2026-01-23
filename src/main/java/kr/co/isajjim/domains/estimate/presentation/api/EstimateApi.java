@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Tag(name = "Estimate", description = "견적서 API")
 public interface EstimateApi {
@@ -43,13 +44,26 @@ public interface EstimateApi {
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
-                    responseClass = EstimateDetailResponse.class,
                     description = "수정 성공"
             )
     )
-    ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
+    ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
+    );
+
+    @Operation(
+            summary = "견적서 조회 구독(SSE)",
+            description = "성공 응답이 오는 경우에 견적서 조회 API를 호출합니다."
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = SseEmitter.class,
+                    description = "조회 성공"
+            )
+    )
+    SseEmitter getEstimateSSE(
+            @PathVariable Long estimateId
     );
 
     @Operation(

@@ -8,6 +8,7 @@ import kr.co.isajjim.domains.estimate.application.response.EstimateDetailRespons
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
 import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
+import kr.co.isajjim.domains.estimate.domain.service.EstimateNotificationService;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
@@ -17,6 +18,7 @@ import kr.co.isajjim.global.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class EstimateUseCase {
 
     private final FurnitureService furnitureService;
     private final EstimateService estimateService;
+    private final EstimateNotificationService notificationService;
     private final ApplicationEventPublisher eventPublisher;
 
     @Transactional
@@ -61,5 +64,16 @@ public class EstimateUseCase {
     @Transactional
     public void updateFurniture(Long estimateId, EstimateItemUpdateRequest request) {
         furnitureService.updateFurnitureQuantity(estimateId, request.furnitureId(), request.quantity());
+    }
+
+    public SseEmitter subscribe(Long estimateId) {
+        SseEmitter emitter = notificationService.createConnection(estimateId);
+
+        // AI 처리가 완료된 경우 즉시 알림 전송
+        if (estimateService.isAIProcessingCompleted(estimateId)) {
+            notificationService.sendNotify(estimateId);
+        }
+
+        return emitter;
     }
 }
