@@ -86,6 +86,12 @@ public class EstimateUseCase {
         return emitter;
     }
 
+    @Transactional
+    public void saveFurnitureList(Long estimateId, AIAnalysisResponse request) {
+        furnitureService.saveFurnitureList(request.results());
+        estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
+    }
+
     private AIAnalysisResponse getMockData(Long imageId1, Long imageId2) {
         AIAnalysisResponse.ImageResult image1 = new AIAnalysisResponse.ImageResult(
                 imageId1,
