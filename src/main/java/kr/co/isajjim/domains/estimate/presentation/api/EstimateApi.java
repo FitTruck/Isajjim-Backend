@@ -14,6 +14,7 @@ import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,5 +85,13 @@ public interface EstimateApi {
     ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateItemUpdateRequest request
+    );
+
+    @Operation(
+            summary = "AI Callback API"
+    )
+    ResponseEntity<ApiResponse<Void>> aiCallback(
+            @PathVariable Long estimateId,
+            @RequestBody AIAnalysisResponse request
     );
 }

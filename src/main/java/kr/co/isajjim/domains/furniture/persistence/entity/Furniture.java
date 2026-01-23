@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.global.base.entity.BaseEntity;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import lombok.AccessLevel;
@@ -15,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Table(name = "furniture")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Furniture {
+public class Furniture extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,6 +39,8 @@ public class Furniture {
 
     private Double depth;
 
+    private Double volume;
+
     private Double ratioWidth;
 
     private Double ratioHeight;
@@ -53,6 +56,7 @@ public class Furniture {
         Double width,
         Double height,
         Double depth,
+        Double volume,
         Double ratioWidth,
         Double ratioHeight,
         Double ratioDepth,
@@ -63,6 +67,7 @@ public class Furniture {
         this.width = width;
         this.height = height;
         this.depth = depth;
+        this.volume = volume;
         this.ratioWidth = ratioWidth;
         this.ratioHeight = ratioHeight;
         this.ratioDepth = ratioDepth;

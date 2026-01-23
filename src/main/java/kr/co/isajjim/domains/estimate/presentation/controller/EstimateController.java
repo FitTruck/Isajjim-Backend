@@ -11,6 +11,7 @@ import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
 import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,5 +61,15 @@ public class EstimateController implements EstimateApi {
         estimateUseCase.updateFurniture(estimateId, request);
         EstimateItemListResponse response = estimateUseCase.getItemList(estimateId);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
+    @PostMapping("/{estimateId}/callback")
+    public ResponseEntity<ApiResponse<Void>> aiCallback(
+            @PathVariable Long estimateId,
+            @RequestBody AIAnalysisResponse request
+    ) {
+        estimateUseCase.saveFurnitureList(estimateId, request);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 }
