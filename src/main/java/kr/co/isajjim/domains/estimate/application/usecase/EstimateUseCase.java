@@ -100,7 +100,7 @@ public class EstimateUseCase {
                 id,
                 List.of(
                         new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, 30.5, 20.0, 15.2, 1.0),
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.TV, 210.0, 90.0, 85.0, 1.0)
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.AIR_CONDITIONER, 210.0, 90.0, 85.0, 1.0)
                 )
         )).toList();
 
