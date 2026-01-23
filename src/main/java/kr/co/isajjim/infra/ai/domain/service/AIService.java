@@ -8,6 +8,7 @@ import kr.co.isajjim.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
@@ -37,9 +38,15 @@ public class AIService {
             requestBody.put("image_urls", images);
 
             if (aiServerOn) {
-                restClient.post()
+                ResponseEntity<Void> response = restClient.post()
                         .uri(url + "/analyze-furniture")
-                        .body(requestBody);
+                        .body(requestBody)
+                        .retrieve()
+                        .toBodilessEntity();
+
+                if (response.getStatusCode().is2xxSuccessful()) {
+                    log.info("AI 서버 요청 성공");
+                }
             }
         } catch (Exception e) {
             log.error("AI 분석 중 오류 발생: {}", e.getMessage());
