@@ -3,6 +3,7 @@ package kr.co.isajjim.infra.ai.domain.service;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateNotificationService;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
+import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
@@ -31,7 +32,7 @@ public class AIService {
 
     public void analyzeFurniture(Long estimateId, List<ImageAnalysisDto> images) {
         try {
-            estimateService.updateAIStatus(estimateId, AIStatus.PROCESSING)
+            estimateService.updateAIStatus(estimateId, AIStatus.PROCESSING);
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("estimate_id", estimateId);
             requestBody.put("image_urls", images);
@@ -40,7 +41,7 @@ public class AIService {
                     .uri(url + "/analyze-furniture")
                     .body(requestBody)
                     .retrieve()
-                    .body(AIAnalysisResponse.class)
+                    .body(AIAnalysisResponse.class);
 
             // Sse 알림 전송;
             notificationService.sendNotify(estimateId);
