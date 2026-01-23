@@ -35,12 +35,15 @@ public class EstimateController implements EstimateApi {
 
     @Override
     @PatchMapping("/{estimateId}")
-    public ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
+//    public ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
+    public ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
     ) {
         estimateUseCase.updateDefaultInfo(estimateId, request);
-        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+//        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 
     @Override

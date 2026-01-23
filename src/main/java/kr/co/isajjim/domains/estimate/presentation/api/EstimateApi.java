@@ -44,10 +44,13 @@ public interface EstimateApi {
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
+                    //todo 추후 삭제
+                    responseClass = EstimateDetailResponse.class,
                     description = "수정 성공"
             )
     )
-    ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
+//    ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
+    ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
     );
@@ -68,7 +71,7 @@ public interface EstimateApi {
 
     @Operation(
             summary = "견적서 조회",
-            description = "[견적서 기본 정보 입력]에서 aiStatus이 COMPLETED가 아닌 경우 일정 시간 대기 후 해당 API를 호출하여 동일한 응답을 반환합니다."
+            description = "견적서 조회 구독 후 COMPLETED 응답이 올 경우 호출합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
