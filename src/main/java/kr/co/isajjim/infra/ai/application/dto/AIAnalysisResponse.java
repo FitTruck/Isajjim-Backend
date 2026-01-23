@@ -19,7 +19,8 @@ public record AIAnalysisResponse(
             FurnitureLabel label,
             Double width,
             Double depth,
-            Double height
+            Double height,
+            Double volume
 //            FurnitureRatio ratio
     ) {
     }

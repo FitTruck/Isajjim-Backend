@@ -31,7 +31,7 @@ public class AIService {
 
     public void analyzeFurniture(Long estimateId, List<ImageAnalysisDto> images) {
         try {
-            estimateService.updateAIStatus(estimateId, AIStatus.PROCESSING);
+            estimateService.updateAIStatus(estimateId, AIStatus.PROCESSING)
             Map<String, Object> requestBody = new HashMap<>();
             requestBody.put("estimate_id", estimateId);
             requestBody.put("image_urls", images);
@@ -40,7 +40,7 @@ public class AIService {
                     .uri(url + "/analyze-furniture")
                     .body(requestBody)
                     .retrieve()
-                    .body(AIAnalysisResponse.class);
+                    .body(AIAnalysisResponse.class)
 
             // Sse 알림 전송;
             notificationService.sendNotify(estimateId);
