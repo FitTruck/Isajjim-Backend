@@ -1,13 +1,10 @@
 package kr.co.isajjim.infra.ai.domain.service;
 
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
-import kr.co.isajjim.domains.estimate.domain.service.EstimateNotificationService;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
-import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
-import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,7 +28,6 @@ public class AIService {
 
     private final RestClient restClient;
     private final EstimateService estimateService;
-    private final EstimateNotificationService notificationService;
 
     public void analyzeFurniture(Long estimateId, List<ImageAnalysisDto> images) {
         try {
@@ -43,13 +39,8 @@ public class AIService {
             if (aiServerOn) {
                 restClient.post()
                         .uri(url + "/analyze-furniture")
-                        .body(requestBody)
-                        .retrieve()
-                        .body(AIAnalysisResponse.class);
+                        .body(requestBody);
             }
-
-            // Sse 알림 전송;
-            notificationService.sendNotify(estimateId);
         } catch (Exception e) {
             log.error("AI 분석 중 오류 발생: {}", e.getMessage());
             estimateService.updateAIStatus(estimateId, AIStatus.FAILED);

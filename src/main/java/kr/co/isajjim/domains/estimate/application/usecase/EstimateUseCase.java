@@ -92,6 +92,7 @@ public class EstimateUseCase {
     public void saveFurnitureList(Long estimateId, AIAnalysisResponse request) {
         furnitureService.saveFurnitureList(request.results());
         estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
+        notificationService.sendNotify(estimateId);
     }
 
     private AIAnalysisResponse getMockData(List<Long> imageIds) {
