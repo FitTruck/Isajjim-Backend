@@ -12,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -43,14 +46,25 @@ public class FurnitureService {
     private void saveFurniturePerImage(AIAnalysisResponse.ImageResult result) {
         Image image = imageService.getImageById(result.imageId());
 
-        List<Furniture> furnitureList = result.objects().stream()
-                .map(info -> {
-                    Furniture furniture = FurnitureMapper.toFurniture(info);
-                    furniture.setImage(image);
-                    return furniture;
-                })
+        // 그룹핑하여 label과 type이 같은 것은 같은 가구로 계산
+        Map<String, Furniture> groupedMap = result.objects().stream()
+                .collect(Collectors.toMap(
+                        // Key : LABEL:TYPE
+                        info -> info.label() + ":" + (info.type() != null ? info.type() : "NONE"),
+                        // 초기 생성
+                        info -> FurnitureMapper.toFurniture(1, info),
+                        // 이미 있다면 수량 +1
+                        (existing, replacement) -> {
+                            existing.updateQuantity(existing.getQuantity() + 1);
+                            return existing;
+                        }
+                ));
+
+        List<Furniture> sortedList = groupedMap.values().stream()
+                .sorted(Comparator.comparing(f -> f.getLabel().name()))
+                .peek(f -> f.setImage(image))
                 .toList();
 
-        furnitureRepository.saveAll(furnitureList);
+        furnitureRepository.saveAll(sortedList);
     }
 }

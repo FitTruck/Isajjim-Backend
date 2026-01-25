@@ -14,6 +14,7 @@ import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
+import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
@@ -99,8 +100,11 @@ public class EstimateUseCase {
         List<AIAnalysisResponse.ImageResult> list = imageIds.stream().map(id -> new AIAnalysisResponse.ImageResult(
                 id,
                 List.of(
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, 30.5, 20.0, 15.2, 1.0),
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.AIR_CONDITIONER, 210.0, 90.0, 85.0, 1.0)
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, FurnitureType.BUNK_BED, 30.5, 20.0, 15.2, 1.0),
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, FurnitureType.DOUBLE_BED, 30.5, 20.0, 15.2, 1.0),
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.PIANO, FurnitureType.GRAND_PIANO, 210.0, 90.0, 85.0, 1.0),
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.PIANO, FurnitureType.DIGITAL_PIANO, 210.0, 90.0, 85.0, 1.0),
+                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BICYCLE, null, 210.0, 90.0, 85.0, 1.0)
                 )
         )).toList();
 
