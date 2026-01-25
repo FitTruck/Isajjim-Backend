@@ -2,6 +2,7 @@ package kr.co.isajjim.infra.ai.application.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
+import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public record AIAnalysisResponse(
 
     public record FurnitureInfo(
             FurnitureLabel label,
+            FurnitureType type,
             Double width,
             Double depth,
             Double height,
