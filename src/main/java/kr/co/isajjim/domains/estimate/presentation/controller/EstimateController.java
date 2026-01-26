@@ -43,8 +43,8 @@ public class EstimateController implements EstimateApi {
     ) {
         estimateUseCase.updateDefaultInfo(estimateId, request);
 //        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
-        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
-        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+//        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
     @Override

@@ -66,11 +66,11 @@ public class EstimateUseCase {
         estimateService.updateDefaultInfo(estimate, request);
 
         // 프론트 임시 Mock 데이터 반환을 위한 코드
-        List<Long> list = estimate.getImages().stream().map(Image::getId).toList();
-        AIAnalysisResponse response = getMockData(list);
+//        List<Long> list = estimate.getImages().stream().map(Image::getId).toList();
+//        AIAnalysisResponse response = getMockData(list);
 
-        furnitureService.saveFurnitureList(response.results());
-        estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
+//        furnitureService.saveFurnitureList(response.results());
+//        estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
     }
 
     @Transactional
