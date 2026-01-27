@@ -5,8 +5,8 @@ import jakarta.validation.Valid;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
+import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlListResponse;
 import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlRequest;
-import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -18,11 +18,11 @@ public interface GcsApi {
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
-                    responseClass = PresignedUrlResponse.class,
+                    responseClass = PresignedUrlListResponse.class,
                     description = "발급 성공"
             )
     )
-    ResponseEntity<ApiResponse<PresignedUrlResponse>> getPresignedUrl(
+    ResponseEntity<ApiResponse<PresignedUrlListResponse>> getPresignedUrl(
             @RequestBody @Valid PresignedUrlRequest request
     );
 }

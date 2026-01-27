@@ -3,8 +3,8 @@ package kr.co.isajjim.infra.google.gcs.presentation.controller;
 import jakarta.validation.Valid;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlListResponse;
 import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlRequest;
-import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlResponse;
 import kr.co.isajjim.infra.google.gcs.application.usecase.GcsUseCase;
 import kr.co.isajjim.infra.google.gcs.presentation.api.GcsApi;
 import lombok.RequiredArgsConstructor;
@@ -23,10 +23,10 @@ public class GcsController implements GcsApi {
 
     @Override
     @PostMapping("/presigned")
-    public ResponseEntity<ApiResponse<PresignedUrlResponse>> getPresignedUrl(
+    public ResponseEntity<ApiResponse<PresignedUrlListResponse>> getPresignedUrl(
             @RequestBody @Valid PresignedUrlRequest request
     ) {
-        PresignedUrlResponse signedUrl = gcsUseCase.generatePresignedUrl(request);
+        PresignedUrlListResponse signedUrl = gcsUseCase.generatePresignedUrl(request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, signedUrl));
     }
 }
