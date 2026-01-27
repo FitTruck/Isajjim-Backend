@@ -17,7 +17,6 @@ import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
-import kr.co.isajjim.domains.image.persistence.entity.Image;
 import kr.co.isajjim.global.annotation.UseCase;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
@@ -92,6 +91,7 @@ public class EstimateUseCase {
     @Transactional
     public void saveFurnitureList(Long estimateId, AIAnalysisResponse request) {
         furnitureService.saveFurnitureList(request.results());
+        estimateService.calculateTruck(estimateId);
         estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
         notificationService.sendNotify(estimateId);
     }
