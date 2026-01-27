@@ -14,7 +14,7 @@ public record PresignedUrlResponse(
         @Schema(description = "업로드 후 파일 접근 URL", example = "https://storage.googleapis.com/bucket-name/73af9_1.jpg")
         String fileUrl,
 
-        @Schema(description = "파일 고유 Key", example = "1/73af9_1.jpg")
+        @Schema(description = "파일 고유 Key", example = "73af9_1.jpg")
         String key
 ) {
 }

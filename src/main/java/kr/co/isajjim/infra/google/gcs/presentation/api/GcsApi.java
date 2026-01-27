@@ -1,6 +1,7 @@
 package kr.co.isajjim.infra.google.gcs.presentation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
@@ -10,6 +11,7 @@ import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 
+@Tag(name = "GCS", description = "GCS API")
 public interface GcsApi {
 
     @Operation(
