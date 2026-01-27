@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.estimate.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,6 +28,14 @@ public class EstimateItem {
     private ItemType type;
 
     private Integer quantity;
+
+    @Builder
+    public EstimateItem(Estimate estimate, ItemCategory category, ItemType type, Integer quantity) {
+        this.estimate = estimate;
+        this.category = category;
+        this.type = type;
+        this.quantity = quantity;
+    }
 
     public void setEstimate(Estimate estimate) {
         this.estimate = estimate;

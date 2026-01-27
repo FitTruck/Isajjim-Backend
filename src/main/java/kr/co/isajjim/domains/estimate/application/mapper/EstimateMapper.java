@@ -40,6 +40,7 @@ public class EstimateMapper {
         return EstimateItemResponse.builder()
                 .category(estimateItem.getCategory())
                 .itemType(estimateItem.getType())
+                .quantity(estimateItem.getQuantity())
                 .build();
     }
 
