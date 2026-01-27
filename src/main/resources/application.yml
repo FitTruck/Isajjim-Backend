@@ -21,6 +21,7 @@ infra:
     project-id: ${GOOGLE_PROJECT_ID}
     gcs:
       key-path: file:configs/gcsKey.json
+      bucket: ${GOOGLE_GCS_BUCKET}
 
 estimate:
   extra-volume-ratio: ${ESTIMATE_EXTRA_VOLUME_RATIO}
