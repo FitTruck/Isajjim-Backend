@@ -22,7 +22,7 @@ public enum FurnitureLabel {
     BOOKSHELF(List.of(FurnitureType.DEFAULT_BOOKSHELF)),
     DISPLAY_SHELF(List.of(FurnitureType.DEFAULT_DISPLAY_SHELF)),
     REFRIGERATOR(List.of(FurnitureType.TOP_BOTTOM_REFRIGERATOR, FurnitureType.SIDE_BY_SIDE_REFRIGERATOR, FurnitureType.FOUR_DOOR_REFRIGERATOR)),
-    WARDROBE(List.of(FurnitureType.MOVABLE_WARDROBE)),
+    WARDROBE(List.of(FurnitureType.MOVABLE_WARDROBE, FurnitureType.SYSTEM_HANGER)),
     SOFA(List.of(FurnitureType.SINGLE_SOFA, FurnitureType.TWIN_SOFA, FurnitureType.THREE_SEATER_SOFA, FurnitureType.L_SHAPED_SOFA)),
     BED(List.of(FurnitureType.SINGLE_BED, FurnitureType.SUPER_SINGLE_BED, FurnitureType.DOUBLE_BED, FurnitureType.QUEEN_SIZE_BED, FurnitureType.KING_SIZE_BED, FurnitureType.BUNK_BED)),
     DINING_TABLE(List.of(FurnitureType.DEFAULT_DINING_TABLE)),
