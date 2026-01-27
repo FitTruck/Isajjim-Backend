@@ -63,7 +63,7 @@ public class FurnitureService {
 
                         volume = dimensionConverter.calculateAbsoluteVolume(info, type);
                     } else {
-                        volume = type.getWidth() * type.getDepth() * type.getHeight();
+                        volume = type.getWidth() * type.getDepth() * type.getHeight() * 1e-9;
                     }
 
                     return FurnitureMapper.toFurniture(1, info, type, volume);
