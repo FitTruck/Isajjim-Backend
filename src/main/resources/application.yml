@@ -17,6 +17,10 @@ infra:
   ai:
     base-url: ${AI_BASE_URL}
     use-server: ${AI_USE_SERVER}
+  google:
+    project-id: ${GOOGLE_PROJECT_ID}
+    gcs:
+      key-path: file:configs/gcsKey.json
 
 estimate:
   extra-volume-ratio: ${ESTIMATE_EXTRA_VOLUME_RATIO}
