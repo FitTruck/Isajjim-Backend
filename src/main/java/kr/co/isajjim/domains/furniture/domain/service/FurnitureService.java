@@ -52,15 +52,21 @@ public class FurnitureService {
         // 그룹핑하여 label과 type이 같은 것은 같은 가구로 계산
         Map<String, Furniture> groupedMap = result.objects().stream()
                 .map(info -> {
-                    // 상대 길이 비율 계산
-                    List<Double> sorted = Stream.of(info.width(), info.depth(), info.height()).sorted().toList();
-                    double detectedRatio = sorted.get(1) / sorted.get(2);
+                    FurnitureType type = info.type();
+                    double volume;
+                    if (type == null) {
+                        // 상대 길이 비율 계산
+                        List<Double> sorted = Stream.of(info.width(), info.depth(), info.height()).sorted().toList();
+                        double detectedRatio = sorted.get(1) / sorted.get(2);
 
-                    FurnitureType bestType = dimensionConverter.findBestMatch(info.label(), detectedRatio);
+                        type = dimensionConverter.findBestMatch(info.label(), detectedRatio);
 
-                    double volume = dimensionConverter.calculateAbsoluteVolume(info, bestType);
+                        volume = dimensionConverter.calculateAbsoluteVolume(info, type);
+                    } else {
+                        volume = type.getWidth() * type.getDepth() * type.getHeight();
+                    }
 
-                    return FurnitureMapper.toFurniture(1, info, bestType, volume);
+                    return FurnitureMapper.toFurniture(1, info, type, volume);
                 })
                 .collect(Collectors.toMap(
                         f -> f.getLabel().name() + ":" + (f.getType() != null ? f.getType().name() : "NONE"),
