@@ -6,7 +6,6 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
-import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
 import kr.co.isajjim.domains.estimate.persistence.entity.ItemCategory;
 import kr.co.isajjim.domains.estimate.persistence.entity.ItemType;
 import kr.co.isajjim.domains.estimate.persistence.repository.EstimateRepository;
@@ -17,6 +16,7 @@ import kr.co.isajjim.domains.image.domain.service.ImageService;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +25,9 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class EstimateService {
+
+    @Value("${estimate.extra-volume-ratio}")
+    private double extraVolumeRatio;
 
     private final EstimateRepository estimateRepository;
     private final ImageService imageService;
@@ -82,7 +85,7 @@ public class EstimateService {
                 .sum();
 
         // 2. 빈 공간 고려 (20% 여유)
-        double requiredVolume = totalVolume * 1.2;
+        double requiredVolume = totalVolume * extraVolumeRatio;
 
         // 3. 최적 트럭 조합 계산 (ItemType 사용)
         Map<ItemType, Integer> truckCombination = determineTruckCombination(requiredVolume);
