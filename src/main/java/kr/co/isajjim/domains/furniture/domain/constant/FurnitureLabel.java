@@ -28,7 +28,7 @@ public enum FurnitureLabel {
     DINING_TABLE(List.of(FurnitureType.DEFAULT_DINING_TABLE)),
     MONITOR_TV(List.of(FurnitureType.DEFAULT_MONITOR_TV)),
     DESK(List.of(FurnitureType.L_SHAPED_DESK, FurnitureType.DESK_NO_DRAWER, FurnitureType.DESK_SINGLE_PEDESTAL, FurnitureType.DESK_DOUBLE_PEDESTAL)),
-    CHAIR_STOOL(List.of(FurnitureType.STANDARD_CHAIR, FurnitureType.ROUND_STOOL)),
+    CHAIR_STOOL(List.of(FurnitureType.STANDARD_CHAIR, FurnitureType.ROUND_STOOL, FurnitureType.ROLLING_OFFICE_CHAIR)),
     WASHING_MACHINE(List.of(FurnitureType.DRUM_WASHING_MACHINE, FurnitureType.TOP_LOADING_WASHING_MACHINE)),
     DRYER(List.of(FurnitureType.DEFAULT_DRYER)),
     KIMCHI_REFRIGERATOR(List.of(FurnitureType.DEFAULT_KIMCHI_REFRIGERATOR)),
@@ -38,6 +38,9 @@ public enum FurnitureLabel {
     MASSAGE_CHAIR(List.of(FurnitureType.DEFAULT_MASSAGE_CHAIR)),
     TREADMILL(List.of(FurnitureType.DEFAULT_TREADMILL)),
     EXERCISE_BIKE(List.of(FurnitureType.DEFAULT_EXERCISE_BIKE)),
+    MICROWAVE_OVEN(List.of(FurnitureType.DEFAULT_MICROWAVE_OVEN)),
+    DISH_CABINET(List.of(FurnitureType.DEFAULT_DISH_CABINET)),
+    POTTED_PLANT(List.of(FurnitureType.DEFAULT_POTTED_PLANT)),
     ;
 
     private final List<FurnitureType> subTypes;
