@@ -36,6 +36,7 @@ public enum FurnitureLabel {
     EXERCISE_BIKE(List.of(FurnitureType.DEFAULT_EXERCISE_BIKE)),
     MICROWAVE_OVEN(List.of(FurnitureType.DEFAULT_MICROWAVE_OVEN)),
     DISH_CABINET(List.of(FurnitureType.DEFAULT_DISH_CABINET)),
+    POTTED_PLANT(List.of(FurnitureType.DEFAULT_POTTED_PLANT)),
     ;
 
     private final List<FurnitureType> subTypes;

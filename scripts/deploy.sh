@@ -51,7 +51,7 @@ for (( i=1; i<=$MAX_RETRIES; i++ )); do
     # 호스트 머신의 TARGET_PORT를 사용하여 새 컨테이너의 헬스 체크 엔드포인트에 접근
     STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" http://localhost:${TARGET_PORT}/api/health || echo "000")
 
-    if [[ "$STATUS_CODE" == "200" || "$STATUS_CODE" == "401" || "$STATUS_CODE" == "404" ]; then
+    if [[ "$STATUS_CODE" == "200" || "$STATUS_CODE" == "401" || "$STATUS_CODE" == "404" ]]; then
         echo "헬스 체크 성공 (${TARGET_SERVER}): HTTP $STATUS_CODE"
         break
     else

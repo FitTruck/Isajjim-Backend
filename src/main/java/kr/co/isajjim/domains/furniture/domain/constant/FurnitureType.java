@@ -56,6 +56,8 @@ public enum FurnitureType {
     DEFAULT_MICROWAVE_OVEN(520, 420, 350),
     ROLLING_OFFICE_CHAIR(700, 700, 1350),
     DEFAULT_DISH_CABINET(800, 400, 1800),
+    DEFAULT_KIMCHI_REFRIGERATOR(920, 800, 1800),
+    DEFAULT_POTTED_PLANT(1, 1, 1),
     ;
 
     private final double width;
