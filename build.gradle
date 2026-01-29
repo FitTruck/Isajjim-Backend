@@ -38,6 +38,7 @@ dependencies {
     // Database
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation 'com.google.cloud.sql:mysql-socket-factory-connector-j-8:1.28.0'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok'
