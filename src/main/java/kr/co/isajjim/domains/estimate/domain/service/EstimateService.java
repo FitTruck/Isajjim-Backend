@@ -55,17 +55,9 @@ public class EstimateService {
     }
 
     public void updateDefaultInfo(Estimate estimate, EstimateUpdateRequest request) {
-        estimate.updateEstimate(
-                request.buildingType(),
-                request.roomSize(),
-                request.floor(),
-                request.elevator(),
-                request.ladderTruck(),
-                request.roomType(),
-                request.duplex(),
-                request.groundStair(),
-                request.parking()
-        );
+        estimate.updateEstimate(request.date());
+        estimate.updateStartLocationDetail(request.startLocation());
+        estimate.updateEndLocationDetail(request.endLocation());
     }
 
     @Transactional
