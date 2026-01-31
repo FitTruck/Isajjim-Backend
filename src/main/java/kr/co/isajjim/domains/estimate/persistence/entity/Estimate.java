@@ -1,21 +1,23 @@
 package kr.co.isajjim.domains.estimate.persistence.entity;
 
 import jakarta.persistence.*;
+import kr.co.isajjim.domains.estimate.application.mapper.LocationDetailMapper;
+import kr.co.isajjim.domains.estimate.application.request.LocationDetailRequest;
 import kr.co.isajjim.domains.estimate.domain.constant.*;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
 import kr.co.isajjim.global.base.entity.BaseEntity;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@Builder
 @Table(name = "estimate")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class Estimate extends BaseEntity {
 
     @Id
@@ -23,61 +25,28 @@ public class Estimate extends BaseEntity {
     @Column(name = "estimate_id")
     private Long id;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "start_location_id")
+    private LocationDetail startLocation;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "end_location_id")
+    private LocationDetail endLocation;
+
+    private LocalDate preferredMovingDate;
+
+    @Builder.Default
     @Enumerated(EnumType.STRING)
-    private AIStatus aiStatus;
+    private AIStatus aiStatus = AIStatus.PENDING;
 
-    @Enumerated(EnumType.STRING)
-    private BuildingType buildingType;
-
-    @Enumerated(EnumType.STRING)
-    private RoomSize roomSize;
-
-    @Enumerated(EnumType.STRING)
-    private Floor floor;
-
-    private Boolean elevator;
-
-    @Enumerated(EnumType.STRING)
-    private LadderTruck ladderTruck;
-
-    @Enumerated(EnumType.STRING)
-    private RoomType roomType;
-
-    private Boolean duplex;
-
-    private Boolean groundStair;
-
-    private Boolean parking;
-
+    @Builder.Default
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EstimateItem> estimateItems = new ArrayList<>();
 
-    @Builder
-    private Estimate(
-            BuildingType buildingType,
-            RoomSize roomSize,
-            Floor floor,
-            Boolean elevator,
-            LadderTruck ladderTruck,
-            RoomType roomType,
-            Boolean duplex,
-            Boolean groundStair,
-            Boolean parking
-    ) {
-        this.aiStatus = AIStatus.PENDING;
-        this.buildingType = buildingType;
-        this.roomSize = roomSize;
-        this.floor = floor;
-        this.elevator = elevator;
-        this.ladderTruck = ladderTruck;
-        this.roomType = roomType;
-        this.duplex = duplex;
-        this.groundStair = groundStair;
-        this.parking = parking;
-    }
 
     public void addImage(Image image) {
         this.images.add(image);
@@ -93,29 +62,27 @@ public class Estimate extends BaseEntity {
         }
     }
 
-    public void updateEstimate(
-            BuildingType buildingType,
-            RoomSize roomSize,
-            Floor floor,
-            Boolean elevator,
-            LadderTruck ladderTruck,
-            RoomType roomType,
-            Boolean duplex,
-            Boolean groundStair,
-            Boolean parking
-    ) {
-        this.buildingType = (buildingType != null) ? buildingType : this.buildingType;
-        this.roomSize = (roomSize != null) ? roomSize : this.roomSize;
-        this.floor = (floor != null) ? floor : this.floor;
-        this.elevator = (elevator != null) ? elevator : this.elevator;
-        this.ladderTruck = (ladderTruck != null) ? ladderTruck : this.ladderTruck;
-        this.roomType = (roomType != null) ? roomType : this.roomType;
-        this.duplex = (duplex != null) ? duplex : this.duplex;
-        this.groundStair = (groundStair != null) ? groundStair : this.groundStair;
-        this.parking = (parking != null) ? parking : this.parking;
+    public void updateEstimate(LocalDate date) {
+        this.preferredMovingDate = (date != null) ? date : this.preferredMovingDate;
     }
 
     public void updateAIStatus(AIStatus aiStatus) {
         this.aiStatus = aiStatus;
+    }
+
+    public void updateStartLocationDetail(LocationDetailRequest request) {
+        if (this.startLocation != null) {
+            this.startLocation.updateLocationDetail(request);
+        } else {
+            this.startLocation = LocationDetailMapper.toLocationDetail(request);
+        }
+    }
+
+    public void updateEndLocationDetail(LocationDetailRequest request) {
+        if (this.endLocation != null) {
+            this.endLocation.updateLocationDetail(request);
+        } else {
+            this.endLocation = LocationDetailMapper.toLocationDetail(request);
+        }
     }
 }
