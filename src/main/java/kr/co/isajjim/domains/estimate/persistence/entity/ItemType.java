@@ -5,9 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ItemType {
     TRUCK_1_TON(ItemCategory.TRUCK, "1톤 트럭"),
-    TRUCK_1_4_TON(ItemCategory.TRUCK, "1.4톤 트럭"),
     TRUCK_2_5_TON(ItemCategory.TRUCK, "2.5톤 트럭"),
-    TRUCK_3_5_TON(ItemCategory.TRUCK, "3.5톤 트럭"),
     TRUCK_5_TON(ItemCategory.TRUCK, "5톤 트럭"),
 
     BOX_5(ItemCategory.BOX, "우체국 5호 박스"),
