@@ -1,7 +1,6 @@
 package kr.co.isajjim.domains.furniture.domain.service;
 
 import kr.co.isajjim.domains.furniture.application.mapper.FurnitureMapper;
-import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.furniture.persistence.entity.Furniture;
 import kr.co.isajjim.domains.furniture.persistence.repository.FurnitureRepository;
 import kr.co.isajjim.domains.image.domain.service.ImageService;
@@ -17,7 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
