@@ -49,14 +49,6 @@ public class EstimateUseCase {
         return EstimateMapper.fromEstimate(estimate);
     }
 
-    public EstimateItemListResponse getItemList(Long estimateId) {
-        Estimate estimate = estimateService.getEstimateById(estimateId);
-
-        List<EstimateItem> items = estimate.getEstimateItems();
-        List<EstimateItemResponse> list = items.stream().map(EstimateMapper::fromEstimateItem).toList();
-        return EstimateMapper.toEstimateItemListResponse(list);
-    }
-
     @Transactional
     public void updateDefaultInfo(Long estimateId, EstimateUpdateRequest request) {
         Estimate estimate = estimateService.getEstimateById(estimateId);

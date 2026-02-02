@@ -50,7 +50,6 @@ public interface EstimateApi {
                     description = "수정 성공"
             )
     )
-//    ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
     ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
@@ -86,12 +85,11 @@ public interface EstimateApi {
 
 
     @Operation(
-            summary = "가구 수량 조정 및 실시간 견적 조회",
-            description = "‘견적서 기본 정보 입력’에서 응답받은 가구 목록을 사용자가 수정하여 실시간으로 견적을 조회합니다."
+            summary = "가구 수량 조정",
+            description = "‘견적서 기본 정보 입력’에서 응답받은 가구 목록을 사용자가 수정합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
-                    responseClass = EstimateItemListResponse.class,
                     description = "수정 성공"
             ),
             errors = {
@@ -99,7 +97,7 @@ public interface EstimateApi {
             }
     )
     @PatchMapping("/{estimateId}/furniture")
-    ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
+    ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateItemUpdateRequest request
     );

@@ -26,7 +26,7 @@ public class EstimateController implements EstimateApi {
     private final EstimateUseCase estimateUseCase;
 
     @Override
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<ApiResponse<EstimateResponse>> createEstimate(
             @RequestBody @Valid EstimateRequest request
     ) {
@@ -36,14 +36,11 @@ public class EstimateController implements EstimateApi {
 
     @Override
     @PatchMapping("/{estimateId}")
-//    public ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
     public ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
     ) {
         estimateUseCase.updateDefaultInfo(estimateId, request);
-//        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
-//        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
@@ -66,13 +63,12 @@ public class EstimateController implements EstimateApi {
 
     @Override
     @PatchMapping("/{estimateId}/furniture")
-    public ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
+    public ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateItemUpdateRequest request
     ) {
         estimateUseCase.updateFurniture(estimateId, request);
-        EstimateItemListResponse response = estimateUseCase.getItemList(estimateId);
-        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
     @Override
