@@ -23,14 +23,6 @@ public record AIAnalysisResponse(
             Double depth,
             Double height,
             Double volume
-//            FurnitureRatio ratio
     ) {
     }
-//
-//    public record FurnitureRatio(
-//            Double w,
-//            Double d,
-//            Double h
-//    ) {
-//    }
 }
