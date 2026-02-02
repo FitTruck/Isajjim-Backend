@@ -47,7 +47,6 @@ public class Estimate extends BaseEntity {
     @OneToMany(mappedBy = "estimate", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<EstimateItem> estimateItems = new ArrayList<>();
 
-
     public void addImage(Image image) {
         this.images.add(image);
         if (image.getEstimate() != this) {
@@ -60,6 +59,10 @@ public class Estimate extends BaseEntity {
         if (estimateItem.getEstimate() != this) {
             estimateItem.setEstimate(this);
         }
+    }
+
+    public void deleteEstimateItem() {
+        this.estimateItems.clear();
     }
 
     public void updateEstimate(LocalDate date) {

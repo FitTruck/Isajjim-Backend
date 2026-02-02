@@ -1,20 +1,13 @@
 package kr.co.isajjim.domains.estimate.application.usecase;
 
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateMapper;
-import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
-import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
-import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.*;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
-import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
-import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateNotificationService;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
-import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
-import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
-import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.global.annotation.UseCase;
@@ -51,31 +44,20 @@ public class EstimateUseCase {
         return EstimateMapper.fromEstimate(estimate);
     }
 
-    public EstimateItemListResponse getItemList(Long estimateId) {
-        Estimate estimate = estimateService.getEstimateById(estimateId);
-
-        List<EstimateItem> items = estimate.getEstimateItems();
-        List<EstimateItemResponse> list = items.stream().map(EstimateMapper::fromEstimateItem).toList();
-        return EstimateMapper.toEstimateItemListResponse(list);
-    }
-
     @Transactional
     public void updateDefaultInfo(Long estimateId, EstimateUpdateRequest request) {
         Estimate estimate = estimateService.getEstimateById(estimateId);
         estimateService.updateDefaultInfo(estimate, request);
-
-        // 프론트 임시 Mock 데이터 반환을 위한 코드
-//        List<Long> list = estimate.getImages().stream().map(Image::getId).toList();
-//        AIAnalysisResponse response = getMockData(list);
-
-//        furnitureService.saveFurnitureList(response.results());
-//        estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
     }
 
     @Transactional
-    public void updateFurniture(Long estimateId, EstimateItemUpdateRequest request) {
+    public void updateFurniture(Long estimateId, EstimateFurnitureUpdateRequest request) {
         furnitureService.updateFurnitureQuantity(estimateId, request.furnitureId(), request.quantity());
-        estimateService.calculateTruck(estimateId);
+    }
+
+    @Transactional
+    public void updateItems(Long estimateId, EstimateItemUpdateRequest request) {
+        estimateService.updateItems(estimateId, request);
     }
 
     public SseEmitter subscribe(Long estimateId) {
@@ -92,24 +74,7 @@ public class EstimateUseCase {
     @Transactional
     public void saveFurnitureList(Long estimateId, AIAnalysisResponse request) {
         furnitureService.saveFurnitureList(request.results());
-        estimateService.calculateTruck(estimateId);
         estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
         notificationService.sendNotify(estimateId);
-    }
-
-    private AIAnalysisResponse getMockData(List<Long> imageIds) {
-        List<AIAnalysisResponse.ImageResult> list = imageIds.stream().map(id -> new AIAnalysisResponse.ImageResult(
-                id,
-                List.of(
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, FurnitureType.BUNK_BED, 30.5, 20.0, 15.2, 1.0),
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.BED, FurnitureType.DOUBLE_BED, 30.5, 20.0, 15.2, 1.0),
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.PIANO, FurnitureType.GRAND_PIANO, 210.0, 90.0, 85.0, 1.0),
-                        new AIAnalysisResponse.FurnitureInfo(FurnitureLabel.PIANO, FurnitureType.DIGITAL_PIANO, 210.0, 90.0, 85.0, 1.0)
-                )
-        )).toList();
-
-        return new AIAnalysisResponse(
-                list
-        );
     }
 }

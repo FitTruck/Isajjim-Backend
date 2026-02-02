@@ -1,25 +1,22 @@
 package kr.co.isajjim.domains.estimate.application.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import kr.co.isajjim.domains.estimate.persistence.entity.ItemCategory;
+import kr.co.isajjim.domains.estimate.persistence.entity.ItemType;
+import lombok.Builder;
 
+import java.util.List;
+
+@Builder
 public record EstimateItemUpdateRequest(
-
-        @Schema(
-                description = "가구 ID",
-                example = "1"
-        )
-        @NotNull
-        Long furnitureId,
-
-        @Schema(
-                description = "가구 수량",
-                example = "1"
-        )
-        @Min(0)
-        @Max(100)
-        Integer quantity
+        @Schema(description = "견적 목록")
+        List<ItemDetail> items
 ) {
+    public record ItemDetail(
+            ItemCategory category,
+            ItemType type,
+            @Schema(example = "1")
+            Integer quantity
+    ) {
+    }
 }

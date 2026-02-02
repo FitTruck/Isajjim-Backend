@@ -3,11 +3,11 @@ package kr.co.isajjim.domains.estimate.presentation.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
-import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.global.annotation.swagger.ApiErrorResponseExplanation;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
@@ -50,7 +50,6 @@ public interface EstimateApi {
                     description = "수정 성공"
             )
     )
-//    ResponseEntity<ApiResponse<Void>> updateDefaultInfo(
     ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request
@@ -86,12 +85,11 @@ public interface EstimateApi {
 
 
     @Operation(
-            summary = "가구 수량 조정 및 실시간 견적 조회",
-            description = "‘견적서 기본 정보 입력’에서 응답받은 가구 목록을 사용자가 수정하여 실시간으로 견적을 조회합니다."
+            summary = "가구 수량 조정",
+            description = "‘견적서 기본 정보 입력’에서 응답받은 가구 목록을 사용자가 수정합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
-                    responseClass = EstimateItemListResponse.class,
                     description = "수정 성공"
             ),
             errors = {
@@ -99,7 +97,17 @@ public interface EstimateApi {
             }
     )
     @PatchMapping("/{estimateId}/furniture")
-    ResponseEntity<ApiResponse<EstimateItemListResponse>> updateFurniture(
+    ResponseEntity<ApiResponse<Void>> updateFurniture(
+            @PathVariable Long estimateId,
+            @RequestBody @Valid EstimateFurnitureUpdateRequest request
+    );
+
+    @Operation(
+            summary = "견적 수정",
+            description = "견적서의 트럭/박스 견적 목록을 수정합니다."
+    )
+    @PatchMapping("/{estimateId}/items")
+    ResponseEntity<ApiResponse<Void>> updateItems(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateItemUpdateRequest request
     );
