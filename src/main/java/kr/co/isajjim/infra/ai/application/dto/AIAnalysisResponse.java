@@ -12,12 +12,14 @@ import java.util.List;
 public record AIAnalysisResponse(
         List<ImageResult> results
 ) {
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record ImageResult(
             Long imageId,
             List<FurnitureInfo> objects
     ) {
     }
 
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record FurnitureInfo(
             FurnitureLabel label,
             FurnitureType type,
