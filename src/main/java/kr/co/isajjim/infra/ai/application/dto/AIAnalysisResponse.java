@@ -10,8 +10,7 @@ import java.util.List;
 // AI -> Backend API 호출 시 SnakeCase 적용
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record AIAnalysisResponse(
-        List<ImageResult> itemsByImage,
-        SimulationResult simulation
+        List<ImageResult> results
 ) {
     public record ImageResult(
             Long imageId,
@@ -20,67 +19,13 @@ public record AIAnalysisResponse(
     }
 
     public record FurnitureInfo(
-            Long id,
             FurnitureLabel label,
             FurnitureType type,
-            Dimensions dimensions,
+            Double width,
+            Double depth,
+            Double height,
             Double volume,
             String plyUrl
     ) {
     }
-
-    public record Dimensions(
-            Double width,
-            Double depth,
-            Double height
-    ) {
-    }
-
-    public record SimulationResult(
-            SimulationSummary summary,
-            List<TruckResult> trucks,
-            List<UnplacedItem> unplacedItems
-    ) {
-    }
-
-    public record SimulationSummary(
-            Integer totalTrucks,
-            Integer totalItems,
-            Double totalVolumeM3
-    ) {
-    }
-
-    public record TruckResult(
-            Integer truckIndex,
-            String type,
-            TruckSpec spec,
-            Double utilization,
-            List<PlacedItem> placedItems
-    ) {
-    }
-
-    public record TruckSpec(
-            String name,
-            Dimensions dimensions,
-            Integer maxWeight
-    ) {}
-
-    public record PlacedItem(
-            Long itemId,
-            Position position,
-            Integer orientation,
-            Integer order
-    ) {}
-
-    public record Position(
-            Double x,
-            Double y,
-            Double z
-    ) {}
-
-    public record UnplacedItem(
-            Long itemId,
-            String reason
-    ) {}
-
 }

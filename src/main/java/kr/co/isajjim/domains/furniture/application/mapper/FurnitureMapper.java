@@ -1,7 +1,6 @@
 package kr.co.isajjim.domains.furniture.application.mapper;
 
 import kr.co.isajjim.domains.furniture.FurnitureResponse;
-import kr.co.isajjim.domains.furniture.domain.constant.FurnitureType;
 import kr.co.isajjim.domains.furniture.persistence.entity.Furniture;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 
@@ -13,10 +12,11 @@ public class FurnitureMapper {
         return Furniture.builder()
                 .label(info.label())
                 .type(info.type())
-                .width(info.dimensions().width())
-                .depth(info.dimensions().depth())
-                .height(info.dimensions().height())
+                .width(info.width())
+                .depth(info.depth())
+                .height(info.height())
                 .volume(info.volume())
+                .plyUrl(info.plyUrl())
                 .quantity(quantity)
                 .build();
     }
@@ -28,6 +28,7 @@ public class FurnitureMapper {
                 .furnitureId(furniture.getId())
                 .label(furniture.getLabel())
                 .type(furniture.getType())
+                .plyUrl(furniture.getPlyUrl())
                 .quantity(furniture.getQuantity())
                 .build();
     }

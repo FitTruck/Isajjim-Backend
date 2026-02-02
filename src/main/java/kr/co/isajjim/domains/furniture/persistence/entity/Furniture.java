@@ -41,11 +41,7 @@ public class Furniture extends BaseEntity {
 
     private Double volume;
 
-    private Double ratioWidth;
-
-    private Double ratioHeight;
-
-    private Double ratioDepth;
+    private String plyUrl;
 
     private Integer quantity;
 
@@ -57,9 +53,7 @@ public class Furniture extends BaseEntity {
         Double height,
         Double depth,
         Double volume,
-        Double ratioWidth,
-        Double ratioHeight,
-        Double ratioDepth,
+        String plyUrl,
         Integer quantity
     ) {
         this.label = label;
@@ -68,9 +62,7 @@ public class Furniture extends BaseEntity {
         this.height = height;
         this.depth = depth;
         this.volume = volume;
-        this.ratioWidth = ratioWidth;
-        this.ratioHeight = ratioHeight;
-        this.ratioDepth = ratioDepth;
+        this.plyUrl = plyUrl;
         this.quantity = quantity;
     }
 
