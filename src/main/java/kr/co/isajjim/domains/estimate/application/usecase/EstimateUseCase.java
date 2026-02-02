@@ -88,7 +88,7 @@ public class EstimateUseCase {
 
     @Transactional
     public void saveFurnitureList(Long estimateId, AIAnalysisResponse request) {
-        furnitureService.saveFurnitureList(request.itemsByImage());
+        furnitureService.saveFurnitureList(request.results());
         estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
         notificationService.sendNotify(estimateId);
     }
