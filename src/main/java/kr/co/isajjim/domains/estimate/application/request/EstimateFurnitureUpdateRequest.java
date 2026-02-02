@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-public record EstimateItemUpdateRequest(
+public record EstimateFurnitureUpdateRequest(
 
         @Schema(
                 description = "가구 ID",

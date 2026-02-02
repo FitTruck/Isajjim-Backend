@@ -3,7 +3,7 @@ package kr.co.isajjim.domains.estimate.presentation.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
@@ -98,7 +98,7 @@ public interface EstimateApi {
     @PatchMapping("/{estimateId}/furniture")
     ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateItemUpdateRequest request
+            @RequestBody @Valid EstimateFurnitureUpdateRequest request
     );
 
     @Operation(
