@@ -25,7 +25,6 @@ public class FurnitureService {
 
     private final FurnitureRepository furnitureRepository;
     private final ImageService imageService;
-    private final FurnitureDimensionConverter dimensionConverter;
 
     @Transactional
     public void saveFurnitureList(List<AIAnalysisResponse.ImageResult> imageResults) {
@@ -51,23 +50,7 @@ public class FurnitureService {
 
         // 그룹핑하여 label과 type이 같은 것은 같은 가구로 계산
         Map<String, Furniture> groupedMap = result.objects().stream()
-                .map(info -> {
-                    FurnitureType type = info.type();
-                    double volume;
-                    if (type == null) {
-                        // 상대 길이 비율 계산
-                        List<Double> sorted = Stream.of(info.width(), info.depth(), info.height()).sorted().toList();
-                        double detectedRatio = sorted.get(1) / sorted.get(2);
-
-                        type = dimensionConverter.findBestMatch(info.label(), detectedRatio);
-
-                        volume = dimensionConverter.calculateAbsoluteVolume(info, type);
-                    } else {
-                        volume = type.getWidth() * type.getDepth() * type.getHeight() * 1e-9;
-                    }
-
-                    return FurnitureMapper.toFurniture(1, info, type, volume);
-                })
+                .map(info -> FurnitureMapper.toFurniture(1, info))
                 .collect(Collectors.toMap(
                         f -> f.getLabel().name() + ":" + (f.getType() != null ? f.getType().name() : "NONE"),
                         f -> f,
