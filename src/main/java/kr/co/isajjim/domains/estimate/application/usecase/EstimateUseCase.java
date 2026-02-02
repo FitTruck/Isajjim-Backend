@@ -1,9 +1,7 @@
 package kr.co.isajjim.domains.estimate.application.usecase;
 
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateMapper;
-import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
-import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
-import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.*;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
@@ -55,6 +53,11 @@ public class EstimateUseCase {
     @Transactional
     public void updateFurniture(Long estimateId, EstimateFurnitureUpdateRequest request) {
         furnitureService.updateFurnitureQuantity(estimateId, request.furnitureId(), request.quantity());
+    }
+
+    @Transactional
+    public void updateItems(Long estimateId, EstimateItemUpdateRequest request) {
+        estimateService.updateItems(estimateId, request);
     }
 
     public SseEmitter subscribe(Long estimateId) {

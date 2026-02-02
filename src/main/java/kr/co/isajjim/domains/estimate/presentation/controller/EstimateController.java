@@ -1,9 +1,7 @@
 package kr.co.isajjim.domains.estimate.presentation.controller;
 
 import jakarta.validation.Valid;
-import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
-import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
-import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.*;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
@@ -67,6 +65,16 @@ public class EstimateController implements EstimateApi {
             @RequestBody @Valid EstimateFurnitureUpdateRequest request
     ) {
         estimateUseCase.updateFurniture(estimateId, request);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @PatchMapping("/{estimateId}/items")
+    public ResponseEntity<ApiResponse<Void>> updateItems(
+            @PathVariable Long estimateId,
+            @RequestBody @Valid EstimateItemUpdateRequest request
+    ) {
+        estimateUseCase.updateItems(estimateId, request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 

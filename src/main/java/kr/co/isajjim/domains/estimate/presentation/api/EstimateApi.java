@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
@@ -99,6 +100,16 @@ public interface EstimateApi {
     ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateFurnitureUpdateRequest request
+    );
+
+    @Operation(
+            summary = "견적 수정",
+            description = "견적서의 트럭/박스 견적 목록을 수정합니다."
+    )
+    @PatchMapping("/{estimateId}/items")
+    ResponseEntity<ApiResponse<Void>> updateItems(
+            @PathVariable Long estimateId,
+            @RequestBody @Valid EstimateItemUpdateRequest request
     );
 
     @Operation(

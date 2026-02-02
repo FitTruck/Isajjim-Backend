@@ -1,10 +1,13 @@
 package kr.co.isajjim.domains.estimate.domain.service;
 
+import kr.co.isajjim.domains.estimate.application.mapper.EstimateItemMapper;
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateMapper;
+import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
+import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
 import kr.co.isajjim.domains.estimate.persistence.repository.EstimateRepository;
 import kr.co.isajjim.domains.image.application.mapper.ImageMapper;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
@@ -50,6 +53,16 @@ public class EstimateService {
         estimate.updateEstimate(request.date());
         estimate.updateStartLocationDetail(request.startLocation());
         estimate.updateEndLocationDetail(request.endLocation());
+    }
+
+    public void updateItems(Long estimateId, EstimateItemUpdateRequest request) {
+        Estimate estimate = getOrThrow(estimateId);
+        estimate.deleteEstimateItem();
+
+        request.items().forEach(itemRequest -> {
+            EstimateItem newItem = EstimateItemMapper.toEstimateItem(estimate, itemRequest.category(), itemRequest.type(), itemRequest.quantity());
+            estimate.addEstimateItem(newItem);
+        });
     }
 
     @Transactional
