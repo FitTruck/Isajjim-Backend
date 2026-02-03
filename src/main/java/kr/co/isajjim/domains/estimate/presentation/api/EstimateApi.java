@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.estimate.presentation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
@@ -68,7 +69,8 @@ public interface EstimateApi {
             )
     )
     SseEmitter getEstimateSSE(
-            @PathVariable Long estimateId
+            @PathVariable Long estimateId,
+            HttpServletResponse response
     );
 
     @Operation(

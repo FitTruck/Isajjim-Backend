@@ -1,5 +1,6 @@
 package kr.co.isajjim.domains.estimate.presentation.controller;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.estimate.application.request.*;
 import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
@@ -45,8 +46,10 @@ public class EstimateController implements EstimateApi {
     @Override
     @GetMapping(value = "/{estimateId}/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter getEstimateSSE(
-            @PathVariable Long estimateId
+            @PathVariable Long estimateId,
+            HttpServletResponse response
     ) {
+        response.setHeader("X-Accel-Buffering", "no");
         return estimateUseCase.subscribe(estimateId);
     }
 
