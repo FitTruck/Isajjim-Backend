@@ -1,7 +1,9 @@
 package kr.co.isajjim.domains.estimate.application.usecase;
 
+import kr.co.isajjim.domains.estimate.application.mapper.EstimateChatSummaryMapper;
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateMapper;
 import kr.co.isajjim.domains.estimate.application.request.*;
+import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
@@ -76,5 +78,10 @@ public class EstimateUseCase {
         furnitureService.saveFurnitureList(request.results());
         estimateService.updateAIStatus(estimateId, AIStatus.COMPLETED);
         notificationService.sendNotify(estimateId);
+    }
+
+    public EstimateChatSummaryResponse generateChatSummary(Long estimateId, String chatContent) {
+        String summary = estimateService.generateChatSummary(estimateId, chatContent);
+        return EstimateChatSummaryMapper.toEstimateChatSummaryResponse(summary);
     }
 }

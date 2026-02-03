@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.estimate.presentation.controller;
 
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.estimate.application.request.*;
+import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
@@ -86,5 +87,15 @@ public class EstimateController implements EstimateApi {
     ) {
         estimateUseCase.saveFurnitureList(estimateId, request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @PostMapping("/{estimateId}/chat-summary")
+    public ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
+            @PathVariable Long estimateId,
+            @RequestBody String chatContent
+    ) {
+        EstimateChatSummaryResponse response = estimateUseCase.generateChatSummary(estimateId, chatContent);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 }

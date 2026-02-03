@@ -89,4 +89,21 @@ public class LocationDetail extends BaseEntity {
         this.groundStair = (request.groundStair() != null) ? request.groundStair() : this.groundStair;
         this.parking = (request.parking() != null) ? request.parking() : this.parking;
     }
+
+    @Override
+    public String toString() {
+        return "LocationDetail{" +
+                "address='" + address + '\'' +
+                ", detailAddress='" + detailAddress + '\'' +
+                ", buildingType=" + buildingType +
+                ", roomSize=" + roomSize +
+                ", floor=" + floor +
+                ", elevator=" + elevator +
+                ", ladderTruck=" + ladderTruck +
+                ", roomType=" + roomType +
+                ", duplex=" + duplex +
+                ", groundStair=" + groundStair +
+                ", parking=" + parking +
+                '}';
+    }
 }

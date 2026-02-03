@@ -7,6 +7,7 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdat
 import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
 import kr.co.isajjim.global.annotation.swagger.ApiErrorResponseExplanation;
@@ -18,6 +19,7 @@ import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -118,5 +120,20 @@ public interface EstimateApi {
     ResponseEntity<ApiResponse<Void>> aiCallback(
             @PathVariable Long estimateId,
             @RequestBody AIAnalysisResponse request
+    );
+
+    @Operation(
+            summary = "대화 내용 요약 LLM 호출"
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = EstimateChatSummaryResponse.class,
+                    description = "응답 성공"
+            )
+    )
+    @PostMapping("/{estimateId}/chat-summary")
+    ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
+            @PathVariable Long estimateId,
+            @RequestBody String chatContent
     );
 }
