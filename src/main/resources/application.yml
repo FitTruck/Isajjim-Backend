@@ -22,6 +22,8 @@ infra:
     gcs:
       key-path: file:configs/gcsKey.json
       bucket: ${GOOGLE_GCS_BUCKET}
+    gemini:
+      model: ${GEMINI_MODEL}
 
 estimate:
   extra-volume-ratio: ${ESTIMATE_EXTRA_VOLUME_RATIO}

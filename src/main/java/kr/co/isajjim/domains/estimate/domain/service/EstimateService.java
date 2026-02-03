@@ -14,6 +14,7 @@ import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.domains.image.domain.service.ImageService;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
+import kr.co.isajjim.global.llm.LlmProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ public class EstimateService {
 
     private final EstimateRepository estimateRepository;
     private final ImageService imageService;
+    private final LlmProvider llmProvider;
 
     public Estimate getEstimateById(Long estimateId) {
         return getOrThrow(estimateId);
@@ -69,6 +71,25 @@ public class EstimateService {
     public void updateAIStatus(Long estimateId, AIStatus status) {
         Estimate estimate = getOrThrow(estimateId);
         estimate.updateAIStatus(status);
+    }
+
+    public String generateChatSummary(Long estimateId, String chatContent) {
+        Estimate estimate = getOrThrow(estimateId);
+
+        String prompt = String.format(
+                "역할: 이사 전문 상담 요약가\n" +
+                        "다음 정보를 바탕으로(특히 대화 내용 중심) 이사 견적 확정 사항을 요약해줘. 최종 응답의 앞뒤에 '안녕하세요 이사 전문 상담 요약가입니다 ~를 요약해드릴게요, 편안한 이사 되세요' 등의 미사어구 없이 내용 자체만 요약해줘.\n\n" +
+                        "1. 출발지: %s\n" +
+                        "2. 도착지: %s\n" +
+                        "3. 이사일: %s\n" +
+                        "4. 대화 내용:\n%s",
+                estimate.getStartLocation(),
+                estimate.getEndLocation(),
+                estimate.getPreferredMovingDate(),
+                chatContent
+        );
+
+        return llmProvider.llmCall(prompt);
     }
 
     /* HELPER METHOD */
