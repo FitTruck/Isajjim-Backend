@@ -93,12 +93,11 @@ public class EstimateController implements EstimateApi {
     }
 
     @Override
-    @PostMapping("/{estimateId}/chat-summary")
+    @PostMapping("/chat-summary")
     public ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
-            @PathVariable Long estimateId,
             @RequestBody String chatContent
     ) {
-        EstimateChatSummaryResponse response = estimateUseCase.generateChatSummary(estimateId, chatContent);
+        EstimateChatSummaryResponse response = estimateUseCase.generateChatSummary(chatContent);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 }
