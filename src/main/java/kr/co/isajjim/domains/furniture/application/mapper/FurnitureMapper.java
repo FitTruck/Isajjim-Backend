@@ -18,6 +18,8 @@ public class FurnitureMapper {
                 .volume(info.volume())
                 .plyUrl(info.plyUrl())
                 .quantity(quantity)
+                .centerX(info.centerX())
+                .centerY(info.centerY())
                 .build();
     }
 
@@ -30,6 +32,8 @@ public class FurnitureMapper {
                 .type(furniture.getType())
                 .plyUrl(furniture.getPlyUrl())
                 .quantity(furniture.getQuantity())
+                .centerX(furniture.getCenterX())
+                .centerY(furniture.getCenterY())
                 .build();
     }
 }
