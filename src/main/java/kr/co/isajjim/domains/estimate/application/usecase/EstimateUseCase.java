@@ -80,8 +80,8 @@ public class EstimateUseCase {
         notificationService.sendNotify(estimateId);
     }
 
-    public EstimateChatSummaryResponse generateChatSummary(Long estimateId, String chatContent) {
-        String summary = estimateService.generateChatSummary(estimateId, chatContent);
+    public EstimateChatSummaryResponse generateChatSummary(String chatContent) {
+        String summary = estimateService.generateChatSummary(chatContent);
         return EstimateChatSummaryMapper.toEstimateChatSummaryResponse(summary);
     }
 }
