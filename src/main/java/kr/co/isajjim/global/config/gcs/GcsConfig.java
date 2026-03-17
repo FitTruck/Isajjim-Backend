@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,7 @@ public class GcsConfig {
     public Storage storage() throws IOException {
         GoogleCredentials credentials;
 
-        if (keyPath != null && !keyPath.isEmpty()) {
+        if (StringUtils.hasText(keyPath)) {
             // 로컬 개발환경: key 파일 사용
             Resource resource = resourceLoader.getResource(keyPath);
             InputStream serviceAccount = resource.getInputStream();
