@@ -20,7 +20,7 @@ infra:
   google:
     project-id: ${GOOGLE_PROJECT_ID}
     gcs:
-      key-path: file:configs/gcsKey.json
+      key-path: ${GCS_KEY_PATH:}
       bucket: ${GOOGLE_GCS_BUCKET}
     gemini:
       model: ${GEMINI_MODEL}
