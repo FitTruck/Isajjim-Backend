@@ -17,8 +17,8 @@ public record FurnitureResponse(
         @Schema(description = "가구 상세(Nullable)", example = "퀸사이즈")
         FurnitureType type,
 
-        @Schema(description = "Ply File Url", example = "https://storage.isajjim.kr/123c")
-        String plyUrl,
+        @Schema(description = "Glb File Url", example = "https://storage.isajjim.kr/123c")
+        String glbUrl,
 
         @Schema(description = "개수", example = "1")
         Integer quantity

@@ -16,7 +16,7 @@ public class FurnitureMapper {
                 .depth(info.depth())
                 .height(info.height())
                 .volume(info.volume())
-                .plyUrl(info.plyUrl())
+                .glbUrl(info.glbUrl())
                 .quantity(quantity)
                 .build();
     }
@@ -28,7 +28,7 @@ public class FurnitureMapper {
                 .furnitureId(furniture.getId())
                 .label(furniture.getLabel())
                 .type(furniture.getType())
-                .plyUrl(furniture.getPlyUrl())
+                .glbUrl(furniture.getGlbUrl())
                 .quantity(furniture.getQuantity())
                 .build();
     }
