@@ -27,7 +27,7 @@ public record AIAnalysisResponse(
             Double depth,
             Double height,
             Double volume,
-            String plyUrl,
+            String glbUrl
             Double centerX,
             Double centerY
     ) {
