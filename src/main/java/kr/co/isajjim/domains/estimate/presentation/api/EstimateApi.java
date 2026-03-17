@@ -133,9 +133,8 @@ public interface EstimateApi {
                     description = "응답 성공"
             )
     )
-    @PostMapping("/{estimateId}/chat-summary")
+    @PostMapping("/chat-summary")
     ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
-            @PathVariable Long estimateId,
             @RequestBody String chatContent
     );
 }

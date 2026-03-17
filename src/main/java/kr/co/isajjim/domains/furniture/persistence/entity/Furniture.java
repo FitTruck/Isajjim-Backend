@@ -45,6 +45,10 @@ public class Furniture extends BaseEntity {
 
     private Integer quantity;
 
+    private Double centerX;
+
+    private Double centerY;
+
     @Builder
     private Furniture(
         FurnitureLabel label,
@@ -55,6 +59,8 @@ public class Furniture extends BaseEntity {
         Double volume,
         String glbUrl,
         Integer quantity
+        Double centerX,
+        Double centerY
     ) {
         this.label = label;
         this.type = type;
@@ -64,6 +70,8 @@ public class Furniture extends BaseEntity {
         this.volume = volume;
         this.glbUrl = glbUrl;
         this.quantity = quantity;
+        this.centerX = centerX;
+        this.centerY = centerY;
     }
 
     public void setImage(Image image) {

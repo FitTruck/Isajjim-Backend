@@ -28,6 +28,8 @@ public record AIAnalysisResponse(
             Double height,
             Double volume,
             String glbUrl
+            Double centerX,
+            Double centerY
     ) {
     }
 }
