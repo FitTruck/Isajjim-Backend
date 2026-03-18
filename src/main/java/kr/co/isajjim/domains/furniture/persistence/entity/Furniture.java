@@ -41,7 +41,7 @@ public class Furniture extends BaseEntity {
 
     private Double volume;
 
-    private String glbUrl;
+    private String plyUrl;
 
     private Integer quantity;
 
@@ -57,8 +57,8 @@ public class Furniture extends BaseEntity {
         Double height,
         Double depth,
         Double volume,
-        String glbUrl,
-        Integer quantity
+        String plyUrl,
+        Integer quantity,
         Double centerX,
         Double centerY
     ) {
@@ -68,7 +68,7 @@ public class Furniture extends BaseEntity {
         this.height = height;
         this.depth = depth;
         this.volume = volume;
-        this.glbUrl = glbUrl;
+        this.plyUrl = plyUrl;
         this.quantity = quantity;
         this.centerX = centerX;
         this.centerY = centerY;
