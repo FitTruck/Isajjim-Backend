@@ -5,6 +5,7 @@ import kr.co.isajjim.domains.estimate.application.mapper.LocationDetailMapper;
 import kr.co.isajjim.domains.estimate.application.request.LocationDetailRequest;
 import kr.co.isajjim.domains.estimate.domain.constant.*;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.global.base.entity.BaseEntity;
 import lombok.*;
 
@@ -24,6 +25,10 @@ public class Estimate extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "estimate_id")
     private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private UserEntity user;
 
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "start_location_id")
