@@ -30,6 +30,9 @@ public enum ResponseCode {
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON-007", "서버 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요."),
 
+    /*    Security    */
+    NOT_SUPPORTED_SOCIAL_PROVIDER(HttpStatus.BAD_REQUEST, "AUTH-001", "해당 소셜 로그인은 지원되지 않습니다."),
+
 
     /*    ESTIMATE    */
     NOT_FOUND_ESTIMATE(HttpStatus.NOT_FOUND, "ESTIMATE-001", "요청 견적서 ID를 찾을 수 없습니다."),
