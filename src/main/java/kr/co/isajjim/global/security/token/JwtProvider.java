@@ -1,0 +1,86 @@
+package kr.co.isajjim.global.security.token;
+
+import io.jsonwebtoken.Jwts;
+import kr.co.isajjim.domains.refreshtoken.domain.service.RefreshTokenService;
+import kr.co.isajjim.domains.user.domain.constant.Role;
+import kr.co.isajjim.global.config.properties.JwtProperties;
+import kr.co.isajjim.global.security.auth.CustomUserDetailsService;
+import lombok.Getter;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+import static kr.co.isajjim.global.common.Constants.*;
+
+@Component
+public class JwtProvider {
+
+    @Getter
+    private final JwtProperties jwtProperties;
+    private final SecretKey secretKey;
+    private final CustomUserDetailsService userDetailsService;
+    private final RefreshTokenService refreshTokenService;
+
+    JwtProvider(JwtProperties jwtProperties, CustomUserDetailsService userDetailsService, RefreshTokenService refreshTokenService) {
+        this.jwtProperties = jwtProperties;
+        this.secretKey = new SecretKeySpec(jwtProperties.secret().getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
+        this.userDetailsService = userDetailsService;
+        this.refreshTokenService = refreshTokenService;
+    }
+
+    /**
+     * 토큰 발급
+     */
+    public Token issueToken(Long userId, Role role) {
+        TokenClaim tokenClaim = TokenClaim.builder()
+                .userId(userId)
+                .role(role)
+                .build();
+
+        String accessToken = generateAccessToken(tokenClaim);
+        String refreshToken = generateRefreshToken(tokenClaim);
+
+        long ttlInSeconds = jwtProperties.refreshToken().expirationTime() / 1000;
+        refreshTokenService.saveRefreshToken(userId, refreshToken, ttlInSeconds);
+
+        return Token.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    // 실제 서비스에서 사용하는 메인 API
+    public String generateAccessToken(TokenClaim tokenClaim) {
+        return generateAccessToken(tokenClaim, jwtProperties.accessToken().expirationTime());
+    }
+
+    public String generateRefreshToken(TokenClaim tokenClaim) {
+        return generateRefreshToken(tokenClaim, jwtProperties.refreshToken().expirationTime());
+    }
+
+    // 테스트 환경을 위해 expirationTime을 값으로 받음
+    public String generateAccessToken(TokenClaim tokenClaim, long expirationTime) {
+        return generateToken(tokenClaim, CLAIM_VALUE_ACCESS_TOKEN, expirationTime);
+    }
+
+    public String generateRefreshToken(TokenClaim tokenClaim, long expirationTime) {
+        return generateToken(tokenClaim, CLAIM_VALUE_REFRESH_TOKEN, expirationTime);
+    }
+
+    /**
+     * 토큰 발급
+     */
+    private String generateToken(TokenClaim tokenClaim, String tokenType, long expirationTime) {
+        return Jwts.builder()
+                .claim(CLAIM_NAME_TOKEN_TYPE, tokenType)
+                .claim(CLAIM_NAME_ROLE, tokenClaim.role().getKey())
+                .subject(String.valueOf(tokenClaim.userId()))
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expirationTime))
+                .signWith(secretKey)
+                .compact();
+    }
+}

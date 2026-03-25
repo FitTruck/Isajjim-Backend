@@ -3,4 +3,10 @@ package kr.co.isajjim.global.common;
 public abstract class Constants {
 
     public static final String DELIMITER = ":";
+
+    // claim
+    public static final String CLAIM_NAME_TOKEN_TYPE = "token";
+    public static final String CLAIM_NAME_ROLE = "role";
+    public static final String CLAIM_VALUE_ACCESS_TOKEN = "ACCESS_TOKEN";
+    public static final String CLAIM_VALUE_REFRESH_TOKEN = "REFRESH_TOKEN";
 }
