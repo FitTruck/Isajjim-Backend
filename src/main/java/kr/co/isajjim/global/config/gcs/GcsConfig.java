@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,16 +21,24 @@ public class GcsConfig {
     @Value("${infra.google.project-id}")
     private String projectId;
 
-    @Value("${infra.google.gcs.key-path}")
+    @Value("${infra.google.gcs.key-path:}")
     private String keyPath;
 
     private final ResourceLoader resourceLoader;
 
     @Bean
     public Storage storage() throws IOException {
-        Resource resource = resourceLoader.getResource(keyPath);
-        InputStream serviceAccount = resource.getInputStream();
-        GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+        GoogleCredentials credentials;
+
+        if (StringUtils.hasText(keyPath)) {
+            // 로컬 개발환경: key 파일 사용
+            Resource resource = resourceLoader.getResource(keyPath);
+            InputStream serviceAccount = resource.getInputStream();
+            credentials = GoogleCredentials.fromStream(serviceAccount);
+        } else {
+            // Cloud Run 환경: 서비스 계정 ADC 자동 사용
+            credentials = GoogleCredentials.getApplicationDefault();
+        }
 
         return StorageOptions.newBuilder()
                 .setCredentials(credentials)
