@@ -5,6 +5,7 @@ import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.user.domain.constant.Role;
 import kr.co.isajjim.global.base.entity.BaseEntity;
 import kr.co.isajjim.global.security.constant.SocialProvider;
+import kr.co.isajjim.global.utils.DatabaseEncryptionConverter;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -37,6 +38,9 @@ public class UserEntity extends BaseEntity {
     // 소셜 제공자에서 반환하는 고유 ID.
     private String socialId;
 
+    @Convert(converter = DatabaseEncryptionConverter.class)
+    private String socialRefreshToken;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -51,5 +55,9 @@ public class UserEntity extends BaseEntity {
                 .socialId(socialId)
                 .role(Role.USER)
                 .build();
+    }
+
+    public void updateSocialRefreshToken(String socialRefreshToken) {
+        this.socialRefreshToken = socialRefreshToken;
     }
 }

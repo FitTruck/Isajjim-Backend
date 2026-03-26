@@ -36,6 +36,9 @@ public enum ResponseCode {
     EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-003", "토큰이 만료되었습니다."),
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-004", "유효하지 않은 토큰입니다."),
 
+    /*    USER        */
+    NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER-001", "요청 유저 ID를 찾을 수 없습니다."),
+
 
     /*    ESTIMATE    */
     NOT_FOUND_ESTIMATE(HttpStatus.NOT_FOUND, "ESTIMATE-001", "요청 견적서 ID를 찾을 수 없습니다."),

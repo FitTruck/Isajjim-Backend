@@ -33,3 +33,7 @@ jwt:
   refresh-token:
     expiration-time: ${JWT_REFRESH_TOKEN_EXPIRATION_TIME}
     reissue-limit-days: ${JWT_REFRESH_TOKEN_REISSUE_LIMIT_DAYS}
+
+app:
+  security:
+    encryption-key: ${APP_ENCRYPTION_KEY}
