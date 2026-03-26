@@ -32,10 +32,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     @Transactional
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        log.info("CustomOAuth2UserService.loadUser() executed");
-
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
-        log.info("Registration ID: {}", registrationId);
 
         Map<String, Object> attributes;
         String userNameAttributeName;

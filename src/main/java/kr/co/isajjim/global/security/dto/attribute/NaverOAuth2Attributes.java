@@ -6,11 +6,8 @@ import java.util.Map;
 
 public class NaverOAuth2Attributes extends OAuth2Attributes {
 
-    private final Map<String, Object> naverAttributes;
-
     public NaverOAuth2Attributes(final Map<String, Object> attributes, final String userNameAttributeKey) {
-        super(attributes, userNameAttributeKey);
-        this.naverAttributes = (Map<String, Object>) attributes.get("response");
+        super((Map<String, Object>) attributes.get("response"), userNameAttributeKey);
     }
 
     @Override
@@ -20,11 +17,11 @@ public class NaverOAuth2Attributes extends OAuth2Attributes {
 
     @Override
     public String getEmail() {
-        return String.valueOf(naverAttributes.get("email"));
+        return String.valueOf(getAttributes().get("email"));
     }
 
     @Override
     public String getName() {
-        return String.valueOf(naverAttributes.get("name"));
+        return String.valueOf(getAttributes().get("name"));
     }
 }
