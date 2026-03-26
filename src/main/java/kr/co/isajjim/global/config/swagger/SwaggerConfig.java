@@ -1,8 +1,11 @@
 package kr.co.isajjim.global.config.swagger;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.customizers.OperationCustomizer;
@@ -22,8 +25,19 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI openAPI() {
+        String jwtSchemeName = "jwtAuth";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        Components components = new Components()
+                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
+                        .name(jwtSchemeName)
+                        .type(SecurityScheme.Type.HTTP)
+                        .scheme("Bearer")
+                        .bearerFormat("JWT"));
+
         return new OpenAPI()
+                .components(components)
                 .addServersItem(new Server().url(serverUrl))
+                .addSecurityItem(securityRequirement)
                 .info(new Info()
                         .title("Isajjim API")
                         .description("이삿찜 백엔드 API 문서")
