@@ -1,6 +1,7 @@
 package kr.co.isajjim.domains.user.presentation.controller;
 
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.user.presentation.api.UserApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.security.dto.ReissueRequest;
@@ -16,10 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
-public class UserController {
+public class UserController implements UserApi {
 
     private final JwtProvider jwtProvider;
 
+    @Override
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse<TokenResponse>> tokenReissue(@RequestBody @Valid ReissueRequest request) {
         TokenResponse tokenResponse = jwtProvider.reissueTokens(request.refreshToken());
