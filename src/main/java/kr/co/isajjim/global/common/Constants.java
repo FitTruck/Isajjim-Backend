@@ -13,4 +13,18 @@ public abstract class Constants {
 
     // header
     public static final String CHARACTER_ENCODING = "UTF-8";
+
+    // whitelist
+    public static final String[] WHITELIST = {
+            "/api/v1/users/reissue",
+            "/api/v1/users/auth/success",
+            "/login/**",
+            "/oauth2/**",
+            "/*.css",
+            "/error",
+            "/favicon.ico",
+            "/oauth2/**",
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+    };
 }
