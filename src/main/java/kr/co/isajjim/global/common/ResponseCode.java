@@ -32,6 +32,9 @@ public enum ResponseCode {
 
     /*    Security    */
     NOT_SUPPORTED_SOCIAL_PROVIDER(HttpStatus.BAD_REQUEST, "AUTH-001", "해당 소셜 로그인은 지원되지 않습니다."),
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "AUTH-002", "인증 정보가 누락되었거나 유효하지 않습니다."),
+    EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-003", "토큰이 만료되었습니다."),
+    INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-004", "유효하지 않은 토큰입니다."),
 
 
     /*    ESTIMATE    */

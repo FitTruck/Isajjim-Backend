@@ -1,11 +1,18 @@
 package kr.co.isajjim.global.security.token;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import kr.co.isajjim.domains.refreshtoken.domain.service.RefreshTokenService;
 import kr.co.isajjim.domains.user.domain.constant.Role;
+import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.config.properties.JwtProperties;
+import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.security.auth.CustomUserDetailsService;
 import lombok.Getter;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -82,5 +89,33 @@ public class JwtProvider {
                 .expiration(new Date(System.currentTimeMillis() + expirationTime))
                 .signWith(secretKey)
                 .compact();
+    }
+
+    /**
+     * 토큰으로 인증 객체를 생성하여 반환
+     */
+    public Authentication getAuthentication(String token) {
+        Claims claims = parseClaims(token);
+        String userId = claims.getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userId);
+
+        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+    }
+
+    /**
+     * 토큰 유효성 검증 후 Claims(Payload) 반환
+     */
+    private Claims parseClaims(String token) {
+        try {
+            return Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) {
+            throw new BaseException(ResponseCode.EXPIRED_JWT_TOKEN);
+        } catch (RuntimeException e) {
+            throw new BaseException(ResponseCode.INVALID_JWT_TOKEN);
+        }
     }
 }
