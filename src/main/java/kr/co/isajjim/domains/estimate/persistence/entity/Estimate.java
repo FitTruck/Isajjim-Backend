@@ -7,11 +7,14 @@ import kr.co.isajjim.domains.estimate.domain.constant.*;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.global.base.entity.BaseEntity;
+import kr.co.isajjim.global.exception.BaseException;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import static kr.co.isajjim.global.common.ResponseCode.FORBIDDEN;
 
 @Entity
 @Getter
@@ -91,6 +94,12 @@ public class Estimate extends BaseEntity {
             this.endLocation.updateLocationDetail(request);
         } else {
             this.endLocation = LocationDetailMapper.toLocationDetail(request);
+        }
+    }
+
+    public void validateOwner(Long userId) {
+        if (!this.user.getId().equals(userId)) {
+            throw new BaseException(FORBIDDEN);
         }
     }
 }

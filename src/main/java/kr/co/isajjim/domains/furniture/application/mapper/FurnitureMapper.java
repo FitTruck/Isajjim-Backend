@@ -1,6 +1,6 @@
 package kr.co.isajjim.domains.furniture.application.mapper;
 
-import kr.co.isajjim.domains.furniture.FurnitureResponse;
+import kr.co.isajjim.domains.furniture.application.dto.FurnitureResponse;
 import kr.co.isajjim.domains.furniture.persistence.entity.Furniture;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 

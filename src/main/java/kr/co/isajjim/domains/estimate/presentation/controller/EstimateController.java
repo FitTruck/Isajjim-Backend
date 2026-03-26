@@ -10,10 +10,12 @@ import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
 import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.security.auth.CustomUserDetails;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
@@ -27,9 +29,10 @@ public class EstimateController implements EstimateApi {
     @Override
     @PostMapping
     public ResponseEntity<ApiResponse<EstimateResponse>> createEstimate(
-            @RequestBody @Valid EstimateRequest request
+            @RequestBody @Valid EstimateRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        Long savedId = estimateUseCase.createAndAnalyze(request);
+        Long savedId = estimateUseCase.createAndAnalyze(request, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, EstimateResponse.from(savedId)));
     }
 
@@ -37,9 +40,10 @@ public class EstimateController implements EstimateApi {
     @PatchMapping("/{estimateId}")
     public ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateUpdateRequest request
+            @RequestBody @Valid EstimateUpdateRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        estimateUseCase.updateDefaultInfo(estimateId, request);
+        estimateUseCase.updateDefaultInfo(estimateId, request, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
@@ -47,18 +51,20 @@ public class EstimateController implements EstimateApi {
     @GetMapping(value = "/{estimateId}/sse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter getEstimateSSE(
             @PathVariable Long estimateId,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
         response.setHeader("X-Accel-Buffering", "no");
-        return estimateUseCase.subscribe(estimateId);
+        return estimateUseCase.subscribe(estimateId, user.getUserId());
     }
 
     @Override
     @GetMapping("/{estimateId}")
     public ResponseEntity<ApiResponse<EstimateDetailResponse>> getEstimate(
-            @PathVariable Long estimateId
+            @PathVariable Long estimateId,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId);
+        EstimateDetailResponse response = estimateUseCase.getDetailEstimates(estimateId, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 
@@ -66,9 +72,10 @@ public class EstimateController implements EstimateApi {
     @PatchMapping("/{estimateId}/furniture")
     public ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateFurnitureUpdateRequest request
+            @RequestBody @Valid EstimateFurnitureUpdateRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        estimateUseCase.updateFurniture(estimateId, request);
+        estimateUseCase.updateFurniture(estimateId, request, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
@@ -76,9 +83,10 @@ public class EstimateController implements EstimateApi {
     @PatchMapping("/{estimateId}/items")
     public ResponseEntity<ApiResponse<Void>> updateItems(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateItemUpdateRequest request
+            @RequestBody @Valid EstimateItemUpdateRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
-        estimateUseCase.updateItems(estimateId, request);
+        estimateUseCase.updateItems(estimateId, request, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
@@ -95,7 +103,8 @@ public class EstimateController implements EstimateApi {
     @Override
     @PostMapping("/chat-summary")
     public ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
-            @RequestBody String chatContent
+            @RequestBody String chatContent,
+            @AuthenticationPrincipal CustomUserDetails user
     ) {
         EstimateChatSummaryResponse response = estimateUseCase.generateChatSummary(chatContent);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));

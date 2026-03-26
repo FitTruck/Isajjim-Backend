@@ -14,6 +14,10 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    public UserEntity getUserById(Long userId) {
+        return getOrThrow(userId);
+    }
+
     @Transactional
     public void updateSocialRefreshToken(Long userId, String token) {
         UserEntity user = getOrThrow(userId);

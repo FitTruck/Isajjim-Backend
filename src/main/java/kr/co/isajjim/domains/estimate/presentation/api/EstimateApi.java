@@ -1,6 +1,7 @@
 package kr.co.isajjim.domains.estimate.presentation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,8 +17,10 @@ import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.security.auth.CustomUserDetails;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,7 +42,8 @@ public interface EstimateApi {
             )
     )
     ResponseEntity<ApiResponse<EstimateResponse>> createEstimate(
-            @RequestBody @Valid EstimateRequest request
+            @RequestBody @Valid EstimateRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
     @Operation(
@@ -55,7 +59,8 @@ public interface EstimateApi {
     )
     ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateUpdateRequest request
+            @RequestBody @Valid EstimateUpdateRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
     @Operation(
@@ -70,7 +75,8 @@ public interface EstimateApi {
     )
     SseEmitter getEstimateSSE(
             @PathVariable Long estimateId,
-            HttpServletResponse response
+            HttpServletResponse response,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
     @Operation(
@@ -84,7 +90,8 @@ public interface EstimateApi {
             )
     )
     ResponseEntity<ApiResponse<EstimateDetailResponse>> getEstimate(
-            @PathVariable Long estimateId
+            @PathVariable Long estimateId,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
 
@@ -103,7 +110,8 @@ public interface EstimateApi {
     @PatchMapping("/{estimateId}/furniture")
     ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateFurnitureUpdateRequest request
+            @RequestBody @Valid EstimateFurnitureUpdateRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
     @Operation(
@@ -113,7 +121,8 @@ public interface EstimateApi {
     @PatchMapping("/{estimateId}/items")
     ResponseEntity<ApiResponse<Void>> updateItems(
             @PathVariable Long estimateId,
-            @RequestBody @Valid EstimateItemUpdateRequest request
+            @RequestBody @Valid EstimateItemUpdateRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
     @Operation(
@@ -135,6 +144,7 @@ public interface EstimateApi {
     )
     @PostMapping("/chat-summary")
     ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
-            @RequestBody String chatContent
+            @RequestBody String chatContent,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 }
