@@ -10,7 +10,6 @@ public enum SocialProvider {
     KAKAO("kakao"),
     NAVER("naver"),
     GOOGLE("google"),
-    APPLE("apple"),
     ;
 
     private final String registrationId;

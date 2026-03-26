@@ -40,20 +40,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         Map<String, Object> attributes;
         String userNameAttributeName;
 
-        if ("apple".equalsIgnoreCase(registrationId)) {
-            // Apple은 UserInfo Endpoint를 호출하지 않고 id_token을 디코딩하여 정보를 가져옴
-            String idToken = userRequest.getAdditionalParameters().get("id_token").toString();
-            attributes = decodeJwtTokenPayload(idToken);
-            attributes.put("id_token", idToken);
-            attributes.put("sub", attributes.get("sub")); // Apple의 식별자는 sub
-            userNameAttributeName = "sub";
-        } else {
-            // Kakao, Google 등은 기존 방식대로 UserInfo Endpoint 호출
-            OAuth2User oAuth2User = super.loadUser(userRequest);
-            attributes = oAuth2User.getAttributes();
-            userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
-                    .getUserNameAttributeName();
-        }
+        // Kakao, Google 등은 기존 방식대로 UserInfo Endpoint 호출
+        OAuth2User oAuth2User = super.loadUser(userRequest);
+        attributes = oAuth2User.getAttributes();
+        userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint()
+                .getUserNameAttributeName();
 
         // 유저 정보 생성
         OAuth2Attributes oAuth2Attributes = OAuth2Attributes.of(registrationId, attributes, userNameAttributeName);

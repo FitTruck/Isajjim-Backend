@@ -35,10 +35,6 @@ public abstract class OAuth2Attributes {
         if (SocialProvider.KAKAO.getRegistrationId().equals(registrationId)) {
             return new KakaoOAuth2Attributes(attributes, "id");
         }
-
-        if (SocialProvider.APPLE.getRegistrationId().equals(registrationId)) {
-            return new AppleOAuth2Attributes(attributes, "sub");
-        }
         
         if (SocialProvider.NAVER.getRegistrationId().equals(registrationId)) {
             return new NaverOAuth2Attributes(attributes, "id");
