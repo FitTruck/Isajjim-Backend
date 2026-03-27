@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.user.presentation.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
@@ -18,5 +19,5 @@ public interface UserApi {
     )
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = TokenResponse.class, description = "재발급 성공"))
     ResponseEntity<ApiResponse<TokenResponse>> tokenReissue(
-            @RequestBody ReissueRequest request);
+            @RequestBody @Valid ReissueRequest request);
 }
