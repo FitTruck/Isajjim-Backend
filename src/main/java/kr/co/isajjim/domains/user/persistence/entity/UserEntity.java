@@ -13,7 +13,12 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(name = "users")
+@Table(
+        name = "users",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_social", columnNames = {"social_provider", "social_id"})
+        }
+)
 @Builder(access = AccessLevel.PACKAGE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
