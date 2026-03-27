@@ -144,7 +144,6 @@ public interface EstimateApi {
     )
     @PostMapping("/chat-summary")
     ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
-            @RequestBody String chatContent,
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
+            @RequestBody String chatContent
     );
 }
