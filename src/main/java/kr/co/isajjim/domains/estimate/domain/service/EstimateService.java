@@ -12,6 +12,7 @@ import kr.co.isajjim.domains.estimate.persistence.repository.EstimateRepository;
 import kr.co.isajjim.domains.image.application.mapper.ImageMapper;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
 import kr.co.isajjim.domains.image.domain.service.ImageService;
+import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.llm.LlmProvider;
@@ -33,8 +34,8 @@ public class EstimateService {
         return getOrThrow(estimateId);
     }
 
-    public Long createEstimate(EstimateRequest request) {
-        Estimate estimate = EstimateMapper.toEstimate();
+    public Long createEstimate(EstimateRequest request, UserEntity user) {
+        Estimate estimate = EstimateMapper.toEstimate(user);
         request.imageUrls().forEach(url -> estimate.addImage(ImageMapper.toImage(url)));
 
         return estimateRepository.save(estimate).getId();
@@ -57,8 +58,7 @@ public class EstimateService {
         estimate.updateEndLocationDetail(request.endLocation());
     }
 
-    public void updateItems(Long estimateId, EstimateItemUpdateRequest request) {
-        Estimate estimate = getOrThrow(estimateId);
+    public void updateItems(Estimate estimate, EstimateItemUpdateRequest request) {
         estimate.deleteEstimateItem();
 
         request.items().forEach(itemRequest -> {

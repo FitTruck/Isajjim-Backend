@@ -12,6 +12,8 @@ import kr.co.isajjim.domains.estimate.domain.service.EstimateService;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.furniture.domain.service.FurnitureService;
 import kr.co.isajjim.domains.image.application.response.ImageAnalysisDto;
+import kr.co.isajjim.domains.user.domain.service.UserService;
+import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.global.annotation.UseCase;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,10 +32,12 @@ public class EstimateUseCase {
     private final EstimateService estimateService;
     private final EstimateNotificationService notificationService;
     private final ApplicationEventPublisher eventPublisher;
+    private final UserService userService;
 
     @Transactional
-    public Long createAndAnalyze(EstimateRequest request) {
-        Long estimateId = estimateService.createEstimate(request);
+    public Long createAndAnalyze(EstimateRequest request, Long userId) {
+        UserEntity user = userService.getUserById(userId);
+        Long estimateId = estimateService.createEstimate(request, user);
 
         List<ImageAnalysisDto> imageDtos = estimateService.getImageDtos(estimateId);
         eventPublisher.publishEvent(new EstimateCreatedEvent(estimateId, imageDtos));
@@ -41,28 +45,41 @@ public class EstimateUseCase {
         return estimateId;
     }
 
-    public EstimateDetailResponse getDetailEstimates(Long estimateId) {
+    public EstimateDetailResponse getDetailEstimates(Long estimateId, Long userId) {
         Estimate estimate = estimateService.getEstimateById(estimateId);
+        estimate.validateOwner(userId);
+
         return EstimateMapper.fromEstimate(estimate);
     }
 
     @Transactional
-    public void updateDefaultInfo(Long estimateId, EstimateUpdateRequest request) {
+    public void updateDefaultInfo(Long estimateId, EstimateUpdateRequest request, Long userId) {
         Estimate estimate = estimateService.getEstimateById(estimateId);
+        estimate.validateOwner(userId);
+
         estimateService.updateDefaultInfo(estimate, request);
     }
 
     @Transactional
-    public void updateFurniture(Long estimateId, EstimateFurnitureUpdateRequest request) {
+    public void updateFurniture(Long estimateId, EstimateFurnitureUpdateRequest request, Long userId) {
+        Estimate estimate = estimateService.getEstimateById(estimateId);
+        estimate.validateOwner(userId);
+
         furnitureService.updateFurnitureQuantity(estimateId, request.furnitureId(), request.quantity());
     }
 
     @Transactional
-    public void updateItems(Long estimateId, EstimateItemUpdateRequest request) {
-        estimateService.updateItems(estimateId, request);
+    public void updateItems(Long estimateId, EstimateItemUpdateRequest request, Long userId) {
+        Estimate estimate = estimateService.getEstimateById(estimateId);
+        estimate.validateOwner(userId);
+
+        estimateService.updateItems(estimate, request);
     }
 
-    public SseEmitter subscribe(Long estimateId) {
+    public SseEmitter subscribe(Long estimateId, Long userId) {
+        Estimate estimate = estimateService.getEstimateById(estimateId);
+        estimate.validateOwner(userId);
+
         SseEmitter emitter = notificationService.createConnection(estimateId);
 
         // AI 처리가 완료된 경우 즉시 알림 전송

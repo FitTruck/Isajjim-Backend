@@ -8,13 +8,16 @@ import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
 import kr.co.isajjim.domains.image.application.mapper.ImageMapper;
 import kr.co.isajjim.domains.image.application.response.ImageResponse;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
+import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 
 import java.util.List;
 
 public class EstimateMapper {
     public static Estimate toEstimate(
+            UserEntity user
     ) {
         return Estimate.builder()
+                .user(user)
                 .build();
     }
 

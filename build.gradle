@@ -28,8 +28,10 @@ dependencies {
     // Spring
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.52.0'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
     // Swagger
@@ -48,8 +50,15 @@ dependencies {
     implementation 'com.google.cloud:google-cloud-storage:2.62.0'
     implementation 'com.google.genai:google-genai:1.37.0'
 
+    // JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.13.0'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.13.0'
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
     // Test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

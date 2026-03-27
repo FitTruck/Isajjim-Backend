@@ -1,4 +1,4 @@
-package kr.co.isajjim.domains.furniture;
+package kr.co.isajjim.domains.furniture.application.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import kr.co.isajjim.domains.furniture.domain.constant.FurnitureLabel;
