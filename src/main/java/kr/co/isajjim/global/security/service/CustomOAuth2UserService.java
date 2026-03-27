@@ -67,19 +67,4 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                 oAuth2Attributes.getProvider(),
                                 oAuth2Attributes.getProviderId())));
     }
-
-    public Map<String, Object> decodeJwtTokenPayload(String jwtToken) {
-        Map<String, Object> jwtClaims = new HashMap<>();
-        try {
-            String[] parts = jwtToken.split("\\.");
-            Base64.Decoder decoder = Base64.getUrlDecoder();
-            String payload = new String(decoder.decode(parts[1]));
-            Map<String, Object> map = objectMapper.readValue(payload, Map.class);
-            jwtClaims.putAll(map);
-            return jwtClaims;
-        } catch (Exception e) {
-            log.error("Failed to parse JWT token", e);
-        }
-        return jwtClaims;
-    }
 }
