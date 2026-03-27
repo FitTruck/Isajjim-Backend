@@ -22,7 +22,6 @@ public abstract class Constants {
             "/*.css",
             "/error",
             "/favicon.ico",
-            "/oauth2/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
     };
