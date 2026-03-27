@@ -1,7 +1,6 @@
 package kr.co.isajjim.global.security.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.transaction.Transactional;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.domains.user.persistence.repository.UserRepository;
 import kr.co.isajjim.global.security.auth.CustomUserDetails;
@@ -15,6 +14,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
