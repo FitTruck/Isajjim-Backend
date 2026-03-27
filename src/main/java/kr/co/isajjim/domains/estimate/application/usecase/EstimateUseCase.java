@@ -77,10 +77,10 @@ public class EstimateUseCase {
     }
 
     public SseEmitter subscribe(Long estimateId, Long userId) {
-        SseEmitter emitter = notificationService.createConnection(estimateId);
-
         Estimate estimate = estimateService.getEstimateById(estimateId);
         estimate.validateOwner(userId);
+
+        SseEmitter emitter = notificationService.createConnection(estimateId);
 
         // AI 처리가 완료된 경우 즉시 알림 전송
         if (estimateService.isAIProcessingCompleted(estimateId)) {
