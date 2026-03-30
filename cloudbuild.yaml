@@ -1,0 +1,35 @@
+steps:
+  # 1. 최신 코드 기반 Docker 이미지 빌드
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'build'
+      - '-t'
+      - 'asia-northeast3-docker.pkg.dev/knu-2026-agion427/isajjim-repo/backend:$COMMIT_SHA'
+      - '-t'
+      - 'asia-northeast3-docker.pkg.dev/knu-2026-agion427/isajjim-repo/backend:latest'
+      - '.'
+
+  # 2. Artifact Registry에 두 가지 태그(커밋 해시, latest) 모두 푸시
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'push'
+      - '--all-tags'
+      - 'asia-northeast3-docker.pkg.dev/knu-2026-agion427/isajjim-repo/backend'
+
+  # 3. Compute Engine 배포 (SSH 접속 후 컨테이너 교체)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud compute ssh --zone "asia-northeast3-a" "isajjim-backend" --project "knu-2026-agion427" --tunnel-through-iap --command "
+          sudo docker pull asia-northeast3-docker.pkg.dev/knu-2026-agion427/isajjim-repo/backend:latest &&
+          sudo docker stop isajjim-backend || true &&
+          sudo docker rm isajjim-backend || true &&
+          sudo docker run -d \
+            --name isajjim-backend \
+            --env-file /home/ubuntu/configs/.env \
+            -p 8080:8080 \
+            --restart unless-stopped \
+            asia-northeast3-docker.pkg.dev/knu-2026-agion427/isajjim-repo/backend:latest
+        "
