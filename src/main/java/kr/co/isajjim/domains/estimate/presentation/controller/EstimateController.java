@@ -10,9 +10,11 @@ import kr.co.isajjim.domains.estimate.application.usecase.EstimateUseCase;
 import kr.co.isajjim.domains.estimate.presentation.api.EstimateApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.security.auth.CustomUserDetails;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,6 +25,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequestMapping("/api/v1/estimates")
 @RequiredArgsConstructor
 public class EstimateController implements EstimateApi {
+
+    @Value("${auth.internal-token}")
+    private String internalToken;
 
     private final EstimateUseCase estimateUseCase;
 
@@ -93,9 +98,11 @@ public class EstimateController implements EstimateApi {
     @Override
     @PostMapping("/{estimateId}/callback")
     public ResponseEntity<ApiResponse<Void>> aiCallback(
+            @RequestHeader("X-INTERNAL-TOKEN") String token,
             @PathVariable Long estimateId,
             @RequestBody AIAnalysisResponse request
     ) {
+        validateToken(token);
         estimateUseCase.saveFurnitureList(estimateId, request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
@@ -107,5 +114,12 @@ public class EstimateController implements EstimateApi {
     ) {
         EstimateChatSummaryResponse response = estimateUseCase.generateChatSummary(chatContent);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    // 추후 Filter 등으로 리팩토링 가능
+    private void validateToken(String token) {
+        if (!internalToken.equals(token)) {
+            throw new BaseException(ResponseCode.UNAUTHORIZED);
+        }
     }
 }
