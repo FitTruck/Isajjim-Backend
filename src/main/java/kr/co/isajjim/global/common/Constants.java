@@ -16,6 +16,7 @@ public abstract class Constants {
 
     // whitelist
     public static final String[] WHITELIST = {
+            "/api/v1/estimates/*/callback",
             "/api/v1/users/reissue",
             "/login/**",
             "/oauth2/**",

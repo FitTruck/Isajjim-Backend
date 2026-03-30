@@ -21,10 +21,7 @@ import kr.co.isajjim.global.security.auth.CustomUserDetails;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Tag(name = "Estimate", description = "견적서 API")
@@ -129,6 +126,7 @@ public interface EstimateApi {
             summary = "AI Callback API"
     )
     ResponseEntity<ApiResponse<Void>> aiCallback(
+            @RequestHeader("X-INTERNAL-TOKEN") String token,
             @PathVariable Long estimateId,
             @RequestBody AIAnalysisResponse request
     );
