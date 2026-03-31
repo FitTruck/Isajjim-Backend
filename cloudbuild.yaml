@@ -1,9 +1,9 @@
 substitutions:
-  _REGION: 'asia-northeast3'
-  _ZONE: 'asia-northeast3-a'
-  _REPO_NAME: 'isajjim-repo'
+  _REGION: ''
+  _ZONE: ''
+  _REPO_NAME: ''
   _IMAGE_NAME: 'backend'
-  _INSTANCE_NAME: 'isajjim-backend'
+  _INSTANCE_NAME: ''
   _ENV_FILE: '/home/ubuntu/configs/.env'
   _PORT: '8080'
 
