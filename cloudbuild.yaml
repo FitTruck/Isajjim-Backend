@@ -1,0 +1,44 @@
+substitutions:
+  _REGION: ''
+  _ZONE: ''
+  _REPO_NAME: ''
+  _IMAGE_NAME: 'backend'
+  _INSTANCE_NAME: ''
+  _ENV_FILE: '/home/ubuntu/configs/.env'
+  _PORT: '8080'
+
+steps:
+  # 1. 최신 코드 기반 Docker 이미지 빌드
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'build'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:$COMMIT_SHA'
+      - '-t'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest'
+      - '.'
+
+  # 2. Artifact Registry에 두 가지 태그(커밋 해시, latest) 모두 푸시
+  - name: 'gcr.io/cloud-builders/docker'
+    args: 
+      - 'push'
+      - '--all-tags'
+      - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}'
+
+  # 3. Compute Engine 배포 (SSH 접속 후 컨테이너 교체)
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        gcloud compute ssh --zone "${_ZONE}" "${_INSTANCE_NAME}" --project "$PROJECT_ID" --tunnel-through-iap --command "
+          sudo docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest &&
+          sudo docker stop ${_INSTANCE_NAME} || true &&
+          sudo docker rm ${_INSTANCE_NAME} || true &&
+          sudo docker run -d \
+            --name ${_INSTANCE_NAME} \
+            --env-file ${_ENV_FILE} \
+            -p ${_PORT}:${_PORT} \
+            --restart unless-stopped \
+            ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest
+        "
