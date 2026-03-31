@@ -3,7 +3,7 @@ substitutions:
   _ZONE: 'asia-northeast3-a'
   _REPO_NAME: 'isajjim-repo'
   _IMAGE_NAME: 'backend'
-  _INSTANCE_NAME: 'isajjim_backend'
+  _INSTANCE_NAME: 'isajjim-backend'
   _ENV_FILE: '/home/ubuntu/configs/.env'
   _PORT: '8080'
 
