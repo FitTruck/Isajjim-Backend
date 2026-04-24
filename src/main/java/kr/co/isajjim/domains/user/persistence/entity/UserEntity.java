@@ -88,4 +88,8 @@ public class UserEntity extends BaseEntity {
     public void deleteProfileImage() {
         this.profileImageUrl = null;
     }
+
+    public void updateRole(Role role) {
+        this.role = role;
+    }
 }
