@@ -1,4 +1,4 @@
-package kr.co.isajjim.domains.estimate.persistence.repository;
+package kr.co.isajjim.global.sse;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
