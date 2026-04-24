@@ -3,12 +3,15 @@ package kr.co.isajjim.domains.user.presentation.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.user.application.dto.request.RoleRequest;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
+import kr.co.isajjim.global.security.auth.CustomUserDetails;
 import kr.co.isajjim.global.security.dto.ReissueRequest;
 import kr.co.isajjim.global.security.token.TokenResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @Tag(name = "User", description = "유저 API")
@@ -19,5 +22,13 @@ public interface UserApi {
     )
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = TokenResponse.class, description = "재발급 성공"))
     ResponseEntity<ApiResponse<TokenResponse>> tokenReissue(
-            @RequestBody @Valid ReissueRequest request);
+            @RequestBody @Valid ReissueRequest request
+    );
+
+    @Operation(summary = "유저 본인 역할 변경", description = "USER/PARTNER 중 선택하여 변경")
+    @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(description = "변경 성공"))
+    ResponseEntity<ApiResponse<Void>> updateRole(
+            @RequestBody @Valid RoleRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
+    );
 }

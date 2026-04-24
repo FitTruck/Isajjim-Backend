@@ -65,4 +65,8 @@ public class UserEntity extends BaseEntity {
     public void updateSocialRefreshToken(String socialRefreshToken) {
         this.socialRefreshToken = socialRefreshToken;
     }
+
+    public void updateRole(Role role) {
+        this.role = role;
+    }
 }
