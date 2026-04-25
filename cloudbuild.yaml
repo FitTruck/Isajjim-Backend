@@ -73,8 +73,8 @@ steps:
             -e SPRING_PROFILES_ACTIVE=dev \
             -e DB_URL=jdbc:mysql://${_DB_PRIVATE_IP}:3306/isajjim \
             -e DB_USERNAME=isajjim-user \
-            -e \"DB_PASSWORD=\$DB_PASSWORD\" \
-            -e \"GEMINI_API_KEY=\$GEMINI_API_KEY\" \
+            -e \"DB_PASSWORD=\$$DB_PASSWORD\" \
+            -e \"GEMINI_API_KEY=\$$GEMINI_API_KEY\" \
             -e GEMINI_MODEL=gemini-2.0-flash \
             -e GOOGLE_PROJECT_ID=$PROJECT_ID \
             -e GOOGLE_GCS_BUCKET=${_IMAGES_BUCKET} \
@@ -88,19 +88,19 @@ steps:
             -e LOGIN_FAIL_PAGE=/ \
             -e LOCAL_URL=http://localhost:3000 \
             -e LOCAL_SECURE_URL=https://localhost:3000 \
-            -e \"JWT_SECRET=\$JWT_SECRET\" \
+            -e \"JWT_SECRET=\$$JWT_SECRET\" \
             -e JWT_ACCESS_TOKEN_EXPIRATION_TIME=${_JWT_ACCESS_TOKEN_EXPIRATION_TIME} \
             -e JWT_REFRESH_TOKEN_EXPIRATION_TIME=${_JWT_REFRESH_TOKEN_EXPIRATION_TIME} \
             -e JWT_REFRESH_TOKEN_REISSUE_LIMIT_DAYS=${_JWT_REFRESH_TOKEN_REISSUE_LIMIT_DAYS} \
-            -e \"APP_ENCRYPTION_KEY=\$APP_ENCRYPTION_KEY\" \
-            -e \"AUTH_TOKEN=\$AUTH_TOKEN\" \
-            -e \"KAKAO_CLIENT_ID=\$KAKAO_CLIENT_ID\" \
-            -e \"KAKAO_CLIENT_SECRET=\$KAKAO_CLIENT_SECRET\" \
-            -e \"KAKAO_ADMIN_KEY=\$KAKAO_ADMIN_KEY\" \
-            -e \"GOOGLE_CLIENT_ID=\$GOOGLE_CLIENT_ID\" \
-            -e \"GOOGLE_CLIENT_SECRET=\$GOOGLE_CLIENT_SECRET\" \
-            -e \"NAVER_CLIENT_ID=\$NAVER_CLIENT_ID\" \
-            -e \"NAVER_CLIENT_SECRET=\$NAVER_CLIENT_SECRET\" \
+            -e \"APP_ENCRYPTION_KEY=\$$APP_ENCRYPTION_KEY\" \
+            -e \"AUTH_TOKEN=\$$AUTH_TOKEN\" \
+            -e \"KAKAO_CLIENT_ID=\$$KAKAO_CLIENT_ID\" \
+            -e \"KAKAO_CLIENT_SECRET=\$$KAKAO_CLIENT_SECRET\" \
+            -e \"KAKAO_ADMIN_KEY=\$$KAKAO_ADMIN_KEY\" \
+            -e \"GOOGLE_CLIENT_ID=\$$GOOGLE_CLIENT_ID\" \
+            -e \"GOOGLE_CLIENT_SECRET=\$$GOOGLE_CLIENT_SECRET\" \
+            -e \"NAVER_CLIENT_ID=\$$NAVER_CLIENT_ID\" \
+            -e \"NAVER_CLIENT_SECRET=\$$NAVER_CLIENT_SECRET\" \
             --network host \
             --restart unless-stopped \
             ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest
