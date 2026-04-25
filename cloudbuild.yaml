@@ -4,8 +4,15 @@ substitutions:
   _REPO_NAME: ''
   _IMAGE_NAME: 'backend'
   _INSTANCE_NAME: ''
-  _ENV_FILE: '/home/ubuntu/configs/.env'
   _PORT: '8080'
+  _DB_PRIVATE_IP: ''
+  _BACKEND_IP: ''
+  _IMAGES_BUCKET: ''
+  _FRONTEND_URL: ''
+  _API_DOMAIN: ''
+  _JWT_ACCESS_TOKEN_EXPIRATION_TIME: '604800000'
+  _JWT_REFRESH_TOKEN_EXPIRATION_TIME: '604800000'
+  _JWT_REFRESH_TOKEN_REISSUE_LIMIT_DAYS: '14'
 
 steps:
   # 1. 최신 코드 기반 Docker 이미지 빌드
@@ -20,28 +27,84 @@ steps:
 
   # 2. Artifact Registry에 두 가지 태그(커밋 해시, latest) 모두 푸시
   - name: 'gcr.io/cloud-builders/docker'
-    args: 
+    args:
       - 'push'
       - '--all-tags'
       - '${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}'
 
-  # 3. Compute Engine 배포 (SSH 접속 후 컨테이너 교체)
+  # 3. Compute Engine 배포 (Secret Manager에서 시크릿을 가져와 컨테이너 교체)
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        gcloud compute ssh --zone "${_ZONE}" "${_INSTANCE_NAME}" --project "$PROJECT_ID" --tunnel-through-iap --command "
-          sudo docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest &&
-          sudo docker stop ${_INSTANCE_NAME} || true &&
-          sudo docker rm ${_INSTANCE_NAME} || true &&
+        gcloud compute ssh --quiet --zone "${_ZONE}" "${_INSTANCE_NAME}" --project "$PROJECT_ID" --tunnel-through-iap --command "
+          set -e
+
+          DB_PASSWORD=\$(gcloud secrets versions access latest --secret=db-password --project=$PROJECT_ID)
+          GEMINI_API_KEY=\$(gcloud secrets versions access latest --secret=gemini-api-key --project=$PROJECT_ID)
+          JWT_SECRET=\$(gcloud secrets versions access latest --secret=jwt-secret --project=$PROJECT_ID 2>/dev/null || echo 'dev-jwt-secret-change-before-prod')
+          APP_ENCRYPTION_KEY=\$(gcloud secrets versions access latest --secret=app-encryption-key --project=$PROJECT_ID 2>/dev/null || echo 'MDEyMzQ1Njc4OWFiY2RlZjAxMjM0NTY3ODlhYmNkZWY=')
+          AUTH_TOKEN=\$(gcloud secrets versions access latest --secret=auth-token --project=$PROJECT_ID 2>/dev/null || echo 'dev-auth-token-change-before-prod')
+          KAKAO_CLIENT_ID=\$(gcloud secrets versions access latest --secret=kakao-client-id --project=$PROJECT_ID 2>/dev/null || echo 'dev-kakao-client-id')
+          KAKAO_CLIENT_SECRET=\$(gcloud secrets versions access latest --secret=kakao-client-secret --project=$PROJECT_ID 2>/dev/null || echo 'dev-kakao-client-secret')
+          KAKAO_ADMIN_KEY=\$(gcloud secrets versions access latest --secret=kakao-admin-key --project=$PROJECT_ID 2>/dev/null || echo 'dev-kakao-admin-key')
+          GOOGLE_CLIENT_ID=\$(gcloud secrets versions access latest --secret=google-client-id --project=$PROJECT_ID 2>/dev/null || echo 'dev-google-client-id')
+          GOOGLE_CLIENT_SECRET=\$(gcloud secrets versions access latest --secret=google-client-secret --project=$PROJECT_ID 2>/dev/null || echo 'dev-google-client-secret')
+          NAVER_CLIENT_ID=\$(gcloud secrets versions access latest --secret=naver-client-id --project=$PROJECT_ID 2>/dev/null || echo 'dev-naver-client-id')
+          NAVER_CLIENT_SECRET=\$(gcloud secrets versions access latest --secret=naver-client-secret --project=$PROJECT_ID 2>/dev/null || echo 'dev-naver-client-secret')
+
+          sudo docker pull ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest
+
+          if ! sudo docker ps --filter \"name=redis\" --filter \"status=running\" | grep -q redis; then
+            sudo docker stop redis 2>/dev/null || true
+            sudo docker rm redis 2>/dev/null || true
+            sudo docker run -d \
+              --name redis \
+              --network host \
+              --restart unless-stopped \
+              redis:latest
+          fi
+
+          sudo docker stop ${_INSTANCE_NAME} 2>/dev/null || true
+          sudo docker rm ${_INSTANCE_NAME} 2>/dev/null || true
           sudo docker run -d \
             --name ${_INSTANCE_NAME} \
-            --env-file ${_ENV_FILE} \
-            -p ${_PORT}:${_PORT} \
+            -e SPRING_PROFILES_ACTIVE=dev \
+            -e DB_URL=jdbc:mysql://${_DB_PRIVATE_IP}:3306/isajjim \
+            -e DB_USERNAME=isajjim-user \
+            -e \"DB_PASSWORD=\$$DB_PASSWORD\" \
+            -e \"GEMINI_API_KEY=\$$GEMINI_API_KEY\" \
+            -e GEMINI_MODEL=gemini-2.0-flash \
+            -e GOOGLE_PROJECT_ID=$PROJECT_ID \
+            -e GOOGLE_GCS_BUCKET=${_IMAGES_BUCKET} \
+            -e FRONTEND_URL=${_FRONTEND_URL} \
+            -e AI_BASE_URL=http://localhost:8000 \
+            -e AI_USE_SERVER=false \
+            -e ESTIMATE_EXTRA_VOLUME_RATIO=1.1 \
+            -e DEV_SWAGGER_URL=https://${_API_DOMAIN} \
+            -e DEV_BASE_URL=https://${_API_DOMAIN} \
+            -e MAIN_PAGE=/ \
+            -e LOGIN_FAIL_PAGE=/ \
+            -e LOCAL_URL=http://localhost:3000 \
+            -e LOCAL_SECURE_URL=https://localhost:3000 \
+            -e \"JWT_SECRET=\$$JWT_SECRET\" \
+            -e JWT_ACCESS_TOKEN_EXPIRATION_TIME=${_JWT_ACCESS_TOKEN_EXPIRATION_TIME} \
+            -e JWT_REFRESH_TOKEN_EXPIRATION_TIME=${_JWT_REFRESH_TOKEN_EXPIRATION_TIME} \
+            -e JWT_REFRESH_TOKEN_REISSUE_LIMIT_DAYS=${_JWT_REFRESH_TOKEN_REISSUE_LIMIT_DAYS} \
+            -e \"APP_ENCRYPTION_KEY=\$$APP_ENCRYPTION_KEY\" \
+            -e \"AUTH_TOKEN=\$$AUTH_TOKEN\" \
+            -e \"KAKAO_CLIENT_ID=\$$KAKAO_CLIENT_ID\" \
+            -e \"KAKAO_CLIENT_SECRET=\$$KAKAO_CLIENT_SECRET\" \
+            -e \"KAKAO_ADMIN_KEY=\$$KAKAO_ADMIN_KEY\" \
+            -e \"GOOGLE_CLIENT_ID=\$$GOOGLE_CLIENT_ID\" \
+            -e \"GOOGLE_CLIENT_SECRET=\$$GOOGLE_CLIENT_SECRET\" \
+            -e \"NAVER_CLIENT_ID=\$$NAVER_CLIENT_ID\" \
+            -e \"NAVER_CLIENT_SECRET=\$$NAVER_CLIENT_SECRET\" \
+            --network host \
             --restart unless-stopped \
             ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO_NAME}/${_IMAGE_NAME}:latest
-        "
+        " -- -o StrictHostKeyChecking=no
 
 options:
   logging: CLOUD_LOGGING_ONLY
