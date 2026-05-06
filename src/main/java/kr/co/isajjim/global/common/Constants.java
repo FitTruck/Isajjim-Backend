@@ -18,6 +18,7 @@ public abstract class Constants {
     public static final String[] WHITELIST = {
             "/api/v1/estimates/*/callback",
             "/api/v1/users/reissue",
+            "/api/v1/users/auth/success",
             "/login/**",
             "/oauth2/**",
             "/*.css",

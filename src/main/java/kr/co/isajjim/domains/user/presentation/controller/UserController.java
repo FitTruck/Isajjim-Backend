@@ -9,6 +9,7 @@ import kr.co.isajjim.global.security.token.JwtProvider;
 import kr.co.isajjim.global.security.token.TokenResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,12 @@ public class UserController implements UserApi {
     @PostMapping("/reissue")
     public ResponseEntity<ApiResponse<TokenResponse>> tokenReissue(@RequestBody @Valid ReissueRequest request) {
         TokenResponse tokenResponse = jwtProvider.reissueTokens(request.refreshToken());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, tokenResponse));
+    }
+
+    @Deprecated
+    @GetMapping("/auth/success")
+    public ResponseEntity<ApiResponse<TokenResponse>> loginSuccess(TokenResponse tokenResponse) {
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, tokenResponse));
     }
 }
