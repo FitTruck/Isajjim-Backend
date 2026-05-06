@@ -69,6 +69,19 @@ infra:
     gemini:
       model: ${GEMINI_MODEL}
 
+oauth2:
+  client:
+    provider:
+      google:
+        jwks-uri: https://www.googleapis.com
+        secret: ${GOOGLE_CLIENT_ID}
+        client-secret: ${GOOGLE_CLIENT_SECRET}
+        issuer: https://accounts.google.com
+      kakao:
+        jwks-uri: https://kauth.kakao.com
+        secret: ${KAKAO_SECRET}
+        issuer: https://kauth.kakao.com
+
 # JWT
 jwt:
   secret: ${JWT_SECRET}

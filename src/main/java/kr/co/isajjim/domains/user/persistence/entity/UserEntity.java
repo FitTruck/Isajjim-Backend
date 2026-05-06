@@ -3,6 +3,7 @@ package kr.co.isajjim.domains.user.persistence.entity;
 import jakarta.persistence.*;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.user.domain.constant.Role;
+import kr.co.isajjim.domains.user.domain.constant.UserStatus;
 import kr.co.isajjim.global.base.entity.BaseEntity;
 import kr.co.isajjim.global.security.constant.SocialProvider;
 import kr.co.isajjim.global.utils.DatabaseEncryptionConverter;
@@ -49,17 +50,25 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Estimate> estimates = new ArrayList<>();
 
-    public static UserEntity socialSignup(String name, String email, SocialProvider socialProvider, String socialId) {
+    public static UserEntity socialSignup(String name, String email, SocialProvider socialProvider, String socialId, UserStatus status) {
         return UserEntity.builder()
                 .name(name)
                 .email(email)
                 .socialProvider(socialProvider)
                 .socialId(socialId)
                 .role(Role.USER)
+                .status(status)
                 .build();
+    }
+
+    public void completeSignup() {
+        this.status = UserStatus.ACTIVE;
     }
 
     public void updateSocialRefreshToken(String socialRefreshToken) {
