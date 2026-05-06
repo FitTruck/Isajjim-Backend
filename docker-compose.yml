@@ -1,0 +1,60 @@
+services:
+  spring-blue:
+    image: ghcr.io/fittruck/isajjim-backend:dev
+    container_name: spring-blue
+    ports:
+      - "8080:8080"
+    networks:
+      - backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./configs:/configs
+    env_file:
+      - .env
+    environment:
+      - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/configs/
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE:-local}
+
+  spring-green:
+    image: ghcr.io/fittruck/isajjim-backend:dev
+    container_name: spring-green
+    ports:
+      - "8081:8080"
+    networks:
+      - backend
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./configs:/configs
+    env_file:
+      - .env
+    environment:
+      - SPRING_CONFIG_ADDITIONAL-LOCATION=file:/configs/
+      - SPRING_PROFILES_ACTIVE=${SPRING_PROFILE:-local}
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - backend
+    volumes:
+      - ./configs/nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./configs/certbot/conf:/etc/letsencrypt
+      - ./configs/certbot/www:/var/www/certbot
+      - ./configs/nginx/service-url.inc:/etc/nginx/conf.d/service-url.inc
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./configs/certbot/conf:/etc/letsencrypt
+      - ./configs/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done;'"
+
+networks:
+  backend:
