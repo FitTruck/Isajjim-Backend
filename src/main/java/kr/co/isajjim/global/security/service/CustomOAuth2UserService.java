@@ -1,6 +1,7 @@
 package kr.co.isajjim.global.security.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import kr.co.isajjim.domains.user.domain.constant.UserStatus;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.domains.user.persistence.repository.UserRepository;
 import kr.co.isajjim.global.security.auth.CustomUserDetails;
@@ -65,6 +66,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                                 oAuth2Attributes.getName(),
                                 oAuth2Attributes.getEmail(),
                                 oAuth2Attributes.getProvider(),
-                                oAuth2Attributes.getProviderId())));
+                                oAuth2Attributes.getProviderId(),
+                                // 웹 진입점 이용약관 동의 없이 즉시 회원가입
+                                UserStatus.ACTIVE
+                        )
+                ));
     }
 }

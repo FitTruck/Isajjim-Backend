@@ -167,4 +167,8 @@ public class JwtProvider {
             throw new BaseException(ResponseCode.INVALID_JWT_TOKEN);
         }
     }
+
+    public void removeRefreshToken(Long userId, String refreshToken) {
+        refreshTokenService.deleteRefreshToken(userId, refreshToken);
+    }
 }
