@@ -7,9 +7,11 @@ import kr.co.isajjim.global.annotation.UseCase;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.security.client.google.GoogleAuthClient;
+import kr.co.isajjim.global.security.client.naver.NaverAuthClient;
 import kr.co.isajjim.global.security.component.OAuthOidcHelper;
 import kr.co.isajjim.global.security.constant.SocialProvider;
 import kr.co.isajjim.global.security.dto.GoogleTokenResponse;
+import kr.co.isajjim.global.security.dto.NaverUserInfoResponse;
 import kr.co.isajjim.global.security.dto.OidcPayload;
 import kr.co.isajjim.global.security.dto.SignUpRequest;
 import kr.co.isajjim.global.security.properties.google.GoogleOidcProperties;
@@ -31,13 +33,25 @@ public class OAuth2UseCase {
     private final JwtProvider jwtProvider;
     private final GoogleAuthClient googleAuthClient;
     private final GoogleOidcProperties googleOidcProperties;
+    private final NaverAuthClient naverAuthClient;
 
     public TokenResponse signUp(SocialProvider provider, SignUpRequest.Oidc request) {
-        OidcPayload payload = oauthOidcHelper.getPayload(provider, request.idToken());
+        String socialId;
+        String email;
+        String name;
 
-        String socialId = payload.sub();
-        String email = payload.email();
-        String name = payload.name();
+        if (provider == SocialProvider.NAVER) {
+            NaverUserInfoResponse userInfo = naverAuthClient.getUserInfo(request.idToken());
+            NaverUserInfoResponse.Response naverResponse = userInfo.response();
+            socialId = naverResponse.id();
+            email = naverResponse.email();
+            name = naverResponse.name();
+        } else {
+            OidcPayload payload = oauthOidcHelper.getPayload(provider, request.idToken());
+            socialId = payload.sub();
+            email = payload.email();
+            name = payload.name();
+        }
 
         UserEntity user = userService.findBySocialProviderAndSocialId(provider, socialId)
                 .orElseGet(() -> {
