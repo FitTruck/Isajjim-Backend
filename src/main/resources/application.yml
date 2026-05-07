@@ -70,6 +70,10 @@ infra:
       model: ${GEMINI_MODEL}
 
 oauth2:
+  allowed-redirect-uris:
+    - http://localhost:8081
+    - https://localhost:8081
+    - https://isajjim.kro.kr
   client:
     provider:
       google:

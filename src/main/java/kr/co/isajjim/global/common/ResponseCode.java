@@ -37,6 +37,7 @@ public enum ResponseCode {
     INVALID_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "AUTH-004", "유효하지 않은 토큰입니다."),
     NEED_REGISTER(HttpStatus.UNAUTHORIZED, "AUTH-005", "회원가입이 필요한 유저입니다.(이용약관 미동의)"),
     INVALID_HEADER(HttpStatus.BAD_REQUEST, "AUTH-006", "헤더가 올바르지 않습니다."),
+    INVALID_REDIRECT_URI(HttpStatus.BAD_REQUEST, "AUTH-007", "허용되지 않은 redirect_uri입니다."),
 
     /*    USER        */
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "USER-001", "요청 유저 ID를 찾을 수 없습니다."),

@@ -2,7 +2,9 @@ package kr.co.isajjim.global.security.handler;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kr.co.isajjim.global.config.properties.FrontendProperties;
+import kr.co.isajjim.global.common.ApiResponse;
+import kr.co.isajjim.global.common.ResponseCode;
+import kr.co.isajjim.global.security.component.OAuth2ResponseHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.AuthenticationException;
@@ -12,13 +14,14 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 @Slf4j
 public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
-    private final FrontendProperties frontendProperties;
+    private final OAuth2ResponseHandler oAuth2ResponseHandler;
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
@@ -34,6 +37,12 @@ public class OAuth2FailureHandler extends SimpleUrlAuthenticationFailureHandler 
         }
 
         log.error("Stack Trace: ", exception);
-        response.sendRedirect(frontendProperties.baseUrl() + frontendProperties.loginFailPage());
+
+        oAuth2ResponseHandler.sendRedirectOrJson(
+                request, response,
+                Map.of("error", "oauth2_login_failed"),
+                HttpServletResponse.SC_UNAUTHORIZED,
+                ApiResponse.ofFail(ResponseCode.UNAUTHORIZED)
+        );
     }
 }

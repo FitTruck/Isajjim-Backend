@@ -13,10 +13,3 @@ spring:
 
 swagger:
   server-url: http://localhost:8080
-
-frontend:
-  base-url: ${LOCAL_BASE_URL}
-  main-page: ${MAIN_PAGE}
-  login-fail-page: ${LOGIN_FAIL_PAGE}
-  local-url: ${LOCAL_URL}
-  local-secure-url: ${LOCAL_SECURE_URL}
