@@ -47,8 +47,10 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
 
     // Google
-    implementation 'com.google.cloud:google-cloud-storage:2.62.0'
     implementation 'com.google.genai:google-genai:1.37.0'
+
+    // AWS
+    implementation 'software.amazon.awssdk:s3:2.40.8'
 
     // JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.13.0'
