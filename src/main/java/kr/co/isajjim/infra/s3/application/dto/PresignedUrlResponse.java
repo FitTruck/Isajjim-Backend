@@ -1,4 +1,4 @@
-package kr.co.isajjim.infra.google.gcs.application.dto;
+package kr.co.isajjim.infra.s3.application.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
