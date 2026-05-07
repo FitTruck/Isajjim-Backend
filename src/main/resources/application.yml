@@ -62,12 +62,16 @@ infra:
     base-url: ${AI_BASE_URL}
     use-server: ${AI_USE_SERVER}
   google:
-    project-id: ${GOOGLE_PROJECT_ID}
-    gcs:
-      key-path: ${GOOGLE_GCS_KEY_PATH:}
-      bucket: ${GOOGLE_GCS_BUCKET}
     gemini:
       model: ${GEMINI_MODEL}
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${AWS_S3_BUCKET}
 
 oauth2:
   allowed-redirect-uris:
