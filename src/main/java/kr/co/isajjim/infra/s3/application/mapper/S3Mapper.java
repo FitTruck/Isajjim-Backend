@@ -1,12 +1,12 @@
-package kr.co.isajjim.infra.google.gcs.application.mapper;
+package kr.co.isajjim.infra.s3.application.mapper;
 
-import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlListResponse;
-import kr.co.isajjim.infra.google.gcs.application.dto.PresignedUrlResponse;
+import kr.co.isajjim.infra.s3.application.dto.PresignedUrlListResponse;
+import kr.co.isajjim.infra.s3.application.dto.PresignedUrlResponse;
 
 import java.net.URL;
 import java.util.List;
 
-public class GcsMapper {
+public class S3Mapper {
 
     public static PresignedUrlResponse toPresignedUrlResponse(URL presignedUrl, String fileUrl, String key) {
         return PresignedUrlResponse.builder()
