@@ -55,11 +55,17 @@ public interface ChatApi {
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
-    @Operation(summary = "FCM 토큰 등록", description = "푸시 알림을 위한 FCM 디바이스 토큰을 등록하거나 갱신합니다. 앱 시작 시 호출하세요.")
+    @Operation(summary = "FCM 토큰 등록", description = "푸시 알림을 위한 FCM 디바이스 토큰을 등록합니다. 앱 시작 시 호출하세요.")
     @PostMapping("/device-token")
-    ResponseEntity<ApiResponse<Void>> saveDeviceToken(
+    ResponseEntity<ApiResponse<Void>> registerDeviceToken(
             @RequestBody @Valid DeviceTokenRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
+    );
+
+    @Operation(summary = "FCM 토큰 해제", description = "푸시 알림을 위한 FCM 디바이스 토큰을 해제합니다. 로그아웃 시 호출하세요.")
+    @DeleteMapping("/device-token")
+    ResponseEntity<ApiResponse<Void>> unregisterDeviceToken(
+            @RequestBody @Valid DeviceTokenRequest request
     );
 
     @Operation(

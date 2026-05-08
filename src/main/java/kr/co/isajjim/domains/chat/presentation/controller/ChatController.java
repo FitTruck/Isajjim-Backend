@@ -6,6 +6,7 @@ import kr.co.isajjim.domains.chat.application.dto.request.DeviceTokenRequest;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatMessagePageResponse;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatRoomResponse;
 import kr.co.isajjim.domains.chat.application.usecase.ChatUseCase;
+import kr.co.isajjim.domains.chat.application.usecase.DeviceTokenUseCase;
 import kr.co.isajjim.domains.chat.presentation.api.ChatApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
@@ -26,6 +27,7 @@ import java.util.List;
 public class ChatController implements ChatApi {
 
     private final ChatUseCase chatUseCase;
+    private final DeviceTokenUseCase deviceTokenUseCase;
     private final S3UseCase s3UseCase;
 
     @Override
@@ -71,11 +73,20 @@ public class ChatController implements ChatApi {
 
     @Override
     @PostMapping("/device-token")
-    public ResponseEntity<ApiResponse<Void>> saveDeviceToken(
+    public ResponseEntity<ApiResponse<Void>> registerDeviceToken(
             @RequestBody @Valid DeviceTokenRequest request,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        chatUseCase.saveDeviceToken(user.getUserId(), request.fcmToken());
+        deviceTokenUseCase.registerDeviceToken(user.getUserId(), request);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @DeleteMapping("/device-token")
+    public ResponseEntity<ApiResponse<Void>> unregisterDeviceToken(
+            @RequestBody @Valid DeviceTokenRequest request
+    ) {
+        deviceTokenUseCase.unregisterDeviceToken(request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
