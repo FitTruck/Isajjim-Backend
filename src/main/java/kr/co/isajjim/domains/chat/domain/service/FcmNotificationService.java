@@ -4,6 +4,7 @@ import com.google.firebase.messaging.*;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatMessageResponse;
 import kr.co.isajjim.domains.chat.persistence.entity.DeviceToken;
 import kr.co.isajjim.domains.chat.persistence.repository.DeviceTokenRepository;
+import kr.co.isajjim.domains.user.domain.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,17 +19,19 @@ public class FcmNotificationService {
 
     private final DeviceTokenRepository deviceTokenRepository;
     private final DeviceTokenService deviceTokenService;
+    private final UserService userService;
 
     public void sendMessageNotification(Long recipientId, ChatMessageResponse message) {
         List<DeviceToken> deviceTokens = deviceTokenRepository.findAllByUserId(recipientId);
         if (deviceTokens.isEmpty()) return;
 
         List<String> tokens = deviceTokens.stream().map(DeviceToken::getToken).toList();
+        String senderName = userService.getUserById(message.senderId()).getName();
 
         MulticastMessage fcmMessage = MulticastMessage.builder()
                 .addAllTokens(tokens)
                 .setNotification(Notification.builder()
-                        .setTitle("새 메시지")
+                        .setTitle(senderName)
                         .setBody(message.content())
                         .build())
                 .putData("roomId", String.valueOf(message.roomId()))
