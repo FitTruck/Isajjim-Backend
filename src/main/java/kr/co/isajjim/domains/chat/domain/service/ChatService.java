@@ -35,7 +35,7 @@ public class ChatService {
         ChatMessage message = ChatMessage.create(room, senderId, request.content(), request.type());
         chatMessageRepository.save(message);
 
-        String lastMessagePreview = request.type() == MessageType.IMAGE ? "사진" : request.content();
+        String lastMessagePreview = request.type() == MessageType.IMAGE ? MessageType.IMAGE.label : request.content();
         room.updateLastMessage(lastMessagePreview);
         room.incrementUnreadCount(senderId);
 

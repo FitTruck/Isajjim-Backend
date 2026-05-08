@@ -28,7 +28,7 @@ public class FcmNotificationService {
 
         List<String> tokens = deviceTokens.stream().map(DeviceToken::getToken).toList();
         String senderName = userService.getUserById(message.senderId()).getName();
-        String body = message.type() == MessageType.IMAGE ? "사진" : message.content();
+        String body = message.type() == MessageType.IMAGE ? MessageType.IMAGE.label : message.content();
 
         MulticastMessage fcmMessage = MulticastMessage.builder()
                 .addAllTokens(tokens)
