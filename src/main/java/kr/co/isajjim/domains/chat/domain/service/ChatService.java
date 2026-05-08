@@ -39,7 +39,7 @@ public class ChatService {
         room.incrementUnreadCount(senderId);
 
         ChatMessageResponse response = ChatMessageResponse.from(message);
-        messagingTemplate.convertAndSend("/topic/chat/rooms/" + roomId, response);
+        messagingTemplate.convertAndSend("/sub/chat/rooms/" + roomId, response);
         fcmNotificationService.sendMessageNotification(room.getRecipientId(senderId), response);
 
         return response;
