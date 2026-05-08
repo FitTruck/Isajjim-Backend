@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.chat.domain.service;
 
 import kr.co.isajjim.domains.chat.application.dto.request.ChatMessageRequest;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatMessageResponse;
+import kr.co.isajjim.domains.chat.domain.constant.MessageType;
 import kr.co.isajjim.domains.chat.persistence.entity.ChatMessage;
 import kr.co.isajjim.domains.chat.persistence.entity.ChatRoom;
 import kr.co.isajjim.domains.chat.persistence.repository.ChatMessageRepository;
@@ -34,7 +35,8 @@ public class ChatService {
         ChatMessage message = ChatMessage.create(room, senderId, request.content(), request.type());
         chatMessageRepository.save(message);
 
-        room.updateLastMessage(request.content());
+        String lastMessagePreview = request.type() == MessageType.IMAGE ? "사진" : request.content();
+        room.updateLastMessage(lastMessagePreview);
         room.incrementUnreadCount(senderId);
 
         ChatMessageResponse response = ChatMessageResponse.from(message);

@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.chat.domain.service;
 
 import com.google.firebase.messaging.*;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatMessageResponse;
+import kr.co.isajjim.domains.chat.domain.constant.MessageType;
 import kr.co.isajjim.domains.chat.persistence.entity.DeviceToken;
 import kr.co.isajjim.domains.chat.persistence.repository.DeviceTokenRepository;
 import kr.co.isajjim.domains.user.domain.service.UserService;
@@ -27,12 +28,13 @@ public class FcmNotificationService {
 
         List<String> tokens = deviceTokens.stream().map(DeviceToken::getToken).toList();
         String senderName = userService.getUserById(message.senderId()).getName();
+        String body = message.type() == MessageType.IMAGE ? "사진" : message.content();
 
         MulticastMessage fcmMessage = MulticastMessage.builder()
                 .addAllTokens(tokens)
                 .setNotification(Notification.builder()
                         .setTitle(senderName)
-                        .setBody(message.content())
+                        .setBody(body)
                         .build())
                 .putData("roomId", String.valueOf(message.roomId()))
                 .build();
