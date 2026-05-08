@@ -64,6 +64,8 @@ infra:
   google:
     gemini:
       model: ${GEMINI_MODEL}
+  firebase:
+    key-path: file:configs/firebaseKey.json
   aws:
     credentials:
       access-key: ${AWS_ACCESS_KEY}

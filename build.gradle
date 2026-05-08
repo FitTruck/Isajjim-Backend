@@ -48,6 +48,7 @@ dependencies {
 
     // Google
     implementation 'com.google.genai:google-genai:1.37.0'
+    implementation 'com.google.firebase:firebase-admin:9.8.0'
 
     // AWS
     implementation 'software.amazon.awssdk:s3:2.40.8'
