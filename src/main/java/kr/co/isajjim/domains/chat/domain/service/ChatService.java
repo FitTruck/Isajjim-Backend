@@ -28,9 +28,8 @@ public class ChatService {
     private final FcmNotificationService fcmNotificationService;
 
     @Transactional
-    public ChatMessageResponse sendMessage(Long roomId, Long senderId, ChatMessageRequest request) {
-        ChatRoom room = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_CHAT_ROOM));
+    public void sendMessage(Long roomId, Long senderId, ChatMessageRequest request) {
+        ChatRoom room = getOrThrow(roomId);
 
         ChatMessage message = ChatMessage.create(room, senderId, request.content(), request.type());
         chatMessageRepository.save(message);
@@ -41,8 +40,6 @@ public class ChatService {
         ChatMessageResponse response = ChatMessageResponse.from(message);
         messagingTemplate.convertAndSend("/sub/chat/rooms/" + roomId, response);
         fcmNotificationService.sendMessageNotification(room.getRecipientId(senderId), response);
-
-        return response;
     }
 
     @Transactional
@@ -61,8 +58,13 @@ public class ChatService {
 
     @Transactional
     public void markAsRead(Long roomId, Long userId) {
-        ChatRoom room = chatRoomRepository.findById(roomId)
-                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_CHAT_ROOM));
+        ChatRoom room = getOrThrow(roomId);
         room.resetUnreadCount(userId);
+    }
+
+    /* HELPER METHOD */
+    private ChatRoom getOrThrow(Long id) {
+        return chatRoomRepository.findById(id)
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_CHAT_ROOM));
     }
 }
