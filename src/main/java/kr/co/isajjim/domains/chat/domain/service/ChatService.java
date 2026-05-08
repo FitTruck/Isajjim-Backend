@@ -31,6 +31,9 @@ public class ChatService {
     @Transactional
     public void sendMessage(Long roomId, Long senderId, ChatMessageRequest request) {
         ChatRoom room = getOrThrow(roomId);
+        if (!room.isParticipant(senderId)) {
+            throw new BaseException(ResponseCode.CHAT_ROOM_ACCESS_DENIED);
+        }
 
         ChatMessage message = ChatMessage.create(room, senderId, request.content(), request.type());
         chatMessageRepository.save(message);
@@ -54,13 +57,20 @@ public class ChatService {
         return chatRoomRepository.findByUserIdOrVendorIdOrderByLastMessageAtDesc(userId, userId);
     }
 
-    public Slice<ChatMessage> getMessages(Long roomId, Pageable pageable) {
+    public Slice<ChatMessage> getMessages(Long roomId, Long userId, Pageable pageable) {
+        ChatRoom room = getOrThrow(roomId);
+        if (!room.isParticipant(userId)) {
+            throw new BaseException(ResponseCode.CHAT_ROOM_ACCESS_DENIED);
+        }
         return chatMessageRepository.findByChatRoomIdOrderByCreatedDateDesc(roomId, pageable);
     }
 
     @Transactional
     public void markAsRead(Long roomId, Long userId) {
         ChatRoom room = getOrThrow(roomId);
+        if (!room.isParticipant(userId)) {
+            throw new BaseException(ResponseCode.CHAT_ROOM_ACCESS_DENIED);
+        }
         room.resetUnreadCount(userId);
     }
 

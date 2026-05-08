@@ -70,4 +70,8 @@ public class ChatRoom extends BaseEntity {
     public Long getRecipientId(Long senderId) {
         return senderId.equals(userId) ? vendorId : userId;
     }
+
+    public boolean isParticipant(Long userId) {
+        return this.userId.equals(userId) || this.vendorId.equals(userId);
+    }
 }

@@ -57,7 +57,7 @@ public class ChatController implements ChatApi {
             @RequestParam(defaultValue = "30") int size,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        ChatMessagePageResponse response = chatUseCase.getMessages(roomId, page, size);
+        ChatMessagePageResponse response = chatUseCase.getMessages(roomId, page, size, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 

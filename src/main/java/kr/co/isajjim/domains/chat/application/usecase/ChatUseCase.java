@@ -28,9 +28,9 @@ public class ChatUseCase {
                 .toList();
     }
 
-    public ChatMessagePageResponse getMessages(Long roomId, int page, int size) {
+    public ChatMessagePageResponse getMessages(Long roomId, int page, int size, Long userId) {
         Pageable pageable = PageRequest.of(page, size);
-        return ChatMessagePageResponse.from(chatService.getMessages(roomId, pageable));
+        return ChatMessagePageResponse.from(chatService.getMessages(roomId, userId, pageable));
     }
 
     public void markAsRead(Long roomId, Long userId) {
