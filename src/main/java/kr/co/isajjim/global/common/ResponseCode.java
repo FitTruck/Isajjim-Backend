@@ -52,6 +52,10 @@ public enum ResponseCode {
     INVALID_FURNITURE_ESTIMATE_ASSOCIATION(HttpStatus.BAD_REQUEST, "FURNITURE-002", "가구가 해당 견적서에 해당하지 않습니다."),
 
 
+    /*    CHAT    */
+    NOT_FOUND_CHAT_ROOM(HttpStatus.NOT_FOUND, "CHAT-001", "채팅방을 찾을 수 없습니다."),
+    CHAT_ROOM_ACCESS_DENIED(HttpStatus.FORBIDDEN, "CHAT-002", "채팅방에 접근 권한이 없습니다."),
+
     /*    Image    */
     NOT_FOUND_IMAGE(HttpStatus.NOT_FOUND, "IMAGE-001", "요청 이미지 ID를 찾을 수 없습니다."),
     ;
