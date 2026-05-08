@@ -5,6 +5,7 @@ import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.security.token.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.event.EventListener;
 import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -15,6 +16,7 @@ import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,6 +71,14 @@ public class StompAuthInterceptor implements ChannelInterceptor {
         }
 
         return message;
+    }
+
+    @EventListener
+    public void handleSessionDisconnect(SessionDisconnectEvent event) {
+        String sessionId = event.getSessionId();
+        Authentication auth = sessionAuthMap.remove(sessionId);
+        log.info("[WS] SESSION CLOSED sessionId={} user={}", sessionId,
+                auth != null ? auth.getName() : "unknown");
     }
 
     private String getUsername(StompHeaderAccessor accessor) {
