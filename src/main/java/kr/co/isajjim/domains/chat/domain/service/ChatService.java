@@ -9,8 +9,8 @@ import kr.co.isajjim.domains.chat.persistence.repository.ChatRoomRepository;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +52,7 @@ public class ChatService {
         return chatRoomRepository.findByUserIdOrVendorIdOrderByLastMessageAtDesc(userId, userId);
     }
 
-    public Page<ChatMessage> getMessages(Long roomId, Pageable pageable) {
+    public Slice<ChatMessage> getMessages(Long roomId, Pageable pageable) {
         return chatMessageRepository.findByChatRoomIdOrderByCreatedDateDesc(roomId, pageable);
     }
 
