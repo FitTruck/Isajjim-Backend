@@ -5,12 +5,12 @@ import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.security.token.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.messaging.MessageDeliveryException;
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.messaging.MessageDeliveryException;
-import org.springframework.lang.NonNull;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.security.core.Authentication;
@@ -43,27 +43,29 @@ public class StompAuthInterceptor implements ChannelInterceptor {
             } catch (Exception e) {
                 throw new MessageDeliveryException(message, ResponseCode.UNAUTHORIZED.name());
             }
-            accessor.setUser(auth);
-            Map<String, Object> sessionAttributes = accessor.getSessionAttributes();
-            if (sessionAttributes != null) {
-                sessionAttributes.put("authentication", auth);
-            }
             sessionAuthMap.put(accessor.getSessionId(), auth);
+            accessor.setUser(auth);
             log.info("[WS] CONNECT sessionId={} user={}", accessor.getSessionId(), auth.getName());
             return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
-        }
-
-        if (StompCommand.SUBSCRIBE.equals(command)) {
-            log.info("[WS] SUBSCRIBE destination={} user={}", accessor.getDestination(), getUsername(accessor));
-        }
-
-        if (StompCommand.SEND.equals(command)) {
-            log.info("[WS] SEND destination={} user={}", accessor.getDestination(), getUsername(accessor));
         }
 
         if (StompCommand.DISCONNECT.equals(command)) {
             log.info("[WS] DISCONNECT user={}", getUsername(accessor));
             sessionAuthMap.remove(accessor.getSessionId());
+            return message;
+        }
+
+        // SUBSCRIBE, SEND 등 이후 명령에 simpUser를 주입해 SecurityContextHolder 연동
+        Authentication auth = sessionAuthMap.get(accessor.getSessionId());
+        if (auth != null) {
+            accessor.setUser(auth);
+            if (StompCommand.SUBSCRIBE.equals(command)) {
+                log.info("[WS] SUBSCRIBE destination={} user={}", accessor.getDestination(), auth.getName());
+            }
+            if (StompCommand.SEND.equals(command)) {
+                log.info("[WS] SEND destination={} user={}", accessor.getDestination(), auth.getName());
+            }
+            return MessageBuilder.createMessage(message.getPayload(), accessor.getMessageHeaders());
         }
 
         return message;

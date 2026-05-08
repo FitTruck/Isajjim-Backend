@@ -85,8 +85,8 @@ public class SecurityConfig {
         configuration.setAllowedOriginPatterns(List.of(
                 "https://isajjim.kro.kr",
                 "https://dev.isajjim.kro.kr",
-                "http://localhost:61365",
-                "http://localhost:8081"
+                "http://localhost:*",
+                "null"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowCredentials(true);
