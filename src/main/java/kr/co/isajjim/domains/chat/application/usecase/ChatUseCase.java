@@ -28,8 +28,10 @@ public class ChatUseCase {
                 .toList();
     }
 
+    private static final int MAX_PAGE_SIZE = 100;
+
     public ChatMessagePageResponse getMessages(Long roomId, int page, int size, Long userId) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, Math.min(size, MAX_PAGE_SIZE));
         return ChatMessagePageResponse.from(chatService.getMessages(roomId, userId, pageable));
     }
 
