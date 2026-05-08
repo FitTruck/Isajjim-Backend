@@ -12,6 +12,8 @@ import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.security.auth.CustomUserDetails;
+import kr.co.isajjim.infra.s3.application.dto.PresignedUrlListResponse;
+import kr.co.isajjim.infra.s3.application.dto.PresignedUrlRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +59,19 @@ public interface ChatApi {
     @PostMapping("/device-token")
     ResponseEntity<ApiResponse<Void>> saveDeviceToken(
             @RequestBody @Valid DeviceTokenRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
+    );
+
+    @Operation(
+            summary = "채팅 이미지 업로드용 Presigned URL 발급",
+            description = "S3에 이미지를 직접 업로드하기 위한 Presigned URL을 발급합니다.\n" +
+                    "업로드 후 반환된 fileUrl을 WebSocket으로 type=IMAGE 메시지로 전송하세요."
+    )
+    @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = PresignedUrlListResponse.class, description = "URL 발급 성공"))
+    @PostMapping("/rooms/{roomId}/images")
+    ResponseEntity<ApiResponse<PresignedUrlListResponse>> generateImageUploadUrl(
+            @PathVariable Long roomId,
+            @RequestBody @Valid PresignedUrlRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 }
