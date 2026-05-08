@@ -1,5 +1,6 @@
 package kr.co.isajjim.global.config.websocket;
 
+import kr.co.isajjim.global.common.Constants;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.security.token.JwtProvider;
@@ -25,10 +26,10 @@ public class StompAuthInterceptor implements ChannelInterceptor {
 
         if (accessor != null && StompCommand.CONNECT.equals(accessor.getCommand())) {
             String token = accessor.getFirstNativeHeader("Authorization");
-            if (token == null || !token.startsWith("Bearer ")) {
+            if (token == null || !token.startsWith(Constants.BEARER)) {
                 throw new BaseException(ResponseCode.UNAUTHORIZED);
             }
-            Authentication auth = jwtProvider.getAuthentication(token.substring(7));
+            Authentication auth = jwtProvider.getAuthentication(token.substring(Constants.BEARER.length()));
             accessor.setUser(auth);
         }
         return message;
