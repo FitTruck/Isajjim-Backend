@@ -14,9 +14,9 @@ public record ChatRoomResponse(
         LocalDateTime lastMessageAt,
         int unreadCount
 ) {
-    public record ParticipantInfo(String name) {
+    public record ParticipantInfo(String name, String profileImageUrl) {
         public static ParticipantInfo from(UserEntity user) {
-            return new ParticipantInfo(user.getName());
+            return new ParticipantInfo(user.getName(), user.getProfileImageUrl());
         }
     }
 

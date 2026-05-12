@@ -54,6 +54,20 @@ public class UserService {
         user.completeSignup();
     }
 
+    @Transactional
+    public void updateProfileImage(Long userId, String imageUrl) {
+        UserEntity user = getOrThrow(userId);
+        user.updateProfileImage(imageUrl);
+    }
+
+    @Transactional
+    public String deleteProfileImage(Long userId) {
+        UserEntity user = getOrThrow(userId);
+        String imageUrl = user.getProfileImageUrl();
+        user.deleteProfileImage();
+        return imageUrl;
+    }
+
     public void deleteUser(UserEntity user) {
         userRepository.delete(user);
     }

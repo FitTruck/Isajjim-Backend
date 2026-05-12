@@ -25,7 +25,7 @@ public class S3UseCase {
                     //todo AI 서버에서 지원하는 확장자 검증
                     //validSupportedExtension(fileName);
 
-                    String key = s3Service.createKey(fileName);
+                    String key = s3Service.createKey(fileName, request.folder());
                     URL presignedUrl = s3Service.generatePresignedUrl(key);
                     String fileUrl = s3Service.generateFileUrl(key);
 

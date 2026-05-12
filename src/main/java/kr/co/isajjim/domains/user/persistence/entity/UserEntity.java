@@ -50,6 +50,8 @@ public class UserEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private String profileImageUrl;
+
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 
@@ -73,5 +75,13 @@ public class UserEntity extends BaseEntity {
 
     public void updateSocialRefreshToken(String socialRefreshToken) {
         this.socialRefreshToken = socialRefreshToken;
+    }
+
+    public void updateProfileImage(String profileImage) {
+        this.profileImageUrl = profileImage;
+    }
+
+    public void deleteProfileImage() {
+        this.profileImageUrl = null;
     }
 }
