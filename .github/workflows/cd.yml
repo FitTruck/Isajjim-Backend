@@ -42,6 +42,7 @@ jobs:
           mkdir -p configs/
           
           echo "${{ secrets.ENV }}" | base64 --decode > configs/.env
+          echo "${{ secrets.FIREBASE_KEY }}" | base64 --decode > configs/firebaseKey.json
           echo "" >> configs/.env
           echo "SPRING_PROFILE=${{ vars.SPRING_PROFILE }}" >> configs/.env
 

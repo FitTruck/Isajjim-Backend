@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,11 @@ public class UserService {
 
     public UserEntity getUserById(Long userId) {
         return getOrThrow(userId);
+    }
+
+    public Map<Long, UserEntity> getUserMapByIds(List<Long> userIds) {
+        return userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(UserEntity::getId, u -> u));
     }
 
     @Transactional
@@ -52,6 +60,26 @@ public class UserService {
     public void completeSignup(Long userId) {
         UserEntity user = getOrThrow(userId);
         user.completeSignup();
+    }
+
+    @Transactional
+    public void updateName(Long userId, String name) {
+        UserEntity user = getOrThrow(userId);
+        user.updateName(name);
+    }
+
+    @Transactional
+    public void updateProfileImage(Long userId, String imageUrl) {
+        UserEntity user = getOrThrow(userId);
+        user.updateProfileImage(imageUrl);
+    }
+
+    @Transactional
+    public String deleteProfileImage(Long userId) {
+        UserEntity user = getOrThrow(userId);
+        String imageUrl = user.getProfileImageUrl();
+        user.deleteProfileImage();
+        return imageUrl;
     }
 
     public void deleteUser(UserEntity user) {

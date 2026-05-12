@@ -46,8 +46,13 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
 
+    // Spring WebSocket
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'org.springframework.security:spring-security-messaging'
+
     // Google
     implementation 'com.google.genai:google-genai:1.37.0'
+    implementation 'com.google.firebase:firebase-admin:9.8.0'
 
     // AWS
     implementation 'software.amazon.awssdk:s3:2.40.8'
