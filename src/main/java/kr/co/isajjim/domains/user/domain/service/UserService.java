@@ -55,6 +55,12 @@ public class UserService {
     }
 
     @Transactional
+    public void updateName(Long userId, String name) {
+        UserEntity user = getOrThrow(userId);
+        user.updateName(name);
+    }
+
+    @Transactional
     public void updateProfileImage(Long userId, String imageUrl) {
         UserEntity user = getOrThrow(userId);
         user.updateProfileImage(imageUrl);

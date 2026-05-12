@@ -2,6 +2,8 @@ package kr.co.isajjim.domains.user.presentation.controller;
 
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.user.application.dto.request.ProfileImageRequest;
+import kr.co.isajjim.domains.user.application.dto.request.UpdateNameRequest;
+import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
 import kr.co.isajjim.domains.user.application.usecase.UserUseCase;
 import kr.co.isajjim.domains.user.presentation.api.UserApi;
 import kr.co.isajjim.global.common.ApiResponse;
@@ -34,6 +36,25 @@ public class UserController implements UserApi {
     @GetMapping("/auth/success")
     public ResponseEntity<ApiResponse<TokenResponse>> loginSuccess(TokenResponse tokenResponse) {
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, tokenResponse));
+    }
+
+    @Override
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<UserInfoResponse>> getMyInfo(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        UserInfoResponse response = userUseCase.getMyInfo(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
+    @PatchMapping("/name")
+    public ResponseEntity<ApiResponse<Void>> updateName(
+            @RequestBody @Valid UpdateNameRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        userUseCase.updateName(user.getUserId(), request.name());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
     @Override

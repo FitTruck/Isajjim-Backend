@@ -77,6 +77,10 @@ public class UserEntity extends BaseEntity {
         this.socialRefreshToken = socialRefreshToken;
     }
 
+    public void updateName(String name) {
+        this.name = name;
+    }
+
     public void updateProfileImage(String profileImage) {
         this.profileImageUrl = profileImage;
     }

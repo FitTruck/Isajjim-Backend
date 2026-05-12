@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.user.application.dto.request.ProfileImageRequest;
+import kr.co.isajjim.domains.user.application.dto.request.UpdateNameRequest;
+import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
 import kr.co.isajjim.global.common.ApiResponse;
@@ -24,6 +26,16 @@ public interface UserApi {
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = TokenResponse.class, description = "재발급 성공"))
     ResponseEntity<ApiResponse<TokenResponse>> tokenReissue(
             @RequestBody @Valid ReissueRequest request);
+
+    @Operation(summary = "내 정보 조회", description = "이름, 프로필 이미지 URL을 반환합니다.")
+    @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = UserInfoResponse.class, description = "조회 성공"))
+    ResponseEntity<ApiResponse<UserInfoResponse>> getMyInfo(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
+
+    @Operation(summary = "이름 수정")
+    ResponseEntity<ApiResponse<Void>> updateName(
+            @RequestBody @Valid UpdateNameRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "프로필 이미지 저장", description = "POST /api/v1/presigned-url로 발급받은 fileUrl을 전달해 프로필 이미지를 저장합니다.")
     ResponseEntity<ApiResponse<Void>> updateProfileImage(
