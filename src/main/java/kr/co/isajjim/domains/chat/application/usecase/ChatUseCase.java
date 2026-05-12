@@ -4,6 +4,8 @@ import kr.co.isajjim.domains.chat.application.dto.response.ChatMessagePageRespon
 import kr.co.isajjim.domains.chat.application.dto.response.ChatRoomResponse;
 import kr.co.isajjim.domains.chat.domain.service.ChatService;
 import kr.co.isajjim.domains.chat.persistence.entity.ChatRoom;
+import kr.co.isajjim.domains.user.domain.service.UserService;
+import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.global.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -16,15 +18,20 @@ import java.util.List;
 public class ChatUseCase {
 
     private final ChatService chatService;
+    private final UserService userService;
 
     public ChatRoomResponse getOrCreateRoom(Long myId, Long targetId) {
         ChatRoom room = chatService.getOrCreateRoom(myId, targetId);
-        return ChatRoomResponse.of(room, myId);
+        UserEntity target = userService.getUserById(targetId(room, myId));
+        return ChatRoomResponse.of(room, myId, target);
     }
 
-    public List<ChatRoomResponse> getChatRooms(Long userId) {
-        return chatService.getChatRooms(userId).stream()
-                .map(room -> ChatRoomResponse.of(room, userId))
+    public List<ChatRoomResponse> getChatRooms(Long myId) {
+        return chatService.getChatRooms(myId).stream()
+                .map(room -> {
+                    UserEntity target = userService.getUserById(targetId(room, myId));
+                    return ChatRoomResponse.of(room, myId, target);
+                })
                 .toList();
     }
 
@@ -37,5 +44,9 @@ public class ChatUseCase {
 
     public void markAsRead(Long roomId, Long userId) {
         chatService.markAsRead(roomId, userId);
+    }
+
+    private Long targetId(ChatRoom room, Long myId) {
+        return myId.equals(room.getCreatorId()) ? room.getTargetId() : room.getCreatorId();
     }
 }
