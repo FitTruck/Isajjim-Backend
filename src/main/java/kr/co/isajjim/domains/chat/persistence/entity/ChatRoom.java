@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Table(
         name = "chat_room",
-        uniqueConstraints = @UniqueConstraint(name = "uk_chat_room", columnNames = {"user_id", "vendor_id"})
+        uniqueConstraints = @UniqueConstraint(name = "uk_chat_room", columnNames = {"creator_id", "target_id"})
 )
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class ChatRoom extends BaseEntity {
@@ -22,11 +22,11 @@ public class ChatRoom extends BaseEntity {
     @Column(name = "chat_room_id")
     private Long id;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @Column(name = "creator_id", nullable = false)
+    private Long creatorId;
 
-    @Column(name = "vendor_id", nullable = false)
-    private Long vendorId;
+    @Column(name = "target_id", nullable = false)
+    private Long targetId;
 
     @Column(length = 2000)
     private String lastMessageContent;
@@ -34,15 +34,15 @@ public class ChatRoom extends BaseEntity {
     private LocalDateTime lastMessageAt;
 
     @Column(nullable = false)
-    private int userUnreadCount;
+    private int creatorUnreadCount;
 
     @Column(nullable = false)
-    private int vendorUnreadCount;
+    private int targetUnreadCount;
 
-    public static ChatRoom create(Long userId, Long vendorId) {
+    public static ChatRoom create(Long creatorId, Long targetId) {
         ChatRoom room = new ChatRoom();
-        room.userId = userId;
-        room.vendorId = vendorId;
+        room.creatorId = creatorId;
+        room.targetId = targetId;
         return room;
     }
 
@@ -52,26 +52,30 @@ public class ChatRoom extends BaseEntity {
     }
 
     public void incrementUnreadCount(Long senderId) {
-        if (senderId.equals(userId)) {
-            this.vendorUnreadCount++;
+        if (senderId.equals(creatorId)) {
+            this.targetUnreadCount++;
         } else {
-            this.userUnreadCount++;
+            this.creatorUnreadCount++;
         }
     }
 
     public void resetUnreadCount(Long readerId) {
-        if (readerId.equals(userId)) {
-            this.userUnreadCount = 0;
+        if (readerId.equals(creatorId)) {
+            this.creatorUnreadCount = 0;
         } else {
-            this.vendorUnreadCount = 0;
+            this.targetUnreadCount = 0;
         }
     }
 
     public Long getRecipientId(Long senderId) {
-        return senderId.equals(userId) ? vendorId : userId;
+        return senderId.equals(creatorId) ? targetId : creatorId;
     }
 
     public boolean isParticipant(Long userId) {
-        return this.userId.equals(userId) || this.vendorId.equals(userId);
+        return this.creatorId.equals(userId) || this.targetId.equals(userId);
+    }
+
+    public int getUnreadCountFor(Long userId) {
+        return userId.equals(creatorId) ? creatorUnreadCount : targetUnreadCount;
     }
 }

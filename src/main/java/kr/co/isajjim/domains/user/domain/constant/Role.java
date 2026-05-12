@@ -9,6 +9,7 @@ public enum Role {
 
     // 필요에 따라 추가.
     USER("ROLE_USER", "사용자"),
+    VENDOR("ROLE_VENDOR", "업체"),
     ADMIN("ROLE_ADMIN", "관리자"),
     ;
 

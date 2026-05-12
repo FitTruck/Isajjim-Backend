@@ -36,7 +36,7 @@ public class ChatController implements ChatApi {
             @RequestBody @Valid ChatRoomCreateRequest request,
             @AuthenticationPrincipal CustomUserDetails user
     ) {
-        ChatRoomResponse response = chatUseCase.getOrCreateRoom(user.getUserId(), request.vendorId());
+        ChatRoomResponse response = chatUseCase.getOrCreateRoom(user.getUserId(), request.targetId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 

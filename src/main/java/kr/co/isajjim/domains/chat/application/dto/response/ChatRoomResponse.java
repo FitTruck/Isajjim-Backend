@@ -6,23 +6,20 @@ import java.time.LocalDateTime;
 
 public record ChatRoomResponse(
         Long roomId,
-        Long userId,
-        Long vendorId,
+        Long creatorId,
+        Long targetId,
         String lastMessageContent,
         LocalDateTime lastMessageAt,
         int unreadCount
 ) {
     public static ChatRoomResponse of(ChatRoom room, Long myId) {
-        int unreadCount = myId.equals(room.getUserId())
-                ? room.getUserUnreadCount()
-                : room.getVendorUnreadCount();
         return new ChatRoomResponse(
                 room.getId(),
-                room.getUserId(),
-                room.getVendorId(),
+                room.getCreatorId(),
+                room.getTargetId(),
                 room.getLastMessageContent(),
                 room.getLastMessageAt(),
-                unreadCount
+                room.getUnreadCountFor(myId)
         );
     }
 }

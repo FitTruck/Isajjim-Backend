@@ -48,13 +48,13 @@ public class ChatService {
     }
 
     @Transactional
-    public ChatRoom getOrCreateRoom(Long userId, Long vendorId) {
-        return chatRoomRepository.findByUserIdAndVendorId(userId, vendorId)
-                .orElseGet(() -> chatRoomRepository.save(ChatRoom.create(userId, vendorId)));
+    public ChatRoom getOrCreateRoom(Long myId, Long targetId) {
+        return chatRoomRepository.findByParticipants(myId, targetId)
+                .orElseGet(() -> chatRoomRepository.save(ChatRoom.create(myId, targetId)));
     }
 
     public List<ChatRoom> getChatRooms(Long userId) {
-        return chatRoomRepository.findByUserIdOrVendorIdOrderByLastMessageAtDesc(userId, userId);
+        return chatRoomRepository.findByCreatorIdOrTargetIdOrderByLastMessageAtDesc(userId, userId);
     }
 
     public Slice<ChatMessage> getMessages(Long roomId, Long userId, Pageable pageable) {

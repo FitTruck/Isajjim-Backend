@@ -17,9 +17,9 @@ public class ChatUseCase {
 
     private final ChatService chatService;
 
-    public ChatRoomResponse getOrCreateRoom(Long userId, Long vendorId) {
-        ChatRoom room = chatService.getOrCreateRoom(userId, vendorId);
-        return ChatRoomResponse.of(room, userId);
+    public ChatRoomResponse getOrCreateRoom(Long myId, Long targetId) {
+        ChatRoom room = chatService.getOrCreateRoom(myId, targetId);
+        return ChatRoomResponse.of(room, myId);
     }
 
     public List<ChatRoomResponse> getChatRooms(Long userId) {

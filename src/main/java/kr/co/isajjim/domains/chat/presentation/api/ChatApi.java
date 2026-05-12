@@ -23,7 +23,7 @@ import java.util.List;
 @Tag(name = "Chat", description = "채팅 API")
 public interface ChatApi {
 
-    @Operation(summary = "채팅방 생성 또는 조회", description = "업체와의 채팅방을 생성하거나 기존 채팅방을 반환합니다.")
+    @Operation(summary = "채팅방 생성 또는 조회", description = "상대방과의 채팅방을 생성하거나 기존 채팅방을 반환합니다.")
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = ChatRoomResponse.class, description = "채팅방 조회 성공"))
     @PostMapping("/rooms")
     ResponseEntity<ApiResponse<ChatRoomResponse>> createOrGetRoom(
