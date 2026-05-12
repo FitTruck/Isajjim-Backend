@@ -10,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +23,11 @@ public class UserService {
 
     public UserEntity getUserById(Long userId) {
         return getOrThrow(userId);
+    }
+
+    public Map<Long, UserEntity> getUserMapByIds(List<Long> userIds) {
+        return userRepository.findAllById(userIds).stream()
+                .collect(Collectors.toMap(UserEntity::getId, u -> u));
     }
 
     @Transactional

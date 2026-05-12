@@ -6,12 +6,13 @@ import kr.co.isajjim.domains.chat.domain.service.ChatService;
 import kr.co.isajjim.domains.chat.persistence.entity.ChatRoom;
 import kr.co.isajjim.domains.user.domain.service.UserService;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
+
+import java.util.List;
+import java.util.Map;
 import kr.co.isajjim.global.annotation.UseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 @UseCase
 @RequiredArgsConstructor
@@ -27,11 +28,11 @@ public class ChatUseCase {
     }
 
     public List<ChatRoomResponse> getChatRooms(Long myId) {
-        return chatService.getChatRooms(myId).stream()
-                .map(room -> {
-                    UserEntity target = userService.getUserById(targetId(room, myId));
-                    return ChatRoomResponse.of(room, myId, target);
-                })
+        List<ChatRoom> rooms = chatService.getChatRooms(myId);
+        List<Long> targetIds = rooms.stream().map(room -> targetId(room, myId)).toList();
+        Map<Long, UserEntity> targetMap = userService.getUserMapByIds(targetIds);
+        return rooms.stream()
+                .map(room -> ChatRoomResponse.of(room, myId, targetMap.get(targetId(room, myId))))
                 .toList();
     }
 
