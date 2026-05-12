@@ -1,6 +1,8 @@
 package kr.co.isajjim.domains.user.presentation.controller;
 
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.chat.application.dto.request.DeviceTokenRequest;
+import kr.co.isajjim.domains.chat.application.usecase.DeviceTokenUseCase;
 import kr.co.isajjim.domains.user.application.dto.request.ProfileImageRequest;
 import kr.co.isajjim.domains.user.application.dto.request.UpdateNameRequest;
 import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
@@ -24,6 +26,7 @@ public class UserController implements UserApi {
 
     private final JwtProvider jwtProvider;
     private final UserUseCase userUseCase;
+    private final DeviceTokenUseCase deviceTokenUseCase;
 
     @Override
     @PostMapping("/reissue")
@@ -73,6 +76,25 @@ public class UserController implements UserApi {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         userUseCase.deleteProfileImage(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @PostMapping("/device-token")
+    public ResponseEntity<ApiResponse<Void>> registerDeviceToken(
+            @RequestBody @Valid DeviceTokenRequest request,
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        deviceTokenUseCase.registerDeviceToken(user.getUserId(), request);
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @DeleteMapping("/device-token")
+    public ResponseEntity<ApiResponse<Void>> unregisterDeviceToken(
+            @RequestBody @Valid DeviceTokenRequest request
+    ) {
+        deviceTokenUseCase.unregisterDeviceToken(request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 }

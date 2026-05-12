@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kr.co.isajjim.domains.chat.application.dto.request.ChatRoomCreateRequest;
-import kr.co.isajjim.domains.chat.application.dto.request.DeviceTokenRequest;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatMessagePageResponse;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatRoomResponse;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
@@ -51,19 +50,6 @@ public interface ChatApi {
     ResponseEntity<ApiResponse<Void>> markAsRead(
             @PathVariable Long roomId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
-    );
-
-    @Operation(summary = "FCM 토큰 등록", description = "푸시 알림을 위한 FCM 디바이스 토큰을 등록합니다. 앱 시작 시 호출하세요.")
-    @PostMapping("/device-token")
-    ResponseEntity<ApiResponse<Void>> registerDeviceToken(
-            @RequestBody @Valid DeviceTokenRequest request,
-            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
-    );
-
-    @Operation(summary = "FCM 토큰 해제", description = "푸시 알림을 위한 FCM 디바이스 토큰을 해제합니다. 로그아웃 시 호출하세요.")
-    @DeleteMapping("/device-token")
-    ResponseEntity<ApiResponse<Void>> unregisterDeviceToken(
-            @RequestBody @Valid DeviceTokenRequest request
     );
 
 }

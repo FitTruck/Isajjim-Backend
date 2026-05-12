@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kr.co.isajjim.domains.chat.application.dto.request.DeviceTokenRequest;
 import kr.co.isajjim.domains.user.application.dto.request.ProfileImageRequest;
 import kr.co.isajjim.domains.user.application.dto.request.UpdateNameRequest;
 import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
@@ -45,4 +46,13 @@ public interface UserApi {
     @Operation(summary = "프로필 이미지 삭제", description = "프로필 이미지를 S3에서 삭제하고 초기화합니다.")
     ResponseEntity<ApiResponse<Void>> deleteProfileImage(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
+
+    @Operation(summary = "FCM 토큰 등록", description = "푸시 알림을 위한 FCM 디바이스 토큰을 등록합니다. 앱 시작 시 호출하세요.")
+    ResponseEntity<ApiResponse<Void>> registerDeviceToken(
+            @RequestBody @Valid DeviceTokenRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
+
+    @Operation(summary = "FCM 토큰 해제", description = "푸시 알림을 위한 FCM 디바이스 토큰을 해제합니다. 로그아웃 시 호출하세요.")
+    ResponseEntity<ApiResponse<Void>> unregisterDeviceToken(
+            @RequestBody @Valid DeviceTokenRequest request);
 }
