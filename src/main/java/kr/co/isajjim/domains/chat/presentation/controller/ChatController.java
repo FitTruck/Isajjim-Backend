@@ -11,9 +11,6 @@ import kr.co.isajjim.domains.chat.presentation.api.ChatApi;
 import kr.co.isajjim.global.common.ApiResponse;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.security.auth.CustomUserDetails;
-import kr.co.isajjim.infra.s3.application.dto.PresignedUrlListResponse;
-import kr.co.isajjim.infra.s3.application.dto.PresignedUrlRequest;
-import kr.co.isajjim.infra.s3.application.usecase.S3UseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -28,7 +25,6 @@ public class ChatController implements ChatApi {
 
     private final ChatUseCase chatUseCase;
     private final DeviceTokenUseCase deviceTokenUseCase;
-    private final S3UseCase s3UseCase;
 
     @Override
     @PostMapping("/rooms")
@@ -90,14 +86,4 @@ public class ChatController implements ChatApi {
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
 
-    @Override
-    @PostMapping("/rooms/{roomId}/images")
-    public ResponseEntity<ApiResponse<PresignedUrlListResponse>> generateImageUploadUrl(
-            @PathVariable Long roomId,
-            @RequestBody @Valid PresignedUrlRequest request,
-            @AuthenticationPrincipal CustomUserDetails user
-    ) {
-        PresignedUrlListResponse response = s3UseCase.generatePresignedUrl(request);
-        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
-    }
 }
