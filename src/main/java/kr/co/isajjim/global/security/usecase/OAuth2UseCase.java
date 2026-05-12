@@ -96,6 +96,7 @@ public class OAuth2UseCase {
         Token token = jwtProvider.issueToken(user.getId(), user.getRole());
 
         return TokenResponse.builder()
+                .userId(user.getId())
                 .accessToken(token.accessToken())
                 .refreshToken(token.refreshToken())
                 .build();
