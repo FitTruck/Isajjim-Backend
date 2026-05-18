@@ -80,6 +80,7 @@ oauth2:
     - http://localhost:8081
     - https://localhost:8081
     - https://isajjim.kro.kr
+    - isajjim://oauth2/callback
   client:
     provider:
       google:
