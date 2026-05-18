@@ -17,3 +17,4 @@ oauth2:
   allowed-redirect-uris:
     - ${FRONTEND_URL}
     - ${DEV_BASE_URL}
+    - isajjim://oauth2/callback
