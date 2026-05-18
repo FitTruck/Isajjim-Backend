@@ -44,7 +44,17 @@ public class OAuth2ResponseHandler {
             }
             UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(redirectUri);
             queryParams.forEach(builder::queryParam);
-            response.sendRedirect(builder.build().toUriString());
+            String targetUrl = builder.build().toUriString();
+
+            // 커스텀 스킴 deeplink는 sendRedirect가 아닌 Location 헤더로 직접 처리
+            URI targetUri = URI.create(targetUrl);
+            String scheme = targetUri.getScheme();
+            if (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme)) {
+                response.setStatus(HttpServletResponse.SC_FOUND);
+                response.setHeader("Location", targetUrl);
+            } else {
+                response.sendRedirect(targetUrl);
+            }
         } else {
             writeJson(response, statusOnJson, jsonBody);
         }
@@ -52,9 +62,23 @@ public class OAuth2ResponseHandler {
 
     private boolean isAllowedRedirectUri(String redirectUri) {
         URI uri = URI.create(redirectUri);
-        String origin = uri.getScheme() + "://" + uri.getHost()
-                + (uri.getPort() == -1 ? "" : ":" + uri.getPort());
+        String scheme = uri.getScheme();
 
+        // 커스텀 스킴 deeplink는 스킴만 비교 (isajjim:// 등)
+        if (!"http".equalsIgnoreCase(scheme) && !"https".equalsIgnoreCase(scheme)) {
+            return oAuth2RedirectProperties.allowedRedirectUris().stream()
+                    .anyMatch(allowed -> {
+                        try {
+                            return scheme.equalsIgnoreCase(URI.create(allowed).getScheme());
+                        } catch (IllegalArgumentException e) {
+                            return false;
+                        }
+                    });
+        }
+
+        // 웹 URI는 origin(scheme+host+port)으로 비교
+        String origin = scheme + "://" + uri.getHost()
+                + (uri.getPort() == -1 ? "" : ":" + uri.getPort());
         return oAuth2RedirectProperties.allowedRedirectUris().stream()
                 .anyMatch(allowedUri -> allowedUri.equalsIgnoreCase(origin));
     }
