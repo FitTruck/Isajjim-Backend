@@ -1,4 +1,7 @@
 # application.yml
+server:
+  forward-headers-strategy: native
+
 spring:
   application:
     name: isajjim
