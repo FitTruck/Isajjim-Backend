@@ -102,6 +102,16 @@ public class OAuth2UseCase {
                 .build();
     }
 
+    public boolean getTermsAgreed(Long userId) {
+        UserEntity user = userService.getUserById(userId);
+        return user.getStatus() == UserStatus.ACTIVE;
+    }
+
+    @Transactional
+    public void agreeTerms(Long userId) {
+        userService.completeSignup(userId);
+    }
+
     @Transactional
     public void logOut(Long userId, String refreshToken) {
         jwtProvider.removeRefreshToken(userId, refreshToken);
