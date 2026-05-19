@@ -38,6 +38,31 @@ public interface AuthApi {
             @RequestBody @Valid SignUpRequest.Oidc request);
 
     @Operation(
+            summary = "이용약관 동의 여부 조회",
+            description = "로그인된 유저의 이용약관 동의 여부를 반환합니다. ACTIVE → true, PENDING → false"
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = Boolean.class,
+                    description = "이용약관 동의 여부 (true: 동의, false: 미동의)"
+            )
+    )
+    ResponseEntity<ApiResponse<Boolean>> getTermsAgreed(
+            @AuthenticationPrincipal CustomUserDetails user);
+
+    @Operation(
+            summary = "이용약관 동의 처리",
+            description = "PENDING 유저를 ACTIVE로 변경합니다."
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "이용약관 동의 처리 성공"
+            )
+    )
+    ResponseEntity<ApiResponse<Void>> agreeTerms(
+            @AuthenticationPrincipal CustomUserDetails user);
+
+    @Operation(
             summary = "로그아웃",
             description = "(Nullable) refreshToken 전송 시 서버에서 폐기합니다."
     )

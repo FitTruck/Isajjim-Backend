@@ -35,6 +35,22 @@ public class AuthController implements AuthApi {
     }
 
     @Override
+    @GetMapping("/agree-terms")
+    public ResponseEntity<ApiResponse<Boolean>> getTermsAgreed(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        boolean agreed = oAuth2UseCase.getTermsAgreed(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, agreed));
+    }
+
+    @Override
+    @PostMapping("/agree-terms")
+    public ResponseEntity<ApiResponse<Void>> agreeTerms(
+            @AuthenticationPrincipal CustomUserDetails user) {
+        oAuth2UseCase.agreeTerms(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
     @PostMapping("/logout")
     public ResponseEntity<ApiResponse<Void>> logOut(
             @RequestParam(required = false) String refreshToken,
