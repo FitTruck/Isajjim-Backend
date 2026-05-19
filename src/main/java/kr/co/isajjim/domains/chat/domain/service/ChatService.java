@@ -2,6 +2,7 @@ package kr.co.isajjim.domains.chat.domain.service;
 
 import kr.co.isajjim.domains.chat.application.dto.request.ChatMessageRequest;
 import kr.co.isajjim.domains.chat.application.dto.response.ChatMessageResponse;
+import kr.co.isajjim.domains.chat.application.dto.response.ChatRoomUpdateEvent;
 import kr.co.isajjim.domains.chat.domain.constant.MessageType;
 import kr.co.isajjim.domains.chat.persistence.entity.ChatMessage;
 import kr.co.isajjim.domains.chat.persistence.entity.ChatRoom;
@@ -44,7 +45,12 @@ public class ChatService {
 
         ChatMessageResponse response = ChatMessageResponse.from(message);
         messagingTemplate.convertAndSend("/sub/chat/rooms/" + roomId, response);
-        fcmNotificationService.sendMessageNotification(room.getRecipientId(senderId), response);
+
+        Long recipientId = room.getRecipientId(senderId);
+        messagingTemplate.convertAndSend("/sub/user/" + senderId,   ChatRoomUpdateEvent.of(room, senderId));
+        messagingTemplate.convertAndSend("/sub/user/" + recipientId, ChatRoomUpdateEvent.of(room, recipientId));
+
+        fcmNotificationService.sendMessageNotification(recipientId, response);
     }
 
     @Transactional
