@@ -104,7 +104,6 @@ public interface EstimateApi {
                     @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_FURNITURE_ESTIMATE_ASSOCIATION)
             }
     )
-    @PatchMapping("/{estimateId}/furniture")
     ResponseEntity<ApiResponse<Void>> updateFurniture(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateFurnitureUpdateRequest request,
@@ -115,7 +114,11 @@ public interface EstimateApi {
             summary = "견적 수정",
             description = "견적서의 트럭/박스 견적 목록을 수정합니다."
     )
-    @PatchMapping("/{estimateId}/items")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "수정 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> updateItems(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateItemUpdateRequest request,
@@ -123,7 +126,7 @@ public interface EstimateApi {
     );
 
     @Operation(
-            summary = "AI Callback API"
+            summary = "(AI서버 전용) AI Callback API"
     )
     ResponseEntity<ApiResponse<Void>> aiCallback(
             @RequestHeader("X-INTERNAL-TOKEN") String token,
@@ -140,7 +143,6 @@ public interface EstimateApi {
                     description = "응답 성공"
             )
     )
-    @PostMapping("/chat-summary")
     ResponseEntity<ApiResponse<EstimateChatSummaryResponse>> chatSummary(
             @RequestBody String chatContent
     );

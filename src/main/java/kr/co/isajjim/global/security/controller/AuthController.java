@@ -34,6 +34,7 @@ public class AuthController implements AuthApi {
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 
+    @Deprecated
     @Override
     @GetMapping("/agree-terms")
     public ResponseEntity<ApiResponse<Boolean>> getTermsAgreed(
@@ -42,6 +43,7 @@ public class AuthController implements AuthApi {
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, agreed));
     }
 
+    @Deprecated
     @Override
     @PostMapping("/agree-terms")
     public ResponseEntity<ApiResponse<Void>> agreeTerms(

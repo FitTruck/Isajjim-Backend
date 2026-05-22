@@ -34,25 +34,50 @@ public interface UserApi {
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "이름 수정")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "수정 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> updateName(
             @RequestBody @Valid UpdateNameRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "프로필 이미지 저장", description = "POST /api/v1/presigned-url로 발급받은 fileUrl을 전달해 프로필 이미지를 저장합니다.")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "저장 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> updateProfileImage(
             @RequestBody @Valid ProfileImageRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "프로필 이미지 삭제", description = "프로필 이미지를 S3에서 삭제하고 초기화합니다.")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "삭제 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> deleteProfileImage(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "FCM 토큰 등록", description = "푸시 알림을 위한 FCM 디바이스 토큰을 등록합니다. 앱 시작 시 호출하세요.")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "등록 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> registerDeviceToken(
             @RequestBody @Valid DeviceTokenRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "FCM 토큰 해제", description = "푸시 알림을 위한 FCM 디바이스 토큰을 해제합니다. 로그아웃 시 호출하세요.")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "해제 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> unregisterDeviceToken(
             @RequestBody @Valid DeviceTokenRequest request);
 }
