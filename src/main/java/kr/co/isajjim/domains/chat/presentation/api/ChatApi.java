@@ -22,7 +22,6 @@ public interface ChatApi {
 
     @Operation(summary = "채팅방 생성 또는 조회", description = "상대방과의 채팅방을 생성하거나 기존 채팅방을 반환합니다.")
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = ChatRoomResponse.class, description = "채팅방 조회 성공"))
-    @PostMapping("/rooms")
     ResponseEntity<ApiResponse<ChatRoomResponse>> createOrGetRoom(
             @RequestBody @Valid ChatRoomCreateRequest request,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
@@ -30,14 +29,12 @@ public interface ChatApi {
 
     @Operation(summary = "채팅방 목록 조회", description = "내 채팅방 목록을 최근 메시지 순으로 반환합니다.")
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = ChatRoomResponse.class, description = "목록 조회 성공"))
-    @GetMapping("/rooms")
     ResponseEntity<ApiResponse<List<ChatRoomResponse>>> getChatRooms(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
     @Operation(summary = "이전 메시지 조회", description = "채팅방의 이전 메시지를 페이지네이션으로 조회합니다.")
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = ChatMessagePageResponse.class, description = "메시지 조회 성공"))
-    @GetMapping("/rooms/{roomId}/messages")
     ResponseEntity<ApiResponse<ChatMessagePageResponse>> getMessages(
             @PathVariable Long roomId,
             @RequestParam(defaultValue = "0") int page,
@@ -46,7 +43,11 @@ public interface ChatApi {
     );
 
     @Operation(summary = "읽음 처리", description = "채팅방의 읽지 않은 메시지를 모두 읽음 처리합니다.")
-    @PutMapping("/rooms/{roomId}/read")
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    description = "처리 성공"
+            )
+    )
     ResponseEntity<ApiResponse<Void>> markAsRead(
             @PathVariable Long roomId,
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
