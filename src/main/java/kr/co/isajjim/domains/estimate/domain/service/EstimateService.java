@@ -34,6 +34,10 @@ public class EstimateService {
         return getOrThrow(estimateId);
     }
 
+    public List<Estimate> getEstimatesByUserId(Long userId) {
+        return estimateRepository.findAllByUserId(userId);
+    }
+
     public Long createEstimate(EstimateRequest request, UserEntity user) {
         Estimate estimate = EstimateMapper.toEstimate(user);
         request.imageUrls().forEach(url -> estimate.addImage(ImageMapper.toImage(url)));

@@ -21,8 +21,11 @@ import kr.co.isajjim.global.security.auth.CustomUserDetails;
 import kr.co.isajjim.infra.ai.application.dto.AIAnalysisResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
 
 @Tag(name = "Estimate", description = "견적서 API")
 public interface EstimateApi {
@@ -57,6 +60,20 @@ public interface EstimateApi {
     ResponseEntity<ApiResponse<EstimateDetailResponse>> updateDefaultInfo(
             @PathVariable Long estimateId,
             @RequestBody @Valid EstimateUpdateRequest request,
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
+    );
+
+    @Operation(
+            summary = "견적서 전체 조회",
+            description = "사용자의 견적서 목록을 전체 조회합니다."
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = EstimateDetailResponse.class,
+                    description = "조회 성공"
+            )
+    )
+    ResponseEntity<ApiResponse<List<EstimateDetailResponse>>> getEstimates(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 

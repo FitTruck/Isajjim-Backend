@@ -2,7 +2,10 @@ package kr.co.isajjim.domains.estimate.presentation.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import kr.co.isajjim.domains.estimate.application.request.*;
+import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
+import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
+import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
@@ -20,6 +23,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/estimates")
@@ -50,6 +55,15 @@ public class EstimateController implements EstimateApi {
     ) {
         estimateUseCase.updateDefaultInfo(estimateId, request, user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
+    }
+
+    @Override
+    @GetMapping
+    public ResponseEntity<ApiResponse<List<EstimateDetailResponse>>> getEstimates(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        List<EstimateDetailResponse> response = estimateUseCase.getEstimates(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 
     @Override

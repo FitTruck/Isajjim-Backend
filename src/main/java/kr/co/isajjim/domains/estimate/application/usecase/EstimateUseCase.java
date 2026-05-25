@@ -45,6 +45,12 @@ public class EstimateUseCase {
         return estimateId;
     }
 
+    public List<EstimateDetailResponse> getEstimates(Long userId) {
+        return estimateService.getEstimatesByUserId(userId).stream()
+                .map(EstimateMapper::fromEstimate)
+                .toList();
+    }
+
     public EstimateDetailResponse getDetailEstimates(Long estimateId, Long userId) {
         Estimate estimate = estimateService.getEstimateById(estimateId);
         estimate.validateOwner(userId);
