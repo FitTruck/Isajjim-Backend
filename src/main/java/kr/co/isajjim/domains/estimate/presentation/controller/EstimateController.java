@@ -98,11 +98,11 @@ public class EstimateController implements EstimateApi {
     @Override
     @PostMapping("/{estimateId}/callback")
     public ResponseEntity<ApiResponse<Void>> aiCallback(
-            @RequestHeader("X_INTERNAL_TOKEN") String token,
+//            @RequestHeader("X_INTERNAL_TOKEN") String token,
             @PathVariable Long estimateId,
             @RequestBody AIAnalysisResponse request
     ) {
-        validateToken(token);
+//        validateToken(token);
         estimateUseCase.saveFurnitureList(estimateId, request);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK));
     }
