@@ -28,7 +28,6 @@ public record AIAnalysisResponse(
             Double width,
             Double depth,
             Double height,
-            Double volume,
             Double centerX,
             Double centerY
     ) {

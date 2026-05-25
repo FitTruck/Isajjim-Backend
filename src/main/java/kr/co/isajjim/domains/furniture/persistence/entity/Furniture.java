@@ -39,8 +39,6 @@ public class Furniture extends BaseEntity {
 
     private Double depth;
 
-    private Double volume;
-
     private Integer quantity;
 
     private Double centerX;
@@ -54,7 +52,6 @@ public class Furniture extends BaseEntity {
         Double width,
         Double height,
         Double depth,
-        Double volume,
         Integer quantity,
         Double centerX,
         Double centerY
@@ -64,7 +61,6 @@ public class Furniture extends BaseEntity {
         this.width = width;
         this.height = height;
         this.depth = depth;
-        this.volume = volume;
         this.quantity = quantity;
         this.centerX = centerX;
         this.centerY = centerY;

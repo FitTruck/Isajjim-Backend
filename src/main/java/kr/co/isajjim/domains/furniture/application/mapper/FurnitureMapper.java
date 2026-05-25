@@ -15,7 +15,6 @@ public class FurnitureMapper {
                 .width(info.width())
                 .depth(info.depth())
                 .height(info.height())
-                .volume(info.volume())
                 .quantity(quantity)
                 .centerX(info.centerX())
                 .centerY(info.centerY())
