@@ -16,7 +16,6 @@ public class FurnitureMapper {
                 .depth(info.depth())
                 .height(info.height())
                 .volume(info.volume())
-                .plyUrl(info.plyUrl())
                 .quantity(quantity)
                 .centerX(info.centerX())
                 .centerY(info.centerY())
@@ -30,10 +29,12 @@ public class FurnitureMapper {
                 .furnitureId(furniture.getId())
                 .label(furniture.getLabel())
                 .type(furniture.getType())
-                .plyUrl(furniture.getPlyUrl())
                 .quantity(furniture.getQuantity())
                 .centerX(furniture.getCenterX())
                 .centerY(furniture.getCenterY())
+                .width(furniture.getWidth())
+                .height(furniture.getHeight())
+                .depth(furniture.getDepth())
                 .build();
     }
 }

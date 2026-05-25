@@ -17,9 +17,6 @@ public record FurnitureResponse(
         @Schema(description = "가구 상세(Nullable)", example = "퀸사이즈")
         FurnitureType type,
 
-        @Schema(description = "Ply File Url", example = "https://storage.isajjim.kr/123c")
-        String plyUrl,
-
         @Schema(description = "개수", example = "1")
         Integer quantity,
 
@@ -27,6 +24,16 @@ public record FurnitureResponse(
         Double centerX,
 
         @Schema(description = "이미지 내 가구 Y 위치", example = "234.2")
-        Double centerY
+        Double centerY,
+
+        @Schema(description = "width", example = "22.1")
+        Double width,
+
+        @Schema(description = "depth", example = "22.1")
+        Double height,
+
+        @Schema(description = "depth", example = "22.1")
+        Double depth
+
 ) {
 }
