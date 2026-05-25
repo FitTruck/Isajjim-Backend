@@ -129,7 +129,7 @@ public interface EstimateApi {
             summary = "(AI서버 전용) AI Callback API"
     )
     ResponseEntity<ApiResponse<Void>> aiCallback(
-            @RequestHeader("X-INTERNAL-TOKEN") String token,
+//            @RequestHeader("X_INTERNAL_TOKEN") String token,
             @PathVariable Long estimateId,
             @RequestBody AIAnalysisResponse request
     );
