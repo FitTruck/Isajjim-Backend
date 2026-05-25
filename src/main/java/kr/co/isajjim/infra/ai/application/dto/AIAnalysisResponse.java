@@ -28,8 +28,6 @@ public record AIAnalysisResponse(
             Double width,
             Double depth,
             Double height,
-            Double volume,
-            String plyUrl,
             Double centerX,
             Double centerY
     ) {

@@ -66,14 +66,12 @@ public class AIService {
                                         new AIAnalysisResponse.FurnitureInfo(
                                                 FurnitureLabel.SOFA,
                                                 FurnitureType.THREE_SEATER_SOFA,
-                                                180.0, 85.0, 90.0, 1377000.0,
-                                                "https://storage.googleapis.com/isajjim-3d-assets/10_BED_2.ply", 0.45, 0.55
+                                                180.0, 85.0, 90.0, 0.45, 0.55
                                         ),
                                         new AIAnalysisResponse.FurnitureInfo(
                                                 FurnitureLabel.DESK,
                                                 FurnitureType.DESK_NO_DRAWER,
-                                                120.0, 60.0, 75.0, 540000.0,
-                                                "https://storage.googleapis.com/isajjim-3d-assets/10_BED_2.ply", 0.25, 0.30
+                                                120.0, 60.0, 75.0, 0.25, 0.30
                                         )
                                 )
                         ))
