@@ -1,5 +1,6 @@
 package kr.co.isajjim.domains.estimate.application.mapper;
 
+import kr.co.isajjim.domains.estimate.application.response.EstimateDetailListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
@@ -10,6 +11,7 @@ import kr.co.isajjim.domains.image.application.response.ImageResponse;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EstimateMapper {
@@ -31,6 +33,7 @@ public class EstimateMapper {
         List<EstimateItemResponse> itemResponses = items.stream().map(EstimateMapper::fromEstimateItem).toList();
 
         return EstimateDetailResponse.builder()
+                .createdDate(LocalDate.from(estimate.getCreatedDate()))
                 .estimateId(estimate.getId())
                 .aiStatus(estimate.getAiStatus())
                 .images(imageResponses)
@@ -48,9 +51,9 @@ public class EstimateMapper {
                 .build();
     }
 
-    public static EstimateItemListResponse toEstimateItemListResponse(
-            List<EstimateItemResponse> items
+    public static EstimateDetailListResponse toEstimateDetailListResponse(
+            List<EstimateDetailResponse> items
     ) {
-        return EstimateItemListResponse.toEstimateItemListResponse(items);
+        return EstimateDetailListResponse.toEstimateDetailListResponse(items);
     }
 }

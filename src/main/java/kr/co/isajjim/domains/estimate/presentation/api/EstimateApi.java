@@ -9,9 +9,7 @@ import kr.co.isajjim.domains.estimate.application.request.EstimateFurnitureUpdat
 import kr.co.isajjim.domains.estimate.application.request.EstimateItemUpdateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateRequest;
 import kr.co.isajjim.domains.estimate.application.request.EstimateUpdateRequest;
-import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
-import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
-import kr.co.isajjim.domains.estimate.application.response.EstimateResponse;
+import kr.co.isajjim.domains.estimate.application.response.*;
 import kr.co.isajjim.global.annotation.swagger.ApiErrorResponseExplanation;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
@@ -24,8 +22,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-
-import java.util.List;
 
 @Tag(name = "Estimate", description = "견적서 API")
 public interface EstimateApi {
@@ -69,11 +65,11 @@ public interface EstimateApi {
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
-                    responseClass = EstimateDetailResponse.class,
+                    responseClass = EstimateDetailListResponse.class,
                     description = "조회 성공"
             )
     )
-    ResponseEntity<ApiResponse<List<EstimateDetailResponse>>> getEstimates(
+    ResponseEntity<ApiResponse<EstimateDetailListResponse>> getEstimates(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
     );
 
