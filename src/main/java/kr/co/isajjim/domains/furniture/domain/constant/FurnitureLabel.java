@@ -105,7 +105,8 @@ public enum FurnitureLabel {
     public static FurnitureLabel from(String value) {
         String normalized = value.toUpperCase()
                 .replace("(", "")
-                .replace(")", "");
+                .replace(")", "")
+                .replace(" ", "_");
         return FurnitureLabel.valueOf(normalized);
     }
 }
