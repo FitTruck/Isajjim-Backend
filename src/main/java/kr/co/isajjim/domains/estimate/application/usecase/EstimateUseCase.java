@@ -3,8 +3,7 @@ package kr.co.isajjim.domains.estimate.application.usecase;
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateChatSummaryMapper;
 import kr.co.isajjim.domains.estimate.application.mapper.EstimateMapper;
 import kr.co.isajjim.domains.estimate.application.request.*;
-import kr.co.isajjim.domains.estimate.application.response.EstimateChatSummaryResponse;
-import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
+import kr.co.isajjim.domains.estimate.application.response.*;
 import kr.co.isajjim.domains.estimate.domain.constant.AIStatus;
 import kr.co.isajjim.domains.estimate.domain.event.EstimateCreatedEvent;
 import kr.co.isajjim.domains.estimate.domain.service.EstimateNotificationService;
@@ -45,10 +44,10 @@ public class EstimateUseCase {
         return estimateId;
     }
 
-    public List<EstimateDetailResponse> getEstimates(Long userId) {
-        return estimateService.getEstimatesByUserId(userId).stream()
-                .map(EstimateMapper::fromEstimate)
-                .toList();
+    public EstimateDetailListResponse getEstimates(Long userId) {
+        List<Estimate> estimates = estimateService.getEstimatesByUserId(userId);
+        List<EstimateDetailResponse> responses = estimates.stream().map(EstimateMapper::fromEstimate).toList();
+        return EstimateMapper.toEstimateDetailListResponse(responses);
     }
 
     public EstimateDetailResponse getDetailEstimates(Long estimateId, Long userId) {

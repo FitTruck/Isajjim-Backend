@@ -1,15 +1,19 @@
 package kr.co.isajjim.domains.estimate.application.mapper;
 
+import kr.co.isajjim.domains.estimate.application.response.EstimateDetailListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemResponse;
+import kr.co.isajjim.domains.estimate.application.response.LocationDetailResponse;
 import kr.co.isajjim.domains.estimate.persistence.entity.Estimate;
 import kr.co.isajjim.domains.estimate.persistence.entity.EstimateItem;
+import kr.co.isajjim.domains.estimate.persistence.entity.LocationDetail;
 import kr.co.isajjim.domains.image.application.mapper.ImageMapper;
 import kr.co.isajjim.domains.image.application.response.ImageResponse;
 import kr.co.isajjim.domains.image.persistence.entity.Image;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class EstimateMapper {
@@ -30,8 +34,15 @@ public class EstimateMapper {
         List<EstimateItem> items = estimate.getEstimateItems();
         List<EstimateItemResponse> itemResponses = items.stream().map(EstimateMapper::fromEstimateItem).toList();
 
+        LocationDetail startLocation = estimate.getStartLocation();
+        LocationDetail endLocation = estimate.getEndLocation();
+
         return EstimateDetailResponse.builder()
+                .createdDate(LocalDate.from(estimate.getCreatedDate()))
                 .estimateId(estimate.getId())
+                .startLocation(startLocation != null ? fromLocationDetail(startLocation) : null)
+                .endLocation(endLocation != null ? fromLocationDetail(endLocation) : null)
+                .preferredMovingDate(estimate.getPreferredMovingDate())
                 .aiStatus(estimate.getAiStatus())
                 .images(imageResponses)
                 .items(itemResponses)
@@ -48,9 +59,25 @@ public class EstimateMapper {
                 .build();
     }
 
-    public static EstimateItemListResponse toEstimateItemListResponse(
-            List<EstimateItemResponse> items
+    public static LocationDetailResponse fromLocationDetail(LocationDetail locationDetail) {
+        return new LocationDetailResponse(
+                locationDetail.getAddress(),
+                locationDetail.getDetailAddress(),
+                locationDetail.getBuildingType(),
+                locationDetail.getRoomSize(),
+                locationDetail.getFloor(),
+                locationDetail.getElevator(),
+                locationDetail.getLadderTruck(),
+                locationDetail.getRoomType(),
+                locationDetail.getDuplex(),
+                locationDetail.getGroundStair(),
+                locationDetail.getParking()
+        );
+    }
+
+    public static EstimateDetailListResponse toEstimateDetailListResponse(
+            List<EstimateDetailResponse> items
     ) {
-        return EstimateItemListResponse.toEstimateItemListResponse(items);
+        return EstimateDetailListResponse.toEstimateDetailListResponse(items);
     }
 }
