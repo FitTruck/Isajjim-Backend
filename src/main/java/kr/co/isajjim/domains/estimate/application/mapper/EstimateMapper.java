@@ -31,6 +31,7 @@ public class EstimateMapper {
         List<EstimateItemResponse> itemResponses = items.stream().map(EstimateMapper::fromEstimateItem).toList();
 
         return EstimateDetailResponse.builder()
+                .estimateId(estimate.getId())
                 .aiStatus(estimate.getAiStatus())
                 .images(imageResponses)
                 .items(itemResponses)

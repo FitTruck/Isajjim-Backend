@@ -9,6 +9,9 @@ import java.util.List;
 
 @Builder
 public record EstimateDetailResponse(
+        @Schema(description = "견적서 ID", example = "1")
+        Long estimateId,
+
         @Schema(description = "AI 처리 상태", example = "PENDING")
         AIStatus aiStatus,
 
