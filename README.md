@@ -32,17 +32,7 @@ FE : React Native
 AI : FastAPI, Google Cloud Platform(Compute Engine), Yoloe, SAM3D
 
 ## 💻 개발 환경 구축
-- 본 프로젝트는 보안을 위해 민감한 설정값을 .env 파일로 관리합니다. 로컬 개발 환경을 구축하기 위해 아래 과정을 따라주세요.
-    - 환경 변수 파일 생성
-        - 루트 디렉토리의 .env.example 파일을 복사하여 .env 파일을 생성합니다.
-        - 각 변수에 로컬 환경에 맞는 값을 입력합니다.
-    - IDE 설정 (IntelliJ IDEA 기준)
-        - EnvFile 플러그인을 설치합니다.
-        - Run/Debug Configuration -> Edit Configuration -> Enable EnvFile, + 버튼 클릭하여 .env 파일을 추가합니다.
-- 관련 파일 : .env.example, application.yml
-
-## 🚀 CI/CD
-- Github Push -> Cloud Build 트리거(Dockerfile 멀티 스테이지 빌드) -> Artifact Registry에 이미지 저장 -> Cloud Run에서 가져와 서버 실행
+- `docs/ONBOARDING.md` 문서 참고
 
 ## 👥 이삿찜을 만든 사람들
 | BE 이효재 | FE 최유준 | AI 김이든 | AI 한윤택 |
