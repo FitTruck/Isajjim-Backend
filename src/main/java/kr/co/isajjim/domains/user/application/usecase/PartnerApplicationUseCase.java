@@ -21,6 +21,11 @@ public class PartnerApplicationUseCase {
     private final PartnerProfileService partnerProfileService;
     private final UserService userService;
 
+    public PartnerProfileResponse getMy(Long userId) {
+        PartnerProfile partnerProfile = partnerProfileService.getByUserId(userId);
+        return PartnerProfileMapper.fromPartnerProfile(partnerProfile);
+    }
+
     @Transactional
     public PartnerProfileResponse apply(Long userId, PartnerApplicationRequest request) {
         UserEntity user = userService.getUserById(userId);

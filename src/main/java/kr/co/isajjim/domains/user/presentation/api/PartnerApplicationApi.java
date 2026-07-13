@@ -20,6 +20,24 @@ import org.springframework.web.bind.annotation.RequestBody;
 public interface PartnerApplicationApi {
 
     @Operation(
+            summary = "내 파트너 신청 조회",
+            description = "본인의 파트너 신청 현황(승인 상태 등)을 조회합니다. 신청 전이라면 새로 신청하고, 신청 후라면 수정/취소할 수 있습니다."
+    )
+    @ApiResponseExplanations(
+            success = @ApiSuccessResponseExplanation(
+                    responseClass = PartnerProfileResponse.class,
+                    description = "조회 성공"
+            ),
+            errors = {
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.FORBIDDEN),
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.NOT_FOUND_PARTNER_PROFILE)
+            }
+    )
+    ResponseEntity<ApiResponse<PartnerProfileResponse>> getMy(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user
+    );
+
+    @Operation(
             summary = "파트너 신청",
             description = "일반 유저가 파트너(업체) 전환을 신청합니다. 관리자 승인 전까지는 role이 변경되지 않습니다."
     )

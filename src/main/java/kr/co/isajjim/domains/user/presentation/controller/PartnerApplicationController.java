@@ -23,6 +23,15 @@ public class PartnerApplicationController implements PartnerApplicationApi {
     private final PartnerApplicationUseCase partnerApplicationUseCase;
 
     @Override
+    @GetMapping("/me")
+    public ResponseEntity<ApiResponse<PartnerProfileResponse>> getMy(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        PartnerProfileResponse response = partnerApplicationUseCase.getMy(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
     @PostMapping
     public ResponseEntity<ApiResponse<PartnerProfileResponse>> apply(
             @RequestBody @Valid PartnerApplicationRequest request,
