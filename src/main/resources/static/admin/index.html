@@ -98,14 +98,16 @@
         .btn-page     { background: var(--surface); border-color: var(--border); color: var(--text); }
 
         /* ── Filters ── */
-        .filters { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 20px; }
-        .filters label { display: block; color: var(--text-muted); font-size: 12px; font-weight: 600; margin-bottom: 5px; }
-        select {
-            padding: 7px 10px; background: var(--surface); border: 1px solid var(--border); color: var(--text);
-            border-radius: 7px; font-family: inherit; font-size: 13px;
+        .filters { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 20px; flex-wrap: wrap; }
+        .filters > div { display: flex; flex-direction: column; }
+        .filters label { display: block; color: var(--text-muted); font-size: 12px; font-weight: 600; margin-bottom: 5px; line-height: 1; }
+        select, input[type="text"] {
+            box-sizing: border-box; height: 34px; padding: 0 10px; background: var(--surface); border: 1px solid var(--border);
+            color: var(--text); border-radius: 7px; font-family: inherit; font-size: 13px; line-height: 32px;
         }
-        select:focus { outline: 2px solid var(--accent-soft); outline-offset: 1px; }
-        select:disabled { opacity: 0.6; cursor: not-allowed; }
+        input[type="text"] { width: 200px; }
+        select:focus, input[type="text"]:focus { outline: 2px solid var(--accent-soft); outline-offset: 1px; }
+        select:disabled, input[type="text"]:disabled { opacity: 0.6; cursor: not-allowed; }
 
         /* ── Loading ── */
         .loading-indicator { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12.5px; padding-bottom: 8px; }
@@ -210,6 +212,10 @@
                                 <option value="50">50</option>
                             </select>
                         </div>
+                        <div>
+                            <label>검색 (업체명/대표자명)</label>
+                            <input type="text" id="keywordFilter" placeholder="검색어 입력" oninput="onKeywordInput('applications')">
+                        </div>
                         <div id="loadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
                     </div>
 
@@ -247,6 +253,10 @@
                                 <option value="20">20</option>
                                 <option value="50">50</option>
                             </select>
+                        </div>
+                        <div>
+                            <label>검색 (업체명/대표자명)</label>
+                            <input type="text" id="companyKeywordFilter" placeholder="검색어 입력" oninput="onKeywordInput('companies')">
                         </div>
                         <div id="companyLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
                     </div>
@@ -294,6 +304,10 @@
                                 <option value="20">20</option>
                                 <option value="50">50</option>
                             </select>
+                        </div>
+                        <div>
+                            <label>검색 (이름/이메일)</label>
+                            <input type="text" id="userKeywordFilter" placeholder="검색어 입력" oninput="onKeywordInput('users')">
                         </div>
                         <div id="userLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
                     </div>
@@ -344,6 +358,10 @@
                                 <option value="50">50</option>
                             </select>
                         </div>
+                        <div>
+                            <label>검색 (신청자 이름/이메일)</label>
+                            <input type="text" id="estimateKeywordFilter" placeholder="검색어 입력" oninput="onKeywordInput('estimates')">
+                        </div>
                         <div id="estimateLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
                     </div>
 
@@ -388,6 +406,7 @@
                 filterParamName: 'status',
                 filterId: 'statusFilter',
                 fixedValue: null,
+                keywordFilterId: 'keywordFilter',
                 sizeFilterId: 'sizeFilter',
                 loadingId: 'loadingIndicator',
                 tableBodyId: 'tableBody',
@@ -403,6 +422,7 @@
                 filterParamName: 'status',
                 filterId: null,
                 fixedValue: 'APPROVED',
+                keywordFilterId: 'companyKeywordFilter',
                 sizeFilterId: 'companySizeFilter',
                 loadingId: 'companyLoadingIndicator',
                 tableBodyId: 'companyTableBody',
@@ -418,6 +438,7 @@
                 filterParamName: 'role',
                 filterId: 'roleFilter',
                 fixedValue: null,
+                keywordFilterId: 'userKeywordFilter',
                 sizeFilterId: 'userSizeFilter',
                 loadingId: 'userLoadingIndicator',
                 tableBodyId: 'userTableBody',
@@ -433,6 +454,7 @@
                 filterParamName: 'aiStatus',
                 filterId: 'estimateStatusFilter',
                 fixedValue: null,
+                keywordFilterId: 'estimateKeywordFilter',
                 sizeFilterId: 'estimateSizeFilter',
                 loadingId: 'estimateLoadingIndicator',
                 tableBodyId: 'estimateTableBody',
@@ -538,6 +560,16 @@
             loadView(viewKey);
         }
 
+        const keywordDebounceTimers = {};
+
+        function onKeywordInput(viewKey) {
+            clearTimeout(keywordDebounceTimers[viewKey]);
+            keywordDebounceTimers[viewKey] = setTimeout(() => {
+                VIEWS[viewKey].state.page = 0;
+                loadView(viewKey);
+            }, 400);
+        }
+
         function setLoading(viewKey, isLoading) {
             const cfg = VIEWS[viewKey];
             document.getElementById(cfg.loadingId).classList.toggle('hidden', !isLoading);
@@ -553,6 +585,8 @@
                 const params = new URLSearchParams({ page: cfg.state.page, size, sort: 'createdDate,desc' });
                 const filterValue = cfg.fixedValue || (cfg.filterId && document.getElementById(cfg.filterId).value);
                 if (filterValue) params.set(cfg.filterParamName, filterValue);
+                const keyword = cfg.keywordFilterId && document.getElementById(cfg.keywordFilterId).value.trim();
+                if (keyword) params.set('keyword', keyword);
 
                 const { ok, status: httpStatus, body } = await apiFetch(`${cfg.endpoint}?${params}`);
 
