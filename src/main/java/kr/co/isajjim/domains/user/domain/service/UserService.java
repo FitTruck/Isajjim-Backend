@@ -8,6 +8,8 @@ import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.security.constant.SocialProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +26,14 @@ public class UserService {
 
     public UserEntity getUserById(Long userId) {
         return getOrThrow(userId);
+    }
+
+    public Page<UserEntity> getList(Role role, String keyword, Pageable pageable) {
+        return userRepository.search(role, normalizeKeyword(keyword), pageable);
+    }
+
+    private String normalizeKeyword(String keyword) {
+        return (keyword == null || keyword.isBlank()) ? null : keyword.trim();
     }
 
     public Map<Long, UserEntity> getUserMapByIds(List<Long> userIds) {

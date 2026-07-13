@@ -82,6 +82,7 @@ oauth2:
   allowed-redirect-uris:
     - http://localhost:8081
     - https://localhost:8081
+    - http://localhost:8080
     - https://isajjim.kro.kr
     - isajjim://oauth2/callback
   client:

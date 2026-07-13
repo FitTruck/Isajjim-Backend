@@ -1,5 +1,6 @@
 package kr.co.isajjim.domains.user.application.usecase;
 
+import kr.co.isajjim.domains.user.application.dto.response.RoleResponse;
 import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
 import kr.co.isajjim.domains.user.domain.constant.Role;
 import kr.co.isajjim.domains.user.domain.service.UserService;
@@ -22,6 +23,11 @@ public class UserUseCase {
     public UserInfoResponse getMyInfo(Long userId) {
         UserEntity user = userService.getUserById(userId);
         return UserInfoResponse.from(user);
+    }
+
+    public RoleResponse getMyRole(Long userId) {
+        UserEntity user = userService.getUserById(userId);
+        return RoleResponse.from(user);
     }
 
     @Transactional
@@ -49,6 +55,5 @@ public class UserUseCase {
         if (imageUrl != null) {
             s3Service.deleteObjectByUrl(imageUrl);
         }
-        userService.updateRole(user, role);
     }
 }

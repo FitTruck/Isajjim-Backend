@@ -17,13 +17,23 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/partner-applications")
 @RequiredArgsConstructor
-@PreAuthorize("hasRole('USER')")
 public class PartnerApplicationController implements PartnerApplicationApi {
 
     private final PartnerApplicationUseCase partnerApplicationUseCase;
 
     @Override
+    @GetMapping("/me")
+    @PreAuthorize("hasAnyRole('USER', 'PARTNER')")
+    public ResponseEntity<ApiResponse<PartnerProfileResponse>> getMy(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        PartnerProfileResponse response = partnerApplicationUseCase.getMy(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
     @PostMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<PartnerProfileResponse>> apply(
             @RequestBody @Valid PartnerApplicationRequest request,
             @AuthenticationPrincipal CustomUserDetails user
@@ -34,6 +44,7 @@ public class PartnerApplicationController implements PartnerApplicationApi {
 
     @Override
     @PatchMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<PartnerProfileResponse>> update(
             @RequestBody @Valid PartnerApplicationRequest request,
             @AuthenticationPrincipal CustomUserDetails user
@@ -44,6 +55,7 @@ public class PartnerApplicationController implements PartnerApplicationApi {
 
     @Override
     @DeleteMapping("/me")
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<ApiResponse<Void>> cancel(
             @AuthenticationPrincipal CustomUserDetails user
     ) {

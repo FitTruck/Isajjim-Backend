@@ -5,6 +5,7 @@ import kr.co.isajjim.domains.chat.application.dto.request.DeviceTokenRequest;
 import kr.co.isajjim.domains.chat.application.usecase.DeviceTokenUseCase;
 import kr.co.isajjim.domains.user.application.dto.request.ProfileImageRequest;
 import kr.co.isajjim.domains.user.application.dto.request.UpdateNameRequest;
+import kr.co.isajjim.domains.user.application.dto.response.RoleResponse;
 import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
 import kr.co.isajjim.domains.user.application.usecase.UserUseCase;
 import kr.co.isajjim.domains.user.presentation.api.UserApi;
@@ -47,6 +48,15 @@ public class UserController implements UserApi {
             @AuthenticationPrincipal CustomUserDetails user
     ) {
         UserInfoResponse response = userUseCase.getMyInfo(user.getUserId());
+        return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
+    }
+
+    @Override
+    @GetMapping("/role")
+    public ResponseEntity<ApiResponse<RoleResponse>> getMyRole(
+            @AuthenticationPrincipal CustomUserDetails user
+    ) {
+        RoleResponse response = userUseCase.getMyRole(user.getUserId());
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 

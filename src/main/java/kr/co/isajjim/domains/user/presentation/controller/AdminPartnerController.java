@@ -27,9 +27,10 @@ public class AdminPartnerController implements AdminPartnerApi {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<PartnerProfileResponse>>> getPartnerApplications(
             @RequestParam(required = false) ApprovalStatus status,
+            @RequestParam(required = false) String keyword,
             Pageable pageable
     ) {
-        Page<PartnerProfileResponse> response = adminPartnerUseCase.getList(status, pageable);
+        Page<PartnerProfileResponse> response = adminPartnerUseCase.getList(status, keyword, pageable);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 

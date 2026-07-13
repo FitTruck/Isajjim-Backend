@@ -28,5 +28,6 @@ public abstract class Constants {
             "/favicon.ico",
             "/swagger-ui/**",
             "/v3/api-docs/**",
+            "/admin/**",
     };
 }

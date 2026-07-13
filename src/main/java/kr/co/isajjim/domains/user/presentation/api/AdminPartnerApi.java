@@ -26,7 +26,7 @@ public interface AdminPartnerApi {
 
     @Operation(
             summary = "파트너 신청 목록 조회",
-            description = "파트너 신청 목록을 승인 상태(status)로 필터링하여 조회합니다. status를 생략하면 전체 조회합니다."
+            description = "파트너 신청 목록을 승인 상태(status)로 필터링하고, 업체명/대표자명 키워드(keyword)로 검색하여 조회합니다. 둘 다 생략하면 전체 조회합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
@@ -41,12 +41,14 @@ public interface AdminPartnerApi {
     ResponseEntity<ApiResponse<Page<PartnerProfileResponse>>> getPartnerApplications(
             @Parameter(in = ParameterIn.QUERY, description = "승인 상태 필터", example = "PENDING")
             @RequestParam(required = false) ApprovalStatus status,
+            @Parameter(in = ParameterIn.QUERY, description = "업체명/대표자명 검색 키워드", example = "이삿찜")
+            @RequestParam(required = false) String keyword,
             @Parameter(hidden = true) Pageable pageable
     );
 
     @Operation(
             summary = "파트너 신청 승인/거부",
-            description = "파트너 신청을 승인하거나 거부합니다. 승인 시 대상 유저의 role이 PARTNER로 변경됩니다."
+            description = "파트너 신청을 승인하거나 거부합니다. 승인 시 대상 유저의 role이 PARTNER로 변경됩니다. 거부(REJECTED) 시 rejectionReason은 필수입니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
@@ -56,7 +58,8 @@ public interface AdminPartnerApi {
             errors = {
                     @ApiErrorResponseExplanation(exceptionCode = ResponseCode.FORBIDDEN),
                     @ApiErrorResponseExplanation(exceptionCode = ResponseCode.NOT_FOUND_PARTNER_PROFILE),
-                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_APPROVAL_STATUS)
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_APPROVAL_STATUS),
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.REQUIRED_REJECTION_REASON)
             }
     )
     ResponseEntity<ApiResponse<PartnerProfileResponse>> decidePartnerApplication(
@@ -66,7 +69,7 @@ public interface AdminPartnerApi {
 
     @Operation(
             summary = "파트너 신청 삭제",
-            description = "파트너 신청 내역을 삭제합니다."
+            description = "파트너 신청 내역을 삭제합니다. 이미 승인(APPROVED)된 파트너인 경우, 삭제와 함께 해당 유저의 role을 USER로 되돌립니다(파트너 권한 해제)."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(description = "삭제 성공"),
