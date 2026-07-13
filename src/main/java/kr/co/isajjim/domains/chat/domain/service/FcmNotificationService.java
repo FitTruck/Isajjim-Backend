@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -23,20 +24,25 @@ public class FcmNotificationService {
     private final UserService userService;
 
     public void sendMessageNotification(Long recipientId, ChatMessageResponse message) {
+        String senderName = userService.getUserById(message.senderId()).getName();
+        String body = message.type() == MessageType.IMAGE ? MessageType.IMAGE.label : message.content();
+
+        sendNotification(recipientId, senderName, body, Map.of("roomId", String.valueOf(message.roomId())));
+    }
+
+    public void sendNotification(Long recipientId, String title, String body, Map<String, String> data) {
         List<DeviceToken> deviceTokens = deviceTokenRepository.findAllByUserId(recipientId);
         if (deviceTokens.isEmpty()) return;
 
         List<String> tokens = deviceTokens.stream().map(DeviceToken::getToken).toList();
-        String senderName = userService.getUserById(message.senderId()).getName();
-        String body = message.type() == MessageType.IMAGE ? MessageType.IMAGE.label : message.content();
 
         MulticastMessage fcmMessage = MulticastMessage.builder()
                 .addAllTokens(tokens)
                 .setNotification(Notification.builder()
-                        .setTitle(senderName)
+                        .setTitle(title)
                         .setBody(body)
                         .build())
-                .putData("roomId", String.valueOf(message.roomId()))
+                .putAllData(data)
                 .build();
 
         try {
