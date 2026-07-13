@@ -77,6 +77,13 @@ infra:
       static: ${AWS_REGION}
     s3:
       bucket: ${AWS_S3_BUCKET}
+  toss:
+    client-key: ${TOSS_CLIENT_KEY}
+    secret-key: ${TOSS_SECRET_KEY}
+    base-url: ${TOSS_BASE_URL:https://api.tosspayments.com}
+    success-url: ${TOSS_SUCCESS_URL}
+    fail-url: ${TOSS_FAIL_URL}
+    krw-per-credit: ${TOSS_KRW_PER_CREDIT:1}
 
 oauth2:
   allowed-redirect-uris:

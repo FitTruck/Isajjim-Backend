@@ -65,6 +65,15 @@ public enum ResponseCode {
     DUPLICATE_PARTNER_APPLICATION(HttpStatus.BAD_REQUEST, "PARTNER-002", "이미 파트너 신청 내역이 존재합니다."),
     INVALID_APPROVAL_STATUS(HttpStatus.BAD_REQUEST, "PARTNER-003", "승인 처리 값은 APPROVED 또는 REJECTED만 가능합니다."),
     REQUIRED_REJECTION_REASON(HttpStatus.BAD_REQUEST, "PARTNER-004", "거부 처리 시 반려 사유는 필수입니다."),
+
+
+    /*    Credit    */
+    NOT_FOUND_CREDIT_CHARGE_ORDER(HttpStatus.NOT_FOUND, "CREDIT-001", "요청 크레딧 충전 주문을 찾을 수 없습니다."),
+    ALREADY_PROCESSED_CREDIT_CHARGE_ORDER(HttpStatus.CONFLICT, "CREDIT-002", "이미 처리된 크레딧 충전 주문입니다."),
+    CREDIT_CHARGE_AMOUNT_MISMATCH(HttpStatus.BAD_REQUEST, "CREDIT-003", "충전 요청 금액이 최초 요청 금액과 일치하지 않습니다."),
+    INVALID_CREDIT_CHARGE_AMOUNT(HttpStatus.BAD_REQUEST, "CREDIT-004", "충전 금액은 지정된 단위의 배수여야 합니다."),
+    TOSS_PAYMENT_CONFIRM_FAILED(HttpStatus.BAD_REQUEST, "CREDIT-005", "결제 승인에 실패했습니다."),
+    INSUFFICIENT_CREDIT(HttpStatus.CONFLICT, "CREDIT-006", "보유 크레딧이 부족합니다."),
     ;
 
     private final HttpStatus status;
