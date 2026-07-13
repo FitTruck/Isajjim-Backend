@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import kr.co.isajjim.domains.chat.application.dto.request.DeviceTokenRequest;
 import kr.co.isajjim.domains.user.application.dto.request.ProfileImageRequest;
 import kr.co.isajjim.domains.user.application.dto.request.UpdateNameRequest;
+import kr.co.isajjim.domains.user.application.dto.response.RoleResponse;
 import kr.co.isajjim.domains.user.application.dto.response.UserInfoResponse;
 import kr.co.isajjim.global.annotation.swagger.ApiResponseExplanations;
 import kr.co.isajjim.global.annotation.swagger.ApiSuccessResponseExplanation;
@@ -31,6 +32,11 @@ public interface UserApi {
     @Operation(summary = "내 정보 조회", description = "이름, 프로필 이미지 URL을 반환합니다.")
     @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = UserInfoResponse.class, description = "조회 성공"))
     ResponseEntity<ApiResponse<UserInfoResponse>> getMyInfo(
+            @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
+
+    @Operation(summary = "내 역할 조회", description = "현재 로그인한 유저의 role(USER/PARTNER/ADMIN)을 반환합니다.")
+    @ApiResponseExplanations(success = @ApiSuccessResponseExplanation(responseClass = RoleResponse.class, description = "조회 성공"))
+    ResponseEntity<ApiResponse<RoleResponse>> getMyRole(
             @Parameter(hidden = true) @AuthenticationPrincipal CustomUserDetails user);
 
     @Operation(summary = "이름 수정")
