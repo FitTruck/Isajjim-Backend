@@ -49,6 +49,5 @@ public class UserUseCase {
         if (imageUrl != null) {
             s3Service.deleteObjectByUrl(imageUrl);
         }
-        userService.updateRole(user, role);
     }
 }
