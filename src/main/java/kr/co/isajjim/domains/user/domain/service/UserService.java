@@ -28,11 +28,12 @@ public class UserService {
         return getOrThrow(userId);
     }
 
-    public Page<UserEntity> getList(Role role, Pageable pageable) {
-        if (role == null) {
-            return userRepository.findAll(pageable);
-        }
-        return userRepository.findAllByRole(role, pageable);
+    public Page<UserEntity> getList(Role role, String keyword, Pageable pageable) {
+        return userRepository.search(role, normalizeKeyword(keyword), pageable);
+    }
+
+    private String normalizeKeyword(String keyword) {
+        return (keyword == null || keyword.isBlank()) ? null : keyword.trim();
     }
 
     public Map<Long, UserEntity> getUserMapByIds(List<Long> userIds) {

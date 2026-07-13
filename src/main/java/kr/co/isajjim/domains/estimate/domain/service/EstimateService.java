@@ -40,11 +40,12 @@ public class EstimateService {
         return estimateRepository.findAllByUserId(userId);
     }
 
-    public Page<Estimate> getList(AIStatus status, Pageable pageable) {
-        if (status == null) {
-            return estimateRepository.findAll(pageable);
-        }
-        return estimateRepository.findAllByAiStatus(status, pageable);
+    public Page<Estimate> getList(AIStatus status, String keyword, Pageable pageable) {
+        return estimateRepository.search(status, normalizeKeyword(keyword), pageable);
+    }
+
+    private String normalizeKeyword(String keyword) {
+        return (keyword == null || keyword.isBlank()) ? null : keyword.trim();
     }
 
     public Long createEstimate(EstimateRequest request, UserEntity user) {

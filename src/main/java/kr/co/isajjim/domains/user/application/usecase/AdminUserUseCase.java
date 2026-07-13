@@ -17,8 +17,8 @@ public class AdminUserUseCase {
 
     private final UserService userService;
 
-    public Page<UserResponse> getList(Role role, Pageable pageable) {
-        return userService.getList(role, pageable)
+    public Page<UserResponse> getList(Role role, String keyword, Pageable pageable) {
+        return userService.getList(role, keyword, pageable)
                 .map(UserMapper::fromUser);
     }
 }

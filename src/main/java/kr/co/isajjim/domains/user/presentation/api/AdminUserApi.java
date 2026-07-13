@@ -22,7 +22,7 @@ public interface AdminUserApi {
 
     @Operation(
             summary = "유저 목록 조회",
-            description = "전체 유저 목록을 role로 필터링하여 조회합니다. role을 생략하면 전체 조회합니다."
+            description = "전체 유저 목록을 role로 필터링하고, 이름/이메일 키워드(keyword)로 검색하여 조회합니다. 둘 다 생략하면 전체 조회합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
@@ -37,6 +37,8 @@ public interface AdminUserApi {
     ResponseEntity<ApiResponse<Page<UserResponse>>> getUsers(
             @Parameter(in = ParameterIn.QUERY, description = "역할 필터", example = "USER")
             @RequestParam(required = false) Role role,
+            @Parameter(in = ParameterIn.QUERY, description = "이름/이메일 검색 키워드", example = "홍길동")
+            @RequestParam(required = false) String keyword,
             @Parameter(hidden = true) Pageable pageable
     );
 }

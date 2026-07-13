@@ -19,8 +19,8 @@ public class AdminEstimateUseCase {
 
     private final EstimateService estimateService;
 
-    public Page<AdminEstimateResponse> getList(AIStatus status, Pageable pageable) {
-        return estimateService.getList(status, pageable)
+    public Page<AdminEstimateResponse> getList(AIStatus status, String keyword, Pageable pageable) {
+        return estimateService.getList(status, keyword, pageable)
                 .map(EstimateMapper::fromEstimateForAdmin);
     }
 

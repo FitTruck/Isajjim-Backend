@@ -30,9 +30,10 @@ public class AdminEstimateController implements AdminEstimateApi {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<AdminEstimateResponse>>> getEstimates(
             @RequestParam(required = false) AIStatus aiStatus,
+            @RequestParam(required = false) String keyword,
             Pageable pageable
     ) {
-        Page<AdminEstimateResponse> response = adminEstimateUseCase.getList(aiStatus, pageable);
+        Page<AdminEstimateResponse> response = adminEstimateUseCase.getList(aiStatus, keyword, pageable);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 

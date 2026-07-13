@@ -28,9 +28,10 @@ public class AdminUserController implements AdminUserApi {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<UserResponse>>> getUsers(
             @RequestParam(required = false) Role role,
+            @RequestParam(required = false) String keyword,
             Pageable pageable
     ) {
-        Page<UserResponse> response = adminUserUseCase.getList(role, pageable);
+        Page<UserResponse> response = adminUserUseCase.getList(role, keyword, pageable);
         return ResponseEntity.ok(ApiResponse.ofSuccess(ResponseCode.OK, response));
     }
 }

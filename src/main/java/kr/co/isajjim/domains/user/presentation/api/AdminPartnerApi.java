@@ -26,7 +26,7 @@ public interface AdminPartnerApi {
 
     @Operation(
             summary = "파트너 신청 목록 조회",
-            description = "파트너 신청 목록을 승인 상태(status)로 필터링하여 조회합니다. status를 생략하면 전체 조회합니다."
+            description = "파트너 신청 목록을 승인 상태(status)로 필터링하고, 업체명/대표자명 키워드(keyword)로 검색하여 조회합니다. 둘 다 생략하면 전체 조회합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
@@ -41,6 +41,8 @@ public interface AdminPartnerApi {
     ResponseEntity<ApiResponse<Page<PartnerProfileResponse>>> getPartnerApplications(
             @Parameter(in = ParameterIn.QUERY, description = "승인 상태 필터", example = "PENDING")
             @RequestParam(required = false) ApprovalStatus status,
+            @Parameter(in = ParameterIn.QUERY, description = "업체명/대표자명 검색 키워드", example = "이삿찜")
+            @RequestParam(required = false) String keyword,
             @Parameter(hidden = true) Pageable pageable
     );
 

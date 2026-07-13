@@ -24,7 +24,7 @@ public interface AdminEstimateApi {
 
     @Operation(
             summary = "견적서 목록 조회",
-            description = "전체 견적서 목록을 AI 처리 상태(aiStatus)로 필터링하여 조회합니다. aiStatus를 생략하면 전체 조회합니다."
+            description = "전체 견적서 목록을 AI 처리 상태(aiStatus)로 필터링하고, 신청자 이름/이메일 키워드(keyword)로 검색하여 조회합니다. 둘 다 생략하면 전체 조회합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
@@ -39,6 +39,8 @@ public interface AdminEstimateApi {
     ResponseEntity<ApiResponse<Page<AdminEstimateResponse>>> getEstimates(
             @Parameter(in = ParameterIn.QUERY, description = "AI 처리 상태 필터", example = "FAILED")
             @RequestParam(required = false) AIStatus aiStatus,
+            @Parameter(in = ParameterIn.QUERY, description = "신청자 이름/이메일 검색 키워드", example = "홍길동")
+            @RequestParam(required = false) String keyword,
             @Parameter(hidden = true) Pageable pageable
     );
 

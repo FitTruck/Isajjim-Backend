@@ -32,11 +32,12 @@ public class PartnerProfileService {
         return partnerProfileRepository.existsByUser_Id(userId);
     }
 
-    public Page<PartnerProfile> getList(ApprovalStatus approvalStatus, Pageable pageable) {
-        if (approvalStatus == null) {
-            return partnerProfileRepository.findAll(pageable);
-        }
-        return partnerProfileRepository.findAllByApprovalStatus(approvalStatus, pageable);
+    public Page<PartnerProfile> getList(ApprovalStatus approvalStatus, String keyword, Pageable pageable) {
+        return partnerProfileRepository.search(approvalStatus, normalizeKeyword(keyword), pageable);
+    }
+
+    private String normalizeKeyword(String keyword) {
+        return (keyword == null || keyword.isBlank()) ? null : keyword.trim();
     }
 
     @Transactional

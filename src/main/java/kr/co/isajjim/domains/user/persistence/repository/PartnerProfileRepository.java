@@ -5,6 +5,8 @@ import kr.co.isajjim.domains.user.persistence.entity.PartnerProfile;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 
@@ -14,5 +16,16 @@ public interface PartnerProfileRepository extends JpaRepository<PartnerProfile, 
 
     boolean existsByUser_Id(Long userId);
 
-    Page<PartnerProfile> findAllByApprovalStatus(ApprovalStatus approvalStatus, Pageable pageable);
+    @Query("""
+            SELECT p FROM PartnerProfile p
+            WHERE (:approvalStatus IS NULL OR p.approvalStatus = :approvalStatus)
+            AND (:keyword IS NULL
+                OR p.companyName LIKE CONCAT('%', :keyword, '%')
+                OR p.representativeName LIKE CONCAT('%', :keyword, '%'))
+            """)
+    Page<PartnerProfile> search(
+            @Param("approvalStatus") ApprovalStatus approvalStatus,
+            @Param("keyword") String keyword,
+            Pageable pageable
+    );
 }

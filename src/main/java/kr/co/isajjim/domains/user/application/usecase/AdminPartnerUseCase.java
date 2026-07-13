@@ -27,8 +27,8 @@ public class AdminPartnerUseCase {
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
 
-    public Page<PartnerProfileResponse> getList(ApprovalStatus approvalStatus, Pageable pageable) {
-        return partnerProfileService.getList(approvalStatus, pageable)
+    public Page<PartnerProfileResponse> getList(ApprovalStatus approvalStatus, String keyword, Pageable pageable) {
+        return partnerProfileService.getList(approvalStatus, keyword, pageable)
                 .map(PartnerProfileMapper::fromPartnerProfile);
     }
 
