@@ -10,6 +10,7 @@ public enum S3Folder {
     PROFILE("profile"),
     ROOM("room"),
     CHAT("chat"),
+    BUSINESS_REGISTRATION("business-registration"),
     ;
 
     private final String path;
