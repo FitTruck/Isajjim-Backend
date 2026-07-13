@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이삿찜 찜 — 파트너 신청 관리</title>
+    <style>
+        :root {
+            --bg: #f4f5f7;
+            --surface: #ffffff;
+            --border: #e3e5e9;
+            --text: #1a1d23;
+            --text-muted: #6b7280;
+            --text-faint: #9aa1ac;
+            --accent: #2f6feb;
+            --accent-hover: #2559c4;
+            --accent-soft: #eaf1ff;
+            --danger: #dc2626;
+            --danger-soft: #fdecec;
+            --success: #15803d;
+            --success-soft: #e7f7ec;
+            --warning: #b45309;
+            --warning-soft: #fef3e0;
+            --radius: 10px;
+            --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Pretendard, Roboto, Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            background: var(--bg);
+            color: var(--text);
+            padding: 32px 20px 60px;
+            line-height: 1.5;
+        }
+        .container { max-width: 1180px; margin: 0 auto; }
+        .hidden { display: none !important; }
+
+        /* ── Header ── */
+        .page-header { margin-bottom: 24px; }
+        .page-header h1 { font-size: 20px; font-weight: 700; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px; }
+        .subtitle { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+        /* ── Layout ── */
+        .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+
+        .app-shell { display: flex; gap: 20px; align-items: flex-start; }
+        .sidebar {
+            width: 208px; flex: none; background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius); box-shadow: var(--shadow); padding: 12px; display: flex; flex-direction: column; gap: 2px;
+        }
+        .sidebar-title { font-size: 11px; font-weight: 700; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.04em; padding: 8px 10px 6px; }
+        .nav-item {
+            display: block; width: 100%; text-align: left; background: transparent; border: 1px solid transparent;
+            border-radius: 7px; padding: 9px 10px; font-size: 13.5px; font-weight: 600; color: var(--text-muted);
+        }
+        .nav-item:hover { background: var(--bg); }
+        .nav-item.active { background: var(--accent-soft); color: var(--accent-hover); }
+        .sidebar-footer { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+        .sidebar-footer .btn-logout { width: 100%; }
+        .content { flex: 1; min-width: 0; }
+
+        @media (max-width: 720px) {
+            .app-shell { flex-direction: column; }
+            .sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+            .sidebar-footer { margin-top: 0; padding-top: 0; border-top: none; margin-left: auto; }
+        }
+
+        /* ── Login / Access Denied ── */
+        .login-card { max-width: 380px; margin: 64px auto; text-align: center; padding: 36px 28px; }
+        .login-card h2 { font-size: 17px; font-weight: 700; margin-bottom: 6px; }
+        .login-card p { color: var(--text-muted); font-size: 13px; margin-bottom: 24px; }
+        .login-buttons { display: flex; flex-direction: column; gap: 10px; }
+        .btn-login { display: block; padding: 11px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 14px; transition: filter 0.15s ease; }
+        .btn-login:hover { filter: brightness(0.96); }
+        .btn-kakao  { background: #FEE500; color: #1a1d23; }
+        .btn-google { background: #fff; color: #1a1d23; border: 1px solid var(--border); }
+        .btn-naver  { background: #03C75A; color: #fff; }
+
+        /* ── Banners ── */
+        .banner { padding: 12px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; font-weight: 500; }
+        .banner.error     { background: var(--danger-soft); color: var(--danger); border: 1px solid #f6cccc; }
+        .banner.forbidden { background: var(--danger-soft); color: var(--danger); border: 1px solid #f6cccc; }
+        .banner.info      { background: var(--accent-soft); color: var(--accent-hover); border: 1px solid #cfe0fb; }
+
+        /* ── Buttons ── */
+        button, .btn {
+            padding: 7px 14px; border: 1px solid transparent; border-radius: 7px; cursor: pointer;
+            font-family: inherit; font-size: 13px; font-weight: 600; white-space: nowrap; transition: filter 0.15s ease, background 0.15s ease;
+        }
+        button:disabled { opacity: 0.4; cursor: not-allowed; }
+        button:not(:disabled):hover { filter: brightness(0.95); }
+        .btn-logout   { background: var(--surface); color: var(--text-muted); border-color: var(--border); }
+        .btn-approve  { background: var(--success-soft); color: var(--success); border-color: #cdeed9; }
+        .btn-reject   { background: var(--warning-soft); color: var(--warning); border-color: #f5deb0; }
+        .btn-delete   { background: var(--danger-soft); color: var(--danger); border-color: #f6cccc; }
+        .btn-detail   { background: var(--surface); border-color: var(--border); color: var(--text-muted); }
+        .btn-page     { background: var(--surface); border-color: var(--border); color: var(--text); }
+
+        /* ── Filters ── */
+        .filters { display: flex; gap: 12px; align-items: flex-end; margin-bottom: 20px; }
+        .filters label { display: block; color: var(--text-muted); font-size: 12px; font-weight: 600; margin-bottom: 5px; }
+        select {
+            padding: 7px 10px; background: var(--surface); border: 1px solid var(--border); color: var(--text);
+            border-radius: 7px; font-family: inherit; font-size: 13px;
+        }
+        select:focus { outline: 2px solid var(--accent-soft); outline-offset: 1px; }
+        select:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* ── Loading ── */
+        .loading-indicator { display: flex; align-items: center; gap: 8px; color: var(--text-muted); font-size: 12.5px; padding-bottom: 8px; }
+        .spinner {
+            width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent);
+            border-radius: 50%; display: inline-block; animation: spin 0.6s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Table ── */
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        thead th {
+            text-align: left; color: var(--text-muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.02em;
+            border-bottom: 1px solid var(--border); padding: 10px 8px; white-space: nowrap;
+        }
+        tbody td { padding: 12px 8px; border-bottom: 1px solid var(--border); vertical-align: top; }
+        tbody tr:hover td { background: #fafbfc; }
+        tbody tr.detail-row td { background: #f7f8fa; color: var(--text-muted); font-size: 12.5px; }
+        tbody tr.detail-row td > div { padding: 2px 0; }
+        .status-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; display: inline-block; }
+        .status-badge.PENDING  { background: var(--warning-soft); color: var(--warning); }
+        .status-badge.APPROVED { background: var(--success-soft); color: var(--success); }
+        .status-badge.REJECTED { background: var(--danger-soft); color: var(--danger); }
+        .status-badge.ACTIVE   { background: var(--success-soft); color: var(--success); }
+        .role-badge { font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 100px; display: inline-block; }
+        .role-badge.USER    { background: var(--accent-soft); color: var(--accent-hover); }
+        .role-badge.PARTNER { background: var(--success-soft); color: var(--success); }
+        .role-badge.ADMIN   { background: var(--danger-soft); color: var(--danger); }
+        .actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .empty-row td { text-align: center; color: var(--text-faint); padding: 40px; }
+
+        /* ── Pagination ── */
+        .pagination { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 12.5px; color: var(--text-muted); }
+        .pagination .controls { display: flex; gap: 8px; align-items: center; }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <div class="page-header">
+        <h1>이삿찜 관리페이지</h1>
+        <p class="subtitle">파트너 신청 관리 · 파트너 관리 · 유저 관리</p>
+    </div>
+
+    <!-- ── Login ── -->
+    <div id="loginSection" class="card login-card hidden">
+        <h2>로그인이 필요합니다</h2>
+        <p>관리자 계정으로 로그인하세요.</p>
+        <div id="loginBanner"></div>
+        <div class="login-buttons">
+            <a class="btn-login btn-kakao"  href="#" onclick="return login('kakao')">카카오로 로그인</a>
+            <a class="btn-login btn-google" href="#" onclick="return login('google')">구글로 로그인</a>
+            <a class="btn-login btn-naver"  href="#" onclick="return login('naver')">네이버로 로그인</a>
+        </div>
+    </div>
+
+    <!-- ── Access Denied ── -->
+    <div id="accessDeniedSection" class="card login-card hidden">
+        <h2>접근 권한이 없습니다</h2>
+        <p>이 페이지는 관리자 계정만 이용할 수 있습니다.</p>
+        <button class="btn-logout" onclick="logout()">로그아웃</button>
+    </div>
+
+    <!-- ── Dashboard ── -->
+    <div id="dashboardSection" class="hidden">
+        <div class="app-shell">
+            <nav class="sidebar">
+                <div class="sidebar-title">관리 메뉴</div>
+                <button class="nav-item active" id="navApplications" onclick="switchView('applications')">파트너 신청 관리</button>
+                <button class="nav-item" id="navCompanies" onclick="switchView('companies')">파트너 관리</button>
+                <button class="nav-item" id="navUsers" onclick="switchView('users')">유저 관리</button>
+                <div class="sidebar-footer">
+                    <button class="btn-logout" onclick="logout()">로그아웃</button>
+                </div>
+            </nav>
+
+            <div class="content card">
+                <div id="forbiddenBanner" class="banner forbidden hidden">
+                    관리자 권한이 없습니다. 관리자 계정으로 다시 로그인해주세요.
+                </div>
+                <div id="errorBanner" class="banner error hidden"></div>
+
+                <!-- Applications Panel -->
+                <div id="applicationsPanel">
+                    <div class="filters">
+                        <div>
+                            <label>승인 상태</label>
+                            <select id="statusFilter" onchange="onFilterChange('applications')">
+                                <option value="">전체</option>
+                                <option value="PENDING" selected>대기</option>
+                                <option value="APPROVED">승인</option>
+                                <option value="REJECTED">거부</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>페이지 크기</label>
+                            <select id="sizeFilter" onchange="onFilterChange('applications')">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div id="loadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>업체명</th>
+                                <th>대표자</th>
+                                <th>사업자등록번호</th>
+                                <th>상태</th>
+                                <th>신청일</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <div id="pageInfo">—</div>
+                        <div class="controls">
+                            <button class="btn-page" id="prevBtn" onclick="changePage('applications', -1)">이전</button>
+                            <button class="btn-page" id="nextBtn" onclick="changePage('applications', 1)">다음</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Companies Panel -->
+                <div id="companiesPanel" class="hidden">
+                    <div class="filters">
+                        <div>
+                            <label>페이지 크기</label>
+                            <select id="companySizeFilter" onchange="onFilterChange('companies')">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div id="companyLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>업체명</th>
+                                <th>대표자</th>
+                                <th>사업자등록번호</th>
+                                <th>상태</th>
+                                <th>승인일</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="companyTableBody"></tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <div id="companyPageInfo">—</div>
+                        <div class="controls">
+                            <button class="btn-page" id="companyPrevBtn" onclick="changePage('companies', -1)">이전</button>
+                            <button class="btn-page" id="companyNextBtn" onclick="changePage('companies', 1)">다음</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Panel -->
+                <div id="usersPanel" class="hidden">
+                    <div class="filters">
+                        <div>
+                            <label>역할</label>
+                            <select id="roleFilter" onchange="onFilterChange('users')">
+                                <option value="">전체</option>
+                                <option value="USER">사용자</option>
+                                <option value="PARTNER">파트너</option>
+                                <option value="ADMIN">관리자</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>페이지 크기</label>
+                            <select id="userSizeFilter" onchange="onFilterChange('users')">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div id="userLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>역할</th>
+                                <th>소셜</th>
+                                <th>상태</th>
+                                <th>가입일</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userTableBody"></tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <div id="userPageInfo">—</div>
+                        <div class="controls">
+                            <button class="btn-page" id="userPrevBtn" onclick="changePage('users', -1)">이전</button>
+                            <button class="btn-page" id="userNextBtn" onclick="changePage('users', 1)">다음</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+
+    <script>
+        const TOKEN_KEY = 'isajjim_admin_access_token';
+        const STATUS_LABEL = { PENDING: '대기', APPROVED: '승인', REJECTED: '거부' };
+        const ROLE_LABEL = { USER: '사용자', PARTNER: '파트너', ADMIN: '관리자' };
+        const USER_STATUS_LABEL = { PENDING: '이용약관 미동의', ACTIVE: '활성' };
+        const SOCIAL_LABEL = { KAKAO: '카카오', NAVER: '네이버', GOOGLE: '구글' };
+
+        const VIEWS = {
+            applications: {
+                endpoint: '/api/v1/admin/partner-applications',
+                filterParamName: 'status',
+                filterId: 'statusFilter',
+                fixedValue: null,
+                sizeFilterId: 'sizeFilter',
+                loadingId: 'loadingIndicator',
+                tableBodyId: 'tableBody',
+                pageInfoId: 'pageInfo',
+                prevBtnId: 'prevBtn',
+                nextBtnId: 'nextBtn',
+                emptyMessage: '신청 내역이 없습니다.',
+                colspan: 7,
+                state: { page: 0, totalPages: 0, expandedId: null, lastList: [] }
+            },
+            companies: {
+                endpoint: '/api/v1/admin/partner-applications',
+                filterParamName: 'status',
+                filterId: null,
+                fixedValue: 'APPROVED',
+                sizeFilterId: 'companySizeFilter',
+                loadingId: 'companyLoadingIndicator',
+                tableBodyId: 'companyTableBody',
+                pageInfoId: 'companyPageInfo',
+                prevBtnId: 'companyPrevBtn',
+                nextBtnId: 'companyNextBtn',
+                emptyMessage: '등록된 파트너가 없습니다.',
+                colspan: 7,
+                state: { page: 0, totalPages: 0, expandedId: null, lastList: [] }
+            },
+            users: {
+                endpoint: '/api/v1/admin/users',
+                filterParamName: 'role',
+                filterId: 'roleFilter',
+                fixedValue: null,
+                sizeFilterId: 'userSizeFilter',
+                loadingId: 'userLoadingIndicator',
+                tableBodyId: 'userTableBody',
+                pageInfoId: 'userPageInfo',
+                prevBtnId: 'userPrevBtn',
+                nextBtnId: 'userNextBtn',
+                emptyMessage: '등록된 유저가 없습니다.',
+                colspan: 8,
+                state: { page: 0, totalPages: 0, expandedId: null, lastList: [] }
+            }
+        };
+        let currentView = 'applications';
+
+        function getToken() { return localStorage.getItem(TOKEN_KEY); }
+        function setToken(t) { localStorage.setItem(TOKEN_KEY, t); }
+        function clearToken() { localStorage.removeItem(TOKEN_KEY); }
+
+        function login(provider) {
+            const redirectUri = window.location.origin + window.location.pathname;
+            window.location.href = `/oauth2/authorization/${provider}?redirect_uri=${encodeURIComponent(redirectUri)}`;
+            return false;
+        }
+
+        function logout() {
+            clearToken();
+            render();
+        }
+
+        function showLoginBanner(msg) {
+            const el = document.getElementById('loginBanner');
+            if (!msg) { el.innerHTML = ''; return; }
+            el.innerHTML = `<div class="banner error">${msg}</div>`;
+        }
+
+        function decodeJwtRole(token) {
+            try {
+                const payload = token.split('.')[1];
+                const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+                const json = decodeURIComponent(
+                    atob(base64).split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('')
+                );
+                return JSON.parse(json).role;
+            } catch (_) {
+                return null;
+            }
+        }
+
+        function render() {
+            const token = getToken();
+            document.getElementById('loginSection').classList.toggle('hidden', !!token);
+            document.getElementById('accessDeniedSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.add('hidden');
+            if (!token) return;
+
+            const role = decodeJwtRole(token);
+            if (role === null) {
+                clearToken();
+                render();
+                showLoginBanner('유효하지 않은 토큰입니다. 다시 로그인해주세요.');
+                return;
+            }
+            if (role !== 'ROLE_ADMIN') {
+                document.getElementById('accessDeniedSection').classList.remove('hidden');
+                return;
+            }
+
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            switchView(currentView);
+        }
+
+        function switchView(viewKey) {
+            currentView = viewKey;
+            document.getElementById('navApplications').classList.toggle('active', viewKey === 'applications');
+            document.getElementById('navCompanies').classList.toggle('active', viewKey === 'companies');
+            document.getElementById('navUsers').classList.toggle('active', viewKey === 'users');
+            document.getElementById('applicationsPanel').classList.toggle('hidden', viewKey !== 'applications');
+            document.getElementById('companiesPanel').classList.toggle('hidden', viewKey !== 'companies');
+            document.getElementById('usersPanel').classList.toggle('hidden', viewKey !== 'users');
+            document.getElementById('forbiddenBanner').classList.add('hidden');
+            document.getElementById('errorBanner').classList.add('hidden');
+            loadView(viewKey);
+        }
+
+        async function apiFetch(path, options = {}) {
+            const token = getToken();
+            const res = await fetch(path, {
+                ...options,
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                    ...(options.headers || {})
+                }
+            });
+            let body = null;
+            try { body = await res.json(); } catch (_) {}
+            return { ok: res.ok, status: res.status, body };
+        }
+
+        function onFilterChange(viewKey) {
+            VIEWS[viewKey].state.page = 0;
+            loadView(viewKey);
+        }
+
+        function setLoading(viewKey, isLoading) {
+            const cfg = VIEWS[viewKey];
+            document.getElementById(cfg.loadingId).classList.toggle('hidden', !isLoading);
+            if (cfg.filterId) document.getElementById(cfg.filterId).disabled = isLoading;
+            document.getElementById(cfg.sizeFilterId).disabled = isLoading;
+        }
+
+        async function loadView(viewKey) {
+            const cfg = VIEWS[viewKey];
+            setLoading(viewKey, true);
+            try {
+                const size = document.getElementById(cfg.sizeFilterId).value;
+                const params = new URLSearchParams({ page: cfg.state.page, size, sort: 'createdDate,desc' });
+                const filterValue = cfg.fixedValue || (cfg.filterId && document.getElementById(cfg.filterId).value);
+                if (filterValue) params.set(cfg.filterParamName, filterValue);
+
+                const { ok, status: httpStatus, body } = await apiFetch(`${cfg.endpoint}?${params}`);
+
+                if (httpStatus === 403) {
+                    document.getElementById('forbiddenBanner').classList.remove('hidden');
+                    document.getElementById('errorBanner').classList.add('hidden');
+                    document.getElementById(cfg.tableBodyId).innerHTML = '';
+                    document.getElementById(cfg.pageInfoId).textContent = '—';
+                    return;
+                }
+                if (httpStatus === 401) {
+                    clearToken();
+                    render();
+                    showLoginBanner('로그인이 만료되었습니다. 다시 로그인해주세요.');
+                    return;
+                }
+                if (!ok) {
+                    document.getElementById('errorBanner').textContent = `오류: ${body?.message || httpStatus}`;
+                    document.getElementById('errorBanner').classList.remove('hidden');
+                    return;
+                }
+
+                document.getElementById('forbiddenBanner').classList.add('hidden');
+                document.getElementById('errorBanner').classList.add('hidden');
+
+                const page = body.data;
+                cfg.state.lastList = page.content;
+                cfg.state.totalPages = page.totalPages;
+                renderTable(viewKey, page.content);
+                document.getElementById(cfg.pageInfoId).textContent =
+                    `${page.totalElements}건 중 ${page.number + 1} / ${Math.max(page.totalPages, 1)} 페이지`;
+                document.getElementById(cfg.prevBtnId).disabled = page.first;
+                document.getElementById(cfg.nextBtnId).disabled = page.last;
+            } finally {
+                setLoading(viewKey, false);
+            }
+        }
+
+        function changePage(viewKey, delta) {
+            const cfg = VIEWS[viewKey];
+            const next = cfg.state.page + delta;
+            if (next < 0 || next >= cfg.state.totalPages) return;
+            cfg.state.page = next;
+            loadView(viewKey);
+        }
+
+        function renderTable(viewKey, list) {
+            if (viewKey === 'users') {
+                renderUserTable(list);
+                return;
+            }
+
+            const cfg = VIEWS[viewKey];
+            const tbody = document.getElementById(cfg.tableBodyId);
+            tbody.innerHTML = '';
+            if (!list.length) {
+                tbody.innerHTML = `<tr class="empty-row"><td colspan="${cfg.colspan}">${cfg.emptyMessage}</td></tr>`;
+                return;
+            }
+            list.forEach(p => {
+                const row = document.createElement('tr');
+                const actionsHtml = viewKey === 'companies'
+                    ? `
+                        <button class="btn-detail" onclick="toggleDetail('${viewKey}', ${p.id})">상세</button>
+                        <button class="btn-delete" onclick="revokeCompany(${p.id})">파트너 권한 해제</button>
+                    `
+                    : `
+                        <button class="btn-detail" onclick="toggleDetail('${viewKey}', ${p.id})">상세</button>
+                        <button class="btn-approve" ${p.approvalStatus === 'APPROVED' ? 'disabled' : ''} onclick="decide(${p.id}, 'APPROVED')">승인</button>
+                        <button class="btn-reject" ${p.approvalStatus === 'REJECTED' ? 'disabled' : ''} onclick="decide(${p.id}, 'REJECTED')">거부</button>
+                        <button class="btn-delete" onclick="removeApplication(${p.id})">삭제</button>
+                    `;
+                row.innerHTML = `
+                    <td>${p.id}</td>
+                    <td>${escapeHtml(p.companyName)}</td>
+                    <td>${escapeHtml(p.representativeName)}</td>
+                    <td>${escapeHtml(p.businessRegistrationNumber)}</td>
+                    <td><span class="status-badge ${p.approvalStatus}">${STATUS_LABEL[p.approvalStatus] || p.approvalStatus}</span></td>
+                    <td>${formatDate(p.createdDate)}</td>
+                    <td class="actions">${actionsHtml}</td>
+                `;
+                tbody.appendChild(row);
+
+                if (cfg.state.expandedId === p.id) {
+                    const detailRow = document.createElement('tr');
+                    detailRow.className = 'detail-row';
+                    detailRow.innerHTML = `
+                        <td colspan="${cfg.colspan}">
+                            <div>연락처: ${escapeHtml(p.contactPhone || '-')}</div>
+                            <div>사업장 주소: ${escapeHtml(p.businessAddress || '-')}</div>
+                            <div>소개: ${escapeHtml(p.introduction || '-')}</div>
+                            <div>사업자등록증: ${p.businessRegistrationImageUrl
+                                ? `<a href="${p.businessRegistrationImageUrl}" target="_blank" style="color:#2f6feb;">${p.businessRegistrationImageUrl}</a>`
+                                : '-'}</div>
+                            <div>유저 ID: ${p.userId}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(detailRow);
+                }
+            });
+        }
+
+        function renderUserTable(list) {
+            const cfg = VIEWS.users;
+            const tbody = document.getElementById(cfg.tableBodyId);
+            tbody.innerHTML = '';
+            if (!list.length) {
+                tbody.innerHTML = `<tr class="empty-row"><td colspan="${cfg.colspan}">${cfg.emptyMessage}</td></tr>`;
+                return;
+            }
+            list.forEach(u => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${u.id}</td>
+                    <td>${escapeHtml(u.name)}</td>
+                    <td>${escapeHtml(u.email)}</td>
+                    <td><span class="role-badge ${u.role}">${ROLE_LABEL[u.role] || u.role}</span></td>
+                    <td>${SOCIAL_LABEL[u.socialProvider] || u.socialProvider}</td>
+                    <td><span class="status-badge ${u.status}">${USER_STATUS_LABEL[u.status] || u.status}</span></td>
+                    <td>${formatDate(u.createdDate)}</td>
+                    <td class="actions">
+                        <button class="btn-detail" onclick="toggleDetail('users', ${u.id})">상세</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+
+                if (cfg.state.expandedId === u.id) {
+                    const detailRow = document.createElement('tr');
+                    detailRow.className = 'detail-row';
+                    detailRow.innerHTML = `
+                        <td colspan="${cfg.colspan}">
+                            <div>프로필 이미지: ${u.profileImageUrl
+                                ? `<a href="${u.profileImageUrl}" target="_blank" style="color:#2f6feb;">${u.profileImageUrl}</a>`
+                                : '-'}</div>
+                        </td>
+                    `;
+                    tbody.appendChild(detailRow);
+                }
+            });
+        }
+
+        function toggleDetail(viewKey, id) {
+            const cfg = VIEWS[viewKey];
+            cfg.state.expandedId = cfg.state.expandedId === id ? null : id;
+            renderTable(viewKey, cfg.state.lastList);
+        }
+
+        async function decide(id, approvalStatus) {
+            const label = approvalStatus === 'APPROVED' ? '승인' : '거부';
+            if (!confirm(`이 신청을 ${label}하시겠습니까?`)) return;
+            const { ok, status, body } = await apiFetch(`/api/v1/admin/partner-applications/${id}`, {
+                method: 'PATCH',
+                body: JSON.stringify({ approvalStatus })
+            });
+            if (status === 403) { document.getElementById('forbiddenBanner').classList.remove('hidden'); return; }
+            if (!ok) { alert(`처리 실패: ${body?.message || status}`); return; }
+            loadView('applications');
+        }
+
+        async function removeApplication(id) {
+            if (!confirm('이 신청을 삭제하시겠습니까? 되돌릴 수 없습니다.')) return;
+            const { ok, status, body } = await apiFetch(`/api/v1/admin/partner-applications/${id}`, { method: 'DELETE' });
+            if (status === 403) { document.getElementById('forbiddenBanner').classList.remove('hidden'); return; }
+            if (!ok) { alert(`삭제 실패: ${body?.message || status}`); return; }
+            loadView('applications');
+        }
+
+        async function revokeCompany(id) {
+            if (!confirm('이 파트너의 권한을 해제하시겠습니까? 해당 유저는 일반 사용자로 전환되고, 신청 내역이 삭제됩니다.')) return;
+            const { ok, status, body } = await apiFetch(`/api/v1/admin/partner-applications/${id}`, { method: 'DELETE' });
+            if (status === 403) { document.getElementById('forbiddenBanner').classList.remove('hidden'); return; }
+            if (!ok) { alert(`처리 실패: ${body?.message || status}`); return; }
+            loadView('companies');
+        }
+
+        function formatDate(iso) {
+            if (!iso) return '-';
+            return iso.replace('T', ' ').slice(0, 16);
+        }
+
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;');
+        }
+
+        function init() {
+            const params = new URLSearchParams(window.location.search);
+            const accessToken = params.get('accessToken');
+            const error = params.get('error');
+
+            if (accessToken) {
+                setToken(accessToken);
+                history.replaceState({}, '', window.location.pathname);
+            } else if (error) {
+                history.replaceState({}, '', window.location.pathname);
+                showLoginBanner(`로그인 실패: ${error}`);
+            }
+
+            render();
+        }
+
+        init();
+    </script>
+</body>
+</html>
