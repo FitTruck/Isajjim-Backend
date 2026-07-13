@@ -8,7 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-//import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -34,12 +34,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(ApiResponse.ofFail(responseCode), responseCode.getStatus());
     }
 
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public ResponseEntity<ApiResponse<Void>> handleAccessDeniedException(AccessDeniedException e) {
-//        log.error("AccessDeniedException: ", e);
-//        ResponseCode responseCode = ResponseCode.FORBIDDEN;
-//        return new ResponseEntity<>(ApiResponse.ofFail(responseCode), responseCode.getStatus());
-//    }
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAuthorizationDeniedException(AuthorizationDeniedException e) {
+        log.warn("AuthorizationDeniedException: {}", e.getMessage());
+        ResponseCode responseCode = ResponseCode.FORBIDDEN;
+        return new ResponseEntity<>(ApiResponse.ofFail(responseCode), responseCode.getStatus());
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<Void>> handleException(Exception e) {
