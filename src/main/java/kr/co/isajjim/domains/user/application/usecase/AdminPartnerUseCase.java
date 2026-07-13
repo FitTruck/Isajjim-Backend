@@ -50,6 +50,9 @@ public class AdminPartnerUseCase {
     @Transactional
     public void delete(Long partnerProfileId) {
         PartnerProfile partnerProfile = partnerProfileService.getById(partnerProfileId);
+        if (partnerProfile.getApprovalStatus() == ApprovalStatus.APPROVED) {
+            userService.updateRole(partnerProfile.getUser(), Role.USER);
+        }
         partnerProfileService.delete(partnerProfile);
     }
 }

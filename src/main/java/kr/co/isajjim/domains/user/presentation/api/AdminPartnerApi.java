@@ -66,7 +66,7 @@ public interface AdminPartnerApi {
 
     @Operation(
             summary = "파트너 신청 삭제",
-            description = "파트너 신청 내역을 삭제합니다."
+            description = "파트너 신청 내역을 삭제합니다. 이미 승인(APPROVED)된 파트너인 경우, 삭제와 함께 해당 유저의 role을 USER로 되돌립니다(파트너 권한 해제)."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(description = "삭제 성공"),
