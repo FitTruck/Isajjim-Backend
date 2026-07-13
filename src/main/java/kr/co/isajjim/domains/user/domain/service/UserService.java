@@ -1,6 +1,7 @@
 package kr.co.isajjim.domains.user.domain.service;
 
 import kr.co.isajjim.domains.user.domain.constant.UserStatus;
+import kr.co.isajjim.domains.user.domain.constant.Role;
 import kr.co.isajjim.domains.user.persistence.entity.UserEntity;
 import kr.co.isajjim.domains.user.persistence.repository.UserRepository;
 import kr.co.isajjim.global.common.ResponseCode;
@@ -35,6 +36,10 @@ public class UserService {
         UserEntity user = getOrThrow(userId);
         user.updateSocialRefreshToken(token);
         userRepository.save(user); // Force update to ensure persistence
+    }
+
+    public void updateRole(UserEntity user, Role role) {
+        user.updateRole(role);
     }
 
     public Optional<UserEntity> findBySocialProviderAndSocialId(SocialProvider provider, String socialId) {
