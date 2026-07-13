@@ -17,6 +17,8 @@ import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
 import kr.co.isajjim.global.llm.LlmProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +38,13 @@ public class EstimateService {
 
     public List<Estimate> getEstimatesByUserId(Long userId) {
         return estimateRepository.findAllByUserId(userId);
+    }
+
+    public Page<Estimate> getList(AIStatus status, Pageable pageable) {
+        if (status == null) {
+            return estimateRepository.findAll(pageable);
+        }
+        return estimateRepository.findAllByAiStatus(status, pageable);
     }
 
     public Long createEstimate(EstimateRequest request, UserEntity user) {

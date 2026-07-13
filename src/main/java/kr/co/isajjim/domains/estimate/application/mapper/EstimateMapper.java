@@ -1,5 +1,6 @@
 package kr.co.isajjim.domains.estimate.application.mapper;
 
+import kr.co.isajjim.domains.estimate.application.response.AdminEstimateResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailListResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateDetailResponse;
 import kr.co.isajjim.domains.estimate.application.response.EstimateItemListResponse;
@@ -79,5 +80,22 @@ public class EstimateMapper {
             List<EstimateDetailResponse> items
     ) {
         return EstimateDetailListResponse.toEstimateDetailListResponse(items);
+    }
+
+    public static AdminEstimateResponse fromEstimateForAdmin(
+            Estimate estimate
+    ) {
+        UserEntity user = estimate.getUser();
+
+        return AdminEstimateResponse.builder()
+                .estimateId(estimate.getId())
+                .userId(user.getId())
+                .userName(user.getName())
+                .userEmail(user.getEmail())
+                .aiStatus(estimate.getAiStatus())
+                .preferredMovingDate(estimate.getPreferredMovingDate())
+                .createdDate(estimate.getCreatedDate())
+                .updatedAt(estimate.getUpdatedAt())
+                .build();
     }
 }
