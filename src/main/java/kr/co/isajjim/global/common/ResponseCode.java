@@ -64,6 +64,7 @@ public enum ResponseCode {
     NOT_FOUND_PARTNER_PROFILE(HttpStatus.NOT_FOUND, "PARTNER-001", "요청 파트너 신청 정보를 찾을 수 없습니다."),
     DUPLICATE_PARTNER_APPLICATION(HttpStatus.BAD_REQUEST, "PARTNER-002", "이미 파트너 신청 내역이 존재합니다."),
     INVALID_APPROVAL_STATUS(HttpStatus.BAD_REQUEST, "PARTNER-003", "승인 처리 값은 APPROVED 또는 REJECTED만 가능합니다."),
+    REQUIRED_REJECTION_REASON(HttpStatus.BAD_REQUEST, "PARTNER-004", "거부 처리 시 반려 사유는 필수입니다."),
     ;
 
     private final HttpStatus status;

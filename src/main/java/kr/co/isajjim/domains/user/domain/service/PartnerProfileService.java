@@ -78,8 +78,8 @@ public class PartnerProfileService {
     }
 
     @Transactional
-    public void reject(PartnerProfile partnerProfile) {
-        partnerProfile.reject();
+    public void reject(PartnerProfile partnerProfile, String rejectionReason) {
+        partnerProfile.reject(rejectionReason);
     }
 
     private PartnerProfile getOrThrow(Long id) {

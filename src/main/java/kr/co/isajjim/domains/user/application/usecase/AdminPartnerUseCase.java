@@ -41,7 +41,10 @@ public class AdminPartnerUseCase {
             partnerProfileService.approve(partnerProfile);
             userService.updateRole(partnerProfile.getUser(), Role.PARTNER);
         } else {
-            partnerProfileService.reject(partnerProfile);
+            if (request.rejectionReason() == null || request.rejectionReason().isBlank()) {
+                throw new BaseException(ResponseCode.REQUIRED_REJECTION_REASON);
+            }
+            partnerProfileService.reject(partnerProfile, request.rejectionReason());
         }
 
         return PartnerProfileMapper.fromPartnerProfile(partnerProfile);

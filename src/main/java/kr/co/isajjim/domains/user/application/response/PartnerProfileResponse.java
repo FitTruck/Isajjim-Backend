@@ -38,6 +38,9 @@ public record PartnerProfileResponse(
         @Schema(description = "승인 상태", example = "PENDING")
         ApprovalStatus approvalStatus,
 
+        @Schema(description = "반려 사유 (approvalStatus가 REJECTED인 경우에만 값 존재)", example = "사업자등록증 이미지가 확인되지 않습니다.")
+        String rejectionReason,
+
         @Schema(description = "신청 일시")
         LocalDateTime createdDate
 ) {

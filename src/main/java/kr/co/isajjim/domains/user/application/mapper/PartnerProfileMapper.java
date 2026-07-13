@@ -17,6 +17,7 @@ public class PartnerProfileMapper {
                 .introduction(partnerProfile.getIntroduction())
                 .businessRegistrationImageUrl(partnerProfile.getBusinessRegistrationImageUrl())
                 .approvalStatus(partnerProfile.getApprovalStatus())
+                .rejectionReason(partnerProfile.getRejectionReason())
                 .createdDate(partnerProfile.getCreatedDate())
                 .build();
     }

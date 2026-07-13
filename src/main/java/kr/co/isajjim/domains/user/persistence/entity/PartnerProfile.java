@@ -54,6 +54,10 @@ public class PartnerProfile extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ApprovalStatus approvalStatus;
 
+    // 반려 사유. REJECTED 상태일 때만 값이 존재.
+    @Column(columnDefinition = "TEXT")
+    private String rejectionReason;
+
     public static PartnerProfile create(UserEntity user, String companyName, String representativeName,
                                          String businessRegistrationNumber, String businessAddress, String contactPhone,
                                          String introduction, String businessRegistrationImageUrl) {
@@ -85,14 +89,17 @@ public class PartnerProfile extends BaseEntity {
 
         if (this.approvalStatus == ApprovalStatus.REJECTED) {
             this.approvalStatus = ApprovalStatus.PENDING;
+            this.rejectionReason = null;
         }
     }
 
     public void approve() {
         this.approvalStatus = ApprovalStatus.APPROVED;
+        this.rejectionReason = null;
     }
 
-    public void reject() {
+    public void reject(String rejectionReason) {
         this.approvalStatus = ApprovalStatus.REJECTED;
+        this.rejectionReason = rejectionReason;
     }
 }

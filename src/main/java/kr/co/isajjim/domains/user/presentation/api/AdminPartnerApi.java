@@ -46,7 +46,7 @@ public interface AdminPartnerApi {
 
     @Operation(
             summary = "파트너 신청 승인/거부",
-            description = "파트너 신청을 승인하거나 거부합니다. 승인 시 대상 유저의 role이 PARTNER로 변경됩니다."
+            description = "파트너 신청을 승인하거나 거부합니다. 승인 시 대상 유저의 role이 PARTNER로 변경됩니다. 거부(REJECTED) 시 rejectionReason은 필수입니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
@@ -56,7 +56,8 @@ public interface AdminPartnerApi {
             errors = {
                     @ApiErrorResponseExplanation(exceptionCode = ResponseCode.FORBIDDEN),
                     @ApiErrorResponseExplanation(exceptionCode = ResponseCode.NOT_FOUND_PARTNER_PROFILE),
-                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_APPROVAL_STATUS)
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.INVALID_APPROVAL_STATUS),
+                    @ApiErrorResponseExplanation(exceptionCode = ResponseCode.REQUIRED_REJECTION_REASON)
             }
     )
     ResponseEntity<ApiResponse<PartnerProfileResponse>> decidePartnerApplication(
