@@ -21,7 +21,7 @@ public interface PartnerApplicationApi {
 
     @Operation(
             summary = "내 파트너 신청 조회",
-            description = "본인의 파트너 신청 현황(승인 상태 등)을 조회합니다. 신청 전이라면 새로 신청하고, 신청 후라면 수정/취소할 수 있습니다."
+            description = "본인의 파트너 신청 현황(승인 상태 등)을 조회합니다. 신청 전이라면 새로 신청하고, 신청 후라면 수정/취소할 수 있습니다. 승인되어 PARTNER role로 전환된 유저도 조회 가능합니다."
     )
     @ApiResponseExplanations(
             success = @ApiSuccessResponseExplanation(
