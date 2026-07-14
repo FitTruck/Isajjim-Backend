@@ -54,6 +54,30 @@ public class CreditChargeOrderService {
                 .ifPresent(order -> order.fail(failReason));
     }
 
+    // 잠금 없이 조회 + 상태 사전 검증. Toss 결제취소 API를 호출하기 전에 환불 가능 상태인지 걸러낸다.
+    public CreditChargeOrder getDoneOrThrow(Long chargeOrderId) {
+        CreditChargeOrder order = creditChargeOrderRepository.findById(chargeOrderId)
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_CREDIT_CHARGE_ORDER));
+        if (order.getStatus() != CreditChargeStatus.DONE) {
+            throw new BaseException(ResponseCode.CREDIT_CHARGE_ORDER_NOT_REFUNDABLE);
+        }
+        return order;
+    }
+
+    // Toss 결제취소 성공 이후 행을 다시 잠금 조회해 최종 상태를 재확인한다.
+    // 주문 환불 처리와 잔액 차감을 하나의 트랜잭션으로 묶어 원자적으로 처리한다.
+    @Transactional
+    public CreditChargeOrder refundAndDeduct(Long chargeOrderId, String refundReason, LocalDateTime refundedAt) {
+        CreditChargeOrder order = creditChargeOrderRepository.findByIdForUpdate(chargeOrderId)
+                .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_CREDIT_CHARGE_ORDER));
+        if (order.getStatus() != CreditChargeStatus.DONE) {
+            throw new BaseException(ResponseCode.CREDIT_CHARGE_ORDER_NOT_REFUNDABLE);
+        }
+        creditLedgerService.refund(order.getUser().getId(), order.getCreditAmount(), "TOSS_REFUND", order.getId());
+        order.refund(refundReason, refundedAt);
+        return order;
+    }
+
     private CreditChargeOrder getOrThrow(String orderId, Long userId) {
         return creditChargeOrderRepository.findByOrderIdAndUser_Id(orderId, userId)
                 .orElseThrow(() -> new BaseException(ResponseCode.NOT_FOUND_CREDIT_CHARGE_ORDER));

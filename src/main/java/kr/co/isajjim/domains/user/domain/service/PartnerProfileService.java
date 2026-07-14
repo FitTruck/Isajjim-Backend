@@ -13,6 +13,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PartnerProfileService {
@@ -34,6 +36,11 @@ public class PartnerProfileService {
 
     public Page<PartnerProfile> getList(ApprovalStatus approvalStatus, String keyword, Pageable pageable) {
         return partnerProfileRepository.search(approvalStatus, normalizeKeyword(keyword), pageable);
+    }
+
+    // 승인된 파트너 중 업체명/대표자명이 keyword와 일치하는 유저 ID 목록. 크레딧 거래내역을 업체명으로 검색할 때 사용.
+    public List<Long> findApprovedUserIdsByKeyword(String keyword) {
+        return partnerProfileRepository.findUserIdsByApprovalStatusAndKeyword(ApprovalStatus.APPROVED, keyword);
     }
 
     private String normalizeKeyword(String keyword) {

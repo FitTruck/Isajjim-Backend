@@ -74,6 +74,8 @@ public enum ResponseCode {
     INVALID_CREDIT_CHARGE_AMOUNT(HttpStatus.BAD_REQUEST, "CREDIT-004", "충전 금액은 지정된 단위의 배수여야 합니다."),
     TOSS_PAYMENT_CONFIRM_FAILED(HttpStatus.BAD_REQUEST, "CREDIT-005", "결제 승인에 실패했습니다."),
     INSUFFICIENT_CREDIT(HttpStatus.CONFLICT, "CREDIT-006", "보유 크레딧이 부족합니다."),
+    TOSS_PAYMENT_CANCEL_FAILED(HttpStatus.BAD_REQUEST, "CREDIT-007", "결제 취소(환불)에 실패했습니다."),
+    CREDIT_CHARGE_ORDER_NOT_REFUNDABLE(HttpStatus.CONFLICT, "CREDIT-008", "환불 가능한 상태의 충전 건이 아닙니다."),
     ;
 
     private final HttpStatus status;

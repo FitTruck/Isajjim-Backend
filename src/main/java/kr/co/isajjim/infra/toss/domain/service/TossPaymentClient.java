@@ -3,6 +3,7 @@ package kr.co.isajjim.infra.toss.domain.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.isajjim.global.common.ResponseCode;
 import kr.co.isajjim.global.exception.BaseException;
+import kr.co.isajjim.infra.toss.application.dto.TossCancelRequest;
 import kr.co.isajjim.infra.toss.application.dto.TossConfirmRequest;
 import kr.co.isajjim.infra.toss.application.dto.TossConfirmResponse;
 import kr.co.isajjim.infra.toss.application.dto.TossErrorResponse;
@@ -45,6 +46,22 @@ public class TossPaymentClient {
                     throw new BaseException(ResponseCode.TOSS_PAYMENT_CONFIRM_FAILED);
                 })
                 .body(TossConfirmResponse.class);
+    }
+
+    public void cancel(String paymentKey, String cancelReason) {
+        TossCancelRequest request = new TossCancelRequest(cancelReason);
+
+        restClient.post()
+                .uri(baseUrl + "/v1/payments/" + paymentKey + "/cancel")
+                .header(HttpHeaders.AUTHORIZATION, basicAuthHeader())
+                .body(request)
+                .retrieve()
+                .onStatus(HttpStatusCode::isError, (req, response) -> {
+                    String rawBody = new String(response.getBody().readAllBytes(), StandardCharsets.UTF_8);
+                    logTossError(response.getStatusCode(), rawBody);
+                    throw new BaseException(ResponseCode.TOSS_PAYMENT_CANCEL_FAILED);
+                })
+                .toBodilessEntity();
     }
 
     private String basicAuthHeader() {

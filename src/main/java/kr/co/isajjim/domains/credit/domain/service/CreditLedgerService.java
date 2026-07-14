@@ -1,5 +1,6 @@
 package kr.co.isajjim.domains.credit.domain.service;
 
+import kr.co.isajjim.domains.credit.domain.constant.CreditTransactionType;
 import kr.co.isajjim.domains.credit.persistence.entity.CreditBalance;
 import kr.co.isajjim.domains.credit.persistence.entity.CreditTransaction;
 import kr.co.isajjim.domains.credit.persistence.repository.CreditBalanceRepository;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +38,16 @@ public class CreditLedgerService {
         return creditTransactionRepository.findByUser_Id(userId, pageable);
     }
 
+    // 어드민 - 전체 파트너 거래내역 (검색어 없음)
+    public Page<CreditTransaction> getAllHistory(Pageable pageable) {
+        return creditTransactionRepository.findAll(pageable);
+    }
+
+    // 어드민 - 특정 유저 ID 목록(업체명 검색 결과)으로 좁힌 거래내역
+    public Page<CreditTransaction> getHistoryByUserIds(List<Long> userIds, Pageable pageable) {
+        return creditTransactionRepository.findByUser_IdIn(userIds, pageable);
+    }
+
     @Transactional
     public Long chargeBalance(Long userId, Long creditAmount, String referenceType, Long referenceId) {
         CreditBalance balance = getOrCreateForUpdate(userId);
@@ -48,8 +61,18 @@ public class CreditLedgerService {
     // 향후 "견적서 발송" 등에서 이 서비스를 직접 주입받아 호출할 크레딧 소모 메서드.
     @Transactional
     public Long consume(Long userId, Long creditAmount, String referenceType, Long referenceId) {
+        return decrease(userId, creditAmount, CreditTransactionType.CONSUME, referenceType, referenceId);
+    }
+
+    // 어드민의 Toss 결제취소(환불) 승인 이후, 해당 금액만큼 크레딧 잔액을 차감한다.
+    @Transactional
+    public Long refund(Long userId, Long creditAmount, String referenceType, Long referenceId) {
+        return decrease(userId, creditAmount, CreditTransactionType.REFUND, referenceType, referenceId);
+    }
+
+    private Long decrease(Long userId, Long creditAmount, CreditTransactionType type, String referenceType, Long referenceId) {
         if (creditAmount == null || creditAmount <= 0) {
-            throw new IllegalArgumentException("소모할 크레딧 수량은 0보다 커야 합니다.");
+            throw new IllegalArgumentException("차감할 크레딧 수량은 0보다 커야 합니다.");
         }
 
         CreditBalance balance = getOrCreateForUpdate(userId);
@@ -58,9 +81,10 @@ public class CreditLedgerService {
         }
 
         balance.decrease(creditAmount);
-        creditTransactionRepository.save(
-                CreditTransaction.consume(balance.getUser(), creditAmount, balance.getBalance(), referenceType, referenceId)
-        );
+        CreditTransaction transaction = type == CreditTransactionType.REFUND
+                ? CreditTransaction.refund(balance.getUser(), creditAmount, balance.getBalance(), referenceType, referenceId)
+                : CreditTransaction.consume(balance.getUser(), creditAmount, balance.getBalance(), referenceType, referenceId);
+        creditTransactionRepository.save(transaction);
         return balance.getBalance();
     }
 

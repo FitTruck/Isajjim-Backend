@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PartnerProfileRepository extends JpaRepository<PartnerProfile, Long> {
@@ -27,5 +28,16 @@ public interface PartnerProfileRepository extends JpaRepository<PartnerProfile, 
             @Param("approvalStatus") ApprovalStatus approvalStatus,
             @Param("keyword") String keyword,
             Pageable pageable
+    );
+
+    @Query("""
+            SELECT p.user.id FROM PartnerProfile p
+            WHERE p.approvalStatus = :approvalStatus
+            AND (p.companyName LIKE CONCAT('%', :keyword, '%')
+                OR p.representativeName LIKE CONCAT('%', :keyword, '%'))
+            """)
+    List<Long> findUserIdsByApprovalStatusAndKeyword(
+            @Param("approvalStatus") ApprovalStatus approvalStatus,
+            @Param("keyword") String keyword
     );
 }

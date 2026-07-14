@@ -51,6 +51,10 @@ public class CreditTransaction extends BaseEntity {
         return of(user, CreditTransactionType.CONSUME, creditAmount, balanceAfter, referenceType, referenceId);
     }
 
+    public static CreditTransaction refund(UserEntity user, Long creditAmount, Long balanceAfter, String referenceType, Long referenceId) {
+        return of(user, CreditTransactionType.REFUND, creditAmount, balanceAfter, referenceType, referenceId);
+    }
+
     private static CreditTransaction of(UserEntity user, CreditTransactionType type, Long creditAmount, Long balanceAfter, String referenceType, Long referenceId) {
         return CreditTransaction.builder()
                 .user(user)
