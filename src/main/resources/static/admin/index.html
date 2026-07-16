@@ -181,6 +181,8 @@
                 <button class="nav-item" id="navCompanies" onclick="switchView('companies')">파트너 관리</button>
                 <button class="nav-item" id="navUsers" onclick="switchView('users')">유저 관리</button>
                 <button class="nav-item" id="navEstimates" onclick="switchView('estimates')">견적서 관리</button>
+                <button class="nav-item" id="navCreditBalances" onclick="switchView('creditBalances')">크레딧 잔액 현황</button>
+                <button class="nav-item" id="navCreditTransactions" onclick="switchView('creditTransactions')">크레딧 거래내역</button>
                 <div class="sidebar-footer">
                     <button class="btn-logout" onclick="logout()">로그아웃</button>
                 </div>
@@ -387,6 +389,88 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Credit Balances Panel -->
+                <div id="creditBalancesPanel" class="hidden">
+                    <div class="filters">
+                        <div>
+                            <label>페이지 크기</label>
+                            <select id="creditBalanceSizeFilter" onchange="onFilterChange('creditBalances')">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>검색 (업체명/대표자명)</label>
+                            <input type="text" id="creditBalanceKeywordFilter" placeholder="검색어 입력" oninput="onKeywordInput('creditBalances')">
+                        </div>
+                        <div id="creditBalanceLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>유저ID</th>
+                                <th>업체명</th>
+                                <th>대표자</th>
+                                <th>현재 잔액</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="creditBalanceTableBody"></tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <div id="creditBalancePageInfo">—</div>
+                        <div class="controls">
+                            <button class="btn-page" id="creditBalancePrevBtn" onclick="changePage('creditBalances', -1)">이전</button>
+                            <button class="btn-page" id="creditBalanceNextBtn" onclick="changePage('creditBalances', 1)">다음</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Credit Transactions Panel -->
+                <div id="creditTransactionsPanel" class="hidden">
+                    <div class="filters">
+                        <div>
+                            <label>페이지 크기</label>
+                            <select id="creditTxSizeFilter" onchange="onFilterChange('creditTransactions')">
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label>검색 (업체명/대표자명)</label>
+                            <input type="text" id="creditTxKeywordFilter" placeholder="검색어 입력" oninput="onKeywordInput('creditTransactions')">
+                        </div>
+                        <div id="creditTxLoadingIndicator" class="loading-indicator hidden"><span class="spinner"></span>불러오는 중...</div>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>일시</th>
+                                <th>파트너</th>
+                                <th>유형</th>
+                                <th>크레딧</th>
+                                <th>잔액</th>
+                                <th>참조</th>
+                                <th>액션</th>
+                            </tr>
+                        </thead>
+                        <tbody id="creditTxTableBody"></tbody>
+                    </table>
+
+                    <div class="pagination">
+                        <div id="creditTxPageInfo">—</div>
+                        <div class="controls">
+                            <button class="btn-page" id="creditTxPrevBtn" onclick="changePage('creditTransactions', -1)">이전</button>
+                            <button class="btn-page" id="creditTxNextBtn" onclick="changePage('creditTransactions', 1)">다음</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -399,6 +483,7 @@
         const USER_STATUS_LABEL = { PENDING: '이용약관 미동의', ACTIVE: '활성' };
         const SOCIAL_LABEL = { KAKAO: '카카오', NAVER: '네이버', GOOGLE: '구글' };
         const AI_STATUS_LABEL = { PENDING: '대기', PROCESSING: '분석중', COMPLETED: '완료', FAILED: '실패' };
+        const TX_TYPE_LABEL = { CHARGE: '충전', CONSUME: '소모', REFUND: '환불' };
 
         const VIEWS = {
             applications: {
@@ -431,7 +516,7 @@
                 nextBtnId: 'companyNextBtn',
                 emptyMessage: '등록된 파트너가 없습니다.',
                 colspan: 7,
-                state: { page: 0, totalPages: 0, expandedId: null, lastList: [] }
+                state: { page: 0, totalPages: 0, expandedId: null, lastList: [], creditCache: {} }
             },
             users: {
                 endpoint: '/api/v1/admin/users',
@@ -464,6 +549,38 @@
                 emptyMessage: '견적서가 없습니다.',
                 colspan: 6,
                 state: { page: 0, totalPages: 0, expandedId: null, lastList: [], detailCache: {} }
+            },
+            creditBalances: {
+                endpoint: '/api/v1/admin/credits/balances',
+                filterParamName: null,
+                filterId: null,
+                fixedValue: null,
+                keywordFilterId: 'creditBalanceKeywordFilter',
+                sizeFilterId: 'creditBalanceSizeFilter',
+                loadingId: 'creditBalanceLoadingIndicator',
+                tableBodyId: 'creditBalanceTableBody',
+                pageInfoId: 'creditBalancePageInfo',
+                prevBtnId: 'creditBalancePrevBtn',
+                nextBtnId: 'creditBalanceNextBtn',
+                emptyMessage: '등록된 파트너가 없습니다.',
+                colspan: 5,
+                state: { page: 0, totalPages: 0, lastList: [] }
+            },
+            creditTransactions: {
+                endpoint: '/api/v1/admin/credits/transactions',
+                filterParamName: null,
+                filterId: null,
+                fixedValue: null,
+                keywordFilterId: 'creditTxKeywordFilter',
+                sizeFilterId: 'creditTxSizeFilter',
+                loadingId: 'creditTxLoadingIndicator',
+                tableBodyId: 'creditTxTableBody',
+                pageInfoId: 'creditTxPageInfo',
+                prevBtnId: 'creditTxPrevBtn',
+                nextBtnId: 'creditTxNextBtn',
+                emptyMessage: '거래 내역이 없습니다.',
+                colspan: 7,
+                state: { page: 0, totalPages: 0, lastList: [] }
             }
         };
         let currentView = 'applications';
@@ -531,10 +648,14 @@
             document.getElementById('navCompanies').classList.toggle('active', viewKey === 'companies');
             document.getElementById('navUsers').classList.toggle('active', viewKey === 'users');
             document.getElementById('navEstimates').classList.toggle('active', viewKey === 'estimates');
+            document.getElementById('navCreditBalances').classList.toggle('active', viewKey === 'creditBalances');
+            document.getElementById('navCreditTransactions').classList.toggle('active', viewKey === 'creditTransactions');
             document.getElementById('applicationsPanel').classList.toggle('hidden', viewKey !== 'applications');
             document.getElementById('companiesPanel').classList.toggle('hidden', viewKey !== 'companies');
             document.getElementById('usersPanel').classList.toggle('hidden', viewKey !== 'users');
             document.getElementById('estimatesPanel').classList.toggle('hidden', viewKey !== 'estimates');
+            document.getElementById('creditBalancesPanel').classList.toggle('hidden', viewKey !== 'creditBalances');
+            document.getElementById('creditTransactionsPanel').classList.toggle('hidden', viewKey !== 'creditTransactions');
             document.getElementById('forbiddenBanner').classList.add('hidden');
             document.getElementById('errorBanner').classList.add('hidden');
             loadView(viewKey);
@@ -642,6 +763,14 @@
                 renderEstimateTable(list);
                 return;
             }
+            if (viewKey === 'creditBalances') {
+                renderCreditBalanceTable(list);
+                return;
+            }
+            if (viewKey === 'creditTransactions') {
+                renderCreditTransactionTable(list);
+                return;
+            }
 
             const cfg = VIEWS[viewKey];
             const tbody = document.getElementById(cfg.tableBodyId);
@@ -687,11 +816,31 @@
                                 : '-'}</div>
                             ${p.approvalStatus === 'REJECTED' ? `<div>반려 사유: ${escapeHtml(p.rejectionReason || '-')}</div>` : ''}
                             <div>유저 ID: ${p.userId}</div>
+                            ${viewKey === 'companies' ? renderCreditSection(cfg.state.creditCache[p.id]) : ''}
                         </td>
                     `;
                     tbody.appendChild(detailRow);
                 }
             });
+        }
+
+        function renderCreditSection(cache) {
+            if (!cache) {
+                return `<div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">크레딧 정보 불러오는 중...</div>`;
+            }
+            if (cache.error) {
+                return `<div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border); color:var(--danger);">${escapeHtml(cache.error)}</div>`;
+            }
+            const txHtml = cache.transactions.length
+                ? cache.transactions.map(t => `<div>${formatDate(t.createdDate)} · ${t.type === 'CHARGE' ? '충전 +' : '소모 -'}${t.creditAmount.toLocaleString()} (잔액 ${t.balanceAfter.toLocaleString()})</div>`).join('')
+                : '<div>거래 내역이 없습니다.</div>';
+            return `
+                <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
+                    <div style="font-weight:700; margin-bottom:4px;">크레딧 잔액: ${cache.balance.toLocaleString()}</div>
+                    <div style="color:var(--text-faint); font-size:11px; margin-bottom:4px;">최근 거래 내역 (최대 5건)</div>
+                    ${txHtml}
+                </div>
+            `;
         }
 
         function renderUserTable(list) {
@@ -785,6 +934,87 @@
             `;
         }
 
+        function renderCreditBalanceTable(list) {
+            const cfg = VIEWS.creditBalances;
+            const tbody = document.getElementById(cfg.tableBodyId);
+            tbody.innerHTML = '';
+            if (!list.length) {
+                tbody.innerHTML = `<tr class="empty-row"><td colspan="${cfg.colspan}">${cfg.emptyMessage}</td></tr>`;
+                return;
+            }
+            list.forEach(b => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${b.userId}</td>
+                    <td>${escapeHtml(b.companyName)}</td>
+                    <td>${escapeHtml(b.representativeName)}</td>
+                    <td>${b.balance.toLocaleString()}</td>
+                    <td class="actions">
+                        <button class="btn-detail">거래내역 보기</button>
+                    </td>
+                `;
+                row.querySelector('button').addEventListener('click', () => viewCreditTransactions(b.companyName));
+                tbody.appendChild(row);
+            });
+        }
+
+        function renderCreditTransactionTable(list) {
+            const cfg = VIEWS.creditTransactions;
+            const tbody = document.getElementById(cfg.tableBodyId);
+            tbody.innerHTML = '';
+            if (!list.length) {
+                tbody.innerHTML = `<tr class="empty-row"><td colspan="${cfg.colspan}">${cfg.emptyMessage}</td></tr>`;
+                return;
+            }
+            list.forEach(t => {
+                const row = document.createElement('tr');
+                const sign = t.type === 'CHARGE' ? '+' : '-';
+                const amountColor = t.type === 'CHARGE' ? 'var(--success)' : 'var(--danger)';
+                const canRefund = t.type === 'CHARGE' && t.referenceId != null;
+                row.innerHTML = `
+                    <td>${formatDate(t.createdDate)}</td>
+                    <td>${escapeHtml(t.userName)} (${escapeHtml(t.userEmail)})</td>
+                    <td>${TX_TYPE_LABEL[t.type] || t.type}</td>
+                    <td style="color:${amountColor};">${sign}${t.creditAmount.toLocaleString()}</td>
+                    <td>${t.balanceAfter.toLocaleString()}</td>
+                    <td>${escapeHtml(t.referenceType || '-')}</td>
+                    <td class="actions">
+                        ${canRefund ? `<button class="btn-delete" onclick="refundCharge(${t.referenceId})">환불</button>` : '-'}
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // 잔액 현황 탭에서 특정 업체의 거래내역 탭으로 이동 (검색어를 업체명으로 채워서 필터링)
+        function viewCreditTransactions(companyName) {
+            document.getElementById('creditTxKeywordFilter').value = companyName;
+            VIEWS.creditTransactions.state.page = 0;
+            switchView('creditTransactions');
+        }
+
+        async function refundCharge(chargeOrderId) {
+            const reason = prompt('환불(결제취소) 사유를 입력하세요.');
+            if (reason === null) return;
+            if (!reason.trim()) { alert('환불 사유를 입력해야 합니다.'); return; }
+            if (!confirm('이 충전 건을 환불하시겠습니까? TossPayments 결제가 실제로 취소되며 되돌릴 수 없습니다.')) return;
+
+            const { ok, status, body } = await apiFetch(`/api/v1/admin/credits/charges/${chargeOrderId}/refund`, {
+                method: 'POST',
+                body: JSON.stringify({ reason: reason.trim() })
+            });
+            if (status === 401) {
+                clearToken();
+                render();
+                showLoginBanner('로그인이 만료되었습니다. 다시 로그인해주세요.');
+                return;
+            }
+            if (status === 403) { document.getElementById('forbiddenBanner').classList.remove('hidden'); return; }
+            if (!ok) { alert(`환불 실패: ${body?.message || status}`); return; }
+            alert('환불이 완료되었습니다.');
+            loadView('creditTransactions');
+        }
+
         async function toggleEstimateDetail(id) {
             const cfg = VIEWS.estimates;
             if (cfg.state.expandedId === id) {
@@ -805,10 +1035,36 @@
             }
         }
 
-        function toggleDetail(viewKey, id) {
+        async function toggleDetail(viewKey, id) {
             const cfg = VIEWS[viewKey];
-            cfg.state.expandedId = cfg.state.expandedId === id ? null : id;
+            const wasExpanded = cfg.state.expandedId === id;
+            cfg.state.expandedId = wasExpanded ? null : id;
             renderTable(viewKey, cfg.state.lastList);
+
+            if (viewKey === 'companies' && !wasExpanded && !cfg.state.creditCache[id]) {
+                const partner = cfg.state.lastList.find(p => p.id === id);
+                if (!partner) return;
+
+                const [balanceRes, txRes] = await Promise.all([
+                    apiFetch(`/api/v1/admin/partners/${partner.userId}/credits/balance`),
+                    apiFetch(`/api/v1/admin/partners/${partner.userId}/credits/transactions?page=0&size=5&sort=createdDate,desc`)
+                ]);
+
+                if (balanceRes.status === 401 || txRes.status === 401) {
+                    clearToken();
+                    render();
+                    showLoginBanner('로그인이 만료되었습니다. 다시 로그인해주세요.');
+                    return;
+                }
+
+                cfg.state.creditCache[id] = (balanceRes.ok && txRes.ok)
+                    ? { balance: balanceRes.body.data.balance, transactions: txRes.body.data.content }
+                    : { error: `크레딧 정보 조회 실패: ${balanceRes.body?.message || txRes.body?.message || ''}` };
+
+                if (cfg.state.expandedId === id) {
+                    renderTable(viewKey, cfg.state.lastList);
+                }
+            }
         }
 
         async function decide(id, approvalStatus) {
